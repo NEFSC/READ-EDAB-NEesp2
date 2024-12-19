@@ -21,7 +21,6 @@ create_coldpool_index <- function(data){
   
   return(coldpool_index)
 }
-# cp_index <- create_coldpool_index(ecodata::cold_pool)
 
 
 #' Create Cold Pool Extent
@@ -45,7 +44,6 @@ create_coldpool_extent <- function(data){
   
   return(coldpool_extent)
 }
-# cp_extent <- create_coldpool_extent(ecodata::cold_pool)
 
 
 #' Create Cold Pool Persistence
@@ -68,7 +66,6 @@ create_coldpool_persistence <- function(data){
   
   return(coldpool_persistence)
 }
-# cp_persistence <- create_coldpool_persistence(ecodata::cold_pool)
 
 
 #' Create Gulf stream Index
@@ -90,7 +87,6 @@ create_gsi <- function(data){
   
   return(gsi)
 }
-# gsi <- create_gsi(ecodata::gsi)
 
 
 #' Create Warm Core Rings
@@ -110,4 +106,4 @@ create_wcr <- function(data){
   
   return(wcr)
 }
-# wcr <- create_wcr(ecodata::wcr)
+
