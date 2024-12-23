@@ -25,7 +25,7 @@ Assessment](https://www.integratedecosystemassessment.noaa.gov/) (IEA).
 IEA seeks to improve understanding and management of fisheries through
 incorporating natural, social, and economic data into fisheries analyses
 and management plans. ESPs are a structured framework developed by the
-Alaska Science Center to integrate ecosystem and socioeconomic
+Alaska Fisheries Science Center to integrate ecosystem and socioeconomic
 information into the stock assessment
 process.<sup>[1](https://meetings.npfmc.org/CommentReview/DownloadFile?p=8f5233fb-3b62-4571-9b49-8bb7ce675916.pdf&fileName=ESP_Shotwell.pdf)</sup>
 
