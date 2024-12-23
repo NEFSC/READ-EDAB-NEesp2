@@ -1,17 +1,21 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
+    ## Warning: `git_branch_default()` was deprecated in usethis 2.1.0.
+    ## ℹ Please use `git_default_branch()` instead.
+    ## ℹ The deprecated feature was likely used in the badger package.
+    ##   Please report the issue at <https://github.com/GuangchuangYu/badger/issues>.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
 [![](https://img.shields.io/badge/devel%20version-0.1.1-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp)
 [![](https://img.shields.io/github/last-commit/NEFSC/READ-EDAB-NEesp.svg)](https://github.com/NEFSC/READ-EDAB-NEesp/commits/main)
-[![](https://img.shields.io/badge/repo%20size-1.37%20GB-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp)
+[![](https://img.shields.io/badge/repo%20size-1.25%20GB-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp)
 [![](https://github.com/NEFSC/READ-EDAB-NEesp/workflows/gitleaks/badge.svg)](https://github.com/NEFSC/READ-EDAB-NEesp/actions/workflows/secretScan.yml)
 <!-- badges: end -->
 
 # Ecosystem and Socioeconomic Profiles <img src="https://raw.githubusercontent.com/NOAA-EDAB/esp_data_aggregation/abby/hexes/NEesp_hex.png" align="right" width="120" />
-
-## View current data products
-
-<https://nefsc.github.io/READ-EDAB-ESP_docs/docs>
 
 ## Introduction
 
@@ -28,58 +32,44 @@ process.<sup>[1](https://meetings.npfmc.org/CommentReview/DownloadFile?p=8f5233f
 Here we adapt the ESP process for use in the management of Northeast
 stocks. Our scientific roadmap consists of these steps:
 
-1.  Gather existing data on ecology, biology, socioeconomics, and the
-    human dimension of Northeast fisheries.
+1.  Review information from the national initiatives and regional
+    priorities to determine if a fish stock is a priority for producing
+    an ESP. Determine priority stocks and assemble an ESP project team.
 
-2.  Conduct a risk analysis of Northeast stocks to determine which
-    stocks are most vulnerable.
+2.  Identify vulnerabilities to overfishing, ecological pressures, and
+    climate change throughout the life stages of the stock. Combine this
+    information with ecosystem and socioeconomic processes driving stock
+    dynamics. Conduct a literature review and develop models outlining
+    major environmental and economic drivers of the stock’s
+    distribution, life cycle, and fishery.
 
-3.  Create detailed reports for the most vulnerable stocks,
-    incorporating data from the original risk assessment as well as
-    detailed species-specific information.
+3.  Create, select, analyze and monitor a suite of indicators of the
+    health of the stock and fishery. Conduct tests on trends between
+    ecosystem and socioeconomic indicators and stock metrics.
+
+4.  The final step culminates in a stock-specific report and
+    presentations that concisely convey the status of leading indicators
+    to fisheries scientists and managers.
 
 ## Using this package
 
-The current preliminary report pulls data from many existing sources and
-creates several data visualizations. Reports for all northeast stocks
-have been compiled and can be viewed
-[here](https://nefsc.github.io/READ-EDAB-ESP_docs/docs). Data,
-functions, and report templates are aggregated in this R package,
-[`NEesp`](https://github.com/NEFSC/READ-EDAB-NEesp). See
+Data, functions, and report templates are aggregated in this R package,
+[`NEesp2`](https://github.com/NEFSC/READ-EDAB-NEesp). See
 [here](https://nefsc.github.io/READ-EDAB-NEesp/articles/install-and-use-package.html)
 for a brief demo of how to use this package.
 
-These reports are a work in progress and should not be viewed as a final
-or complete product at this time. We do not guarantee that these reports
-are free from errors; please contact us if you notice any issues.
+## NEesp2 package
 
-## The Northeast ESP suite
-
-There are currently 4 github repos associated with the Northeast ESP
-initiative.
-
-1.  [`NOAA-EDAB/esp_data_aggregation`](https://github.com/NOAA-EDAB/esp_data_aggregation)
-    is the original repo and currently houses development and
-    exploratory work.
-
-2.  [`NEFSC/READ-EDAB-NEesp`](https://github.com/NEFSC/READ-EDAB-NEesp)
-    houses an R package that contains relevant data, functions for
-    low-level data analysis and plotting, and report templates.
-
-3.  [`NEFSC/READ-EDAB-NEespShiny`](https://github.com/NOAA-EDAB/NEespShiny)
-    houses an R Shiny app (in the form of an R package) that provides a
-    graphical user interface for creating reports with the `NEesp`
-    package.
-
-4.  [`NEFSC/READ-EDAB-ESP_docs`](https://github.com/NOAA-EDAB/ESP_docs)
-    houses static reports on Northeast stocks and
-    ecosystem/socioeconomic indicators.
+This package is a derivative of the original Northeast ESP R package
+\[`NEesp`\]. All relevant data, functions, and methods for ESP reports
+prior to 2024 will be found in this package
+[`NEFSC/READ-EDAB-NEesp`](https://github.com/NEFSC/READ-EDAB-NEesp).
 
 ## Next steps
 
-We continue to synthesize existing data on Northeast stocks,
-environment, and socioeconomics. We are currently refining our data
-analyses and beginning the preliminary risk assessment process.
+This package is currently in development. Standard ecosystem and
+socioeconomic indicator data and methods, visualizations, and report
+templates will be added shortly.
 
 ## Developers
 
@@ -93,7 +83,7 @@ analyses and beginning the preliminary risk assessment process.
 <tr class="header">
 <th><a href="https://github.com/atyrell3">atyrell3</a></th>
 <th><a href="https://github.com/stephanie-owen">stephanie-owen</a></th>
-<th><a href="https://github.com/rtabandera">rtabandera</a></th>
+<th></th>
 </tr>
 </thead>
 <tbody>
@@ -102,8 +92,7 @@ analyses and beginning the preliminary risk assessment process.
 src="https://avatars.githubusercontent.com/u/77738923?s=100&amp;u=92e54f60ca179f3e41c1a3610fb3ecdb9e233434&amp;v=4" /></a></td>
 <td><a href="https://github.com/stephanie-owen"><img
 src="https://avatars.githubusercontent.com/u/144704736?v=4" /></a></td>
-<td><a href="https://github.com/rtabandera"><img
-src="https://avatars.githubusercontent.com/u/64960823?s=100&amp;u=ea5abeca602e43d461e964fe8283f703aef63c61&amp;v=4" /></a></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -126,4 +115,4 @@ commercial product or activity by DOC or the United States Government.*
 
 #### Pkgdown site
 
-The pkgdown site is being built from the `dev` branch.
+The pkgdown site is being built from the `main` branch.
