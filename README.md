@@ -60,10 +60,9 @@ for a brief demo of how to use this package.
 
 ## NEesp2 package
 
-This package is a derivative of the original Northeast ESP R package
-\[`NEesp`\] (<https://github.com/NEFSC/READ-EDAB-NEesp>). All relevant
-data, functions, and methods for ESP reports prior to 2024 will be found
-in this package
+This package is a derivative of the original Northeast ESP R package.
+All relevant data, functions, and methods for ESP reports prior to 2024
+will be found in this package
 [`NEFSC/READ-EDAB-NEesp`](https://github.com/NEFSC/READ-EDAB-NEesp).
 
 ## Next steps

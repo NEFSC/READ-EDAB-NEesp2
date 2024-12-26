@@ -45,7 +45,7 @@ Here we adapt the ESP process for use in the management of Northeast stocks. Our
 Data, functions, and report templates are aggregated in this R package, [`NEesp2`](https://github.com/NEFSC/READ-EDAB-NEesp2). See [here](https://nefsc.github.io/READ-EDAB-NEesp/articles/install-and-use-package.html) for a brief demo of how to use this package.
 
 ## NEesp2 package 
-This package is a derivative of the original Northeast ESP R package [`NEesp`] (https://github.com/NEFSC/READ-EDAB-NEesp). All relevant data, functions, and methods for ESP reports prior to 2024 will be found in this package [`NEFSC/READ-EDAB-NEesp`](https://github.com/NEFSC/READ-EDAB-NEesp).
+This package is a derivative of the original Northeast ESP R package. All relevant data, functions, and methods for ESP reports prior to 2024 will be found in this package [`NEFSC/READ-EDAB-NEesp`](https://github.com/NEFSC/READ-EDAB-NEesp).
 
 ## Next steps
 This package is currently in development. Standard ecosystem and socioeconomic indicator data and methods, visualizations, and report templates will be added shortly.
