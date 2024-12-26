@@ -9,13 +9,13 @@
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
     ## generated.
 
-[![](https://img.shields.io/badge/devel%20version-0.1.1-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp)
-[![](https://img.shields.io/github/last-commit/NEFSC/READ-EDAB-NEesp.svg)](https://github.com/NEFSC/READ-EDAB-NEesp/commits/main)
-[![](https://img.shields.io/badge/repo%20size-1.25%20GB-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp)
-[![](https://github.com/NEFSC/READ-EDAB-NEesp/workflows/gitleaks/badge.svg)](https://github.com/NEFSC/READ-EDAB-NEesp/actions/workflows/secretScan.yml)
+[![](https://img.shields.io/badge/devel%20version-0.1.1-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2)
+[![](https://img.shields.io/github/last-commit/NEFSC/READ-EDAB-NEesp2.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2/commits/main)
+[![](https://img.shields.io/badge/repo%20size-1.25%20GB-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2)
+[![](https://github.com/NEFSC/READ-EDAB-NEesp2/workflows/gitleaks/badge.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2/actions/workflows/secretScan.yml)
 <!-- badges: end -->
 
-# Ecosystem and Socioeconomic Profiles <img src="https://raw.githubusercontent.com/NOAA-EDAB/esp_data_aggregation/abby/hexes/NEesp_hex.png" align="right" width="120" />
+# Ecosystem and Socioeconomic Profiles
 
 ## Introduction
 
@@ -54,15 +54,16 @@ stocks. Our scientific roadmap consists of these steps:
 ## Using this package
 
 Data, functions, and report templates are aggregated in this R package,
-[`NEesp2`](https://github.com/NEFSC/READ-EDAB-NEesp). See
+[`NEesp2`](https://github.com/NEFSC/READ-EDAB-NEesp2). See
 [here](https://nefsc.github.io/READ-EDAB-NEesp/articles/install-and-use-package.html)
 for a brief demo of how to use this package.
 
 ## NEesp2 package
 
 This package is a derivative of the original Northeast ESP R package
-\[`NEesp`\]. All relevant data, functions, and methods for ESP reports
-prior to 2024 will be found in this package
+\[`NEesp`\] (<https://github.com/NEFSC/READ-EDAB-NEesp>). All relevant
+data, functions, and methods for ESP reports prior to 2024 will be found
+in this package
 [`NEFSC/READ-EDAB-NEesp`](https://github.com/NEFSC/READ-EDAB-NEesp).
 
 ## Next steps
