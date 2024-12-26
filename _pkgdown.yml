@@ -13,6 +13,14 @@ navbar:
   left:
     - text: "Vignettes"
       menu:
+      -  text: "Why ESP?"
+         href: articles/why-esp.html
+      -  text: "Install and Use Package"
+         href: articles/install-and-use-package.html
+      -  text: "General Workflow"
+         href: articles/general-workflow.html
+      -  text: "RMarkdown Intro"
+         href: articles/rmarkdown-intro.html
       -  text: "Using EDAB-Utils R package"
          href: articles/using_edab_utils.html
     - text: "Functions"
