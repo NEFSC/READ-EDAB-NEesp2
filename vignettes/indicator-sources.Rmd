@@ -1,0 +1,110 @@
+---
+title: "Indicator Sources for Northeast ESPs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Indicator Sources for Northeast ESPs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  eval = FALSE
+)
+```
+
+## Ecodata
+
+{ecodata} is an R data package developed by the Ecosystems Dynamics and Assessment Branch of the Northeast Fisheries Science Center for use in State of the Ecosystem (SOE) reporting. Indicators in ecodata are grouped into the following categories: Lower Trophic Levels, Megafauna, Oceanographic & Habitat, and Economic & Social. The Technical Documentation of SOE indicators (https://noaa-edab.github.io/tech-doc/) contains relevant information about each indicator. 
+
+{ecodata} can be installed by running the following code in RStudio
+```{r}
+remotes::install_github("noaa-edab/ecodata",build_vignettes=TRUE)
+```
+
+All derived data sets are available once the package has been loaded into the environment. View available data sets using the syntax 'ecodata::...'
+
+More information on the SOE and ecodata can be found in the following links:
+
+https://github.com/NOAA-EDAB/ecodata?tab=readme-ov-file 
+https://www.fisheries.noaa.gov/new-england-mid-atlantic/ecosystems/state-ecosystem-reports-northeast-us-shelf 
+
+## Spatial Indicators
+
+### OISST
+
+The NOAA 1/4° Daily Optimum Interpolation Sea Surface Temperature (OISST) is a long term Climate Data Record that incorporates observations from different platforms (satellites, ships, buoys and Argo floats) into a regular global grid. The dataset is interpolated to fill gaps on the grid and create a spatially complete map of sea surface temperature. Daily, weekly, and monthly data are currently available from September 1, 1981—present, and updated every day.
+
+Raw data downloads are available here in NetCDF4 format. (https://psl.noaa.gov/data/gridded/data.noaa.oisst.v2.highres.html) 
+
+### GLORYS
+
+GLORYS12 is a global eddy-resolving physical ocean and sea ice reanalysis at 1/12° horizontal resolution covering the 1993-present altimetry period, designed and implemented in the framework of the Copernicus Marine Environment Monitoring Service (CMEMS). GLORYS includes daily and monthly mean files for temperature, salinity, currents, sea level, mixed layer depth and ice parameters from the top to the bottom. 
+
+Raw data access can be found here in NetCDF4 format. (https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_PHY_001_030/services) 
+
+### OCCCI
+
+The Ocean-Colour Climate Change Initiative (OCCCI) provides satellite observations of ocean color. The daily level 3 (L3) mapped (4 km resolution, sinusoidally projected) OCCCI dataset is composed of merged SeaWIFS, MERIS, MODIS-Aqua, VIIRS and Sentinel3A-OLCI global data. The L3 OCCCI products include chlorophyll a (CHL-CCI), remote sensing reflectance (Rrs(λ)), and several inherent optical property products (IOPs). 
+
+A composite file browser and WebGIS portal for viewing and manipulating data are found at https://www.oceancolour.org/
+
+### ERDDAP
+
+OISST (daily, 1971-2020; monthly, 1991-2020) and OCCCI (1991-present) data are available through the NEFSC ERDDAP server (https://comet.nefsc.noaa.gov/erddap/info/index.html?page=1&itemsPerPage=1000). 
+
+Publicly available ERDDAP datasets can be accessed through the {rerddap} package (https://comet.nefsc.noaa.gov/erddap/info/index.html?page=1&itemsPerPage=1000). 
+
+The package {erddapXtracto} allows a user to extract data for a moving point in time along a user-supplied set of longitude, latitude, depth and time points, and also extract data within a polygon (through time). (https://cran.r-project.org/web/packages/rerddapXtracto/vignettes/UsingrerddapXtracto.html) 
+
+## Bottom Trawl Survey Indicators (survdat)
+
+The R package {survdat} identifies research cruises associated with the seasonal NEFSC bottom trawl surveys and pulls the station and biological data. Using {survdat} requires installation of Oracle’s Instant Client and an Oracle username/password, both of which require a ticket submission to ITD, as well as installation of the {ROracle} R package and access behind the NEFSC firewall. 
+
+To install {survdat} directly from Github into RStudio: 
+```{r}
+remotes::install_github("NOAA-EDAB/survdat",build_vignettes = TRUE)
+```
+
+View available data using the syntax 'survdat::...'
+
+More information on using {survdat} to process NEFSC bottom trawl survey data:
+https://noaa-edab.github.io/survdat/index.html
+https://github.com/NOAA-EDAB/survdat 
+
+## Commercial Fisheries Indicators (CAMS/comlandr)
+
+The Catch Accounting and Monitoring System (CAMS) is a joint venture between the Greater Atlantic Regional Fisheries Office (GARFO) and the Northeast Fisheries Science Center (NEFSC) to implement a shared data system to support quota monitoring, stock assessments, and other programs reliant on fisheries-dependent data. 
+
+Monitoring Analysis Program System (MAPS) is the program that runs the code and generates the CAMS output tables. The code is currently available to programming team members.
+
+More information on CAMS at: https://www.greateratlantic.fisheries.noaa.gov/ro/fso/reports/ 
+
+The R package {comlandr} can also be used to pull and process commercial fisheries data. Using {comlandr} requires installation of Oracle’s Instant Client and an Oracle username/password, both of which require a ticket submission to ITD, as well as installation of the {ROracle} R package and access behind the NEFSC firewall. 
+
+To install {comlandr} directly from Github into RStudio:
+```{r}
+remotes::install_github("NOAA-EDAB/comlandr",build_vignettes = TRUE)
+```
+
+View available data using the syntax 'comlandr::...'
+
+More information on using {comlandr} to process commercial fisheries data:
+https://noaa-edab.github.io/comlandr/index.html
+https://github.com/NOAA-EDAB/comlandr/ 
+
+## Recreational Fisheries Indicators (MRIP)
+
+NOAA Fisheries’ Marine Recreational Information Program (MRIP) is the state-regional-federal partnership that develops, implements, and continually improves a national network of recreational fishing surveys to estimate total recreational catch. MRIP provides general data downloads as well as a Query Tool to filter by year, time, subregion, or type of fishing. 
+
+Information about the Marine Recreational Information Program can be found here:
+https://www.fisheries.noaa.gov/recreational-fishing-data/about-marine-recreational-information-program#products
+
+Guidance and links to data downloads:
+https://www.fisheries.noaa.gov/recreational-fishing-data/recreational-fishing-data-downloads#general-survey-data-downloads
+
+MRIP Query Tool:
+https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries 
