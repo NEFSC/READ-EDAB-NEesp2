@@ -83,7 +83,7 @@ templates will be added shortly.
 <td><a href="https://github.com/atyrell3"><img
 src="https://avatars.githubusercontent.com/u/77738923?s=100&amp;u=92e54f60ca179f3e41c1a3610fb3ecdb9e233434&amp;v=4" /></a></td>
 <td><a href="https://github.com/stephanie-owen"><img
-src="https://avatars.githubusercontent.com/u/144704736?v=4&amp;size=40" /></a></td>
+src="https://avatars.githubusercontent.com/u/144704736?v=4&amp;size=100" /></a></td>
 <td></td>
 </tr>
 </tbody>
