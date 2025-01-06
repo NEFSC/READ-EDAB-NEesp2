@@ -56,7 +56,7 @@ This package is currently in development. Standard ecosystem and socioeconomic i
 
 | [atyrell3](https://github.com/atyrell3) | [stephanie-owen](https://github.com/stephanie-owen) |
 |-----------|-----------|-----------|
-| [![](https://avatars.githubusercontent.com/u/77738923?s=100&u=92e54f60ca179f3e41c1a3610fb3ecdb9e233434&v=4)](https://github.com/atyrell3) | [![](https://avatars.githubusercontent.com/u/144704736?v=4)](https://github.com/stephanie-owen) |
+| [![](https://avatars.githubusercontent.com/u/77738923?s=100&u=92e54f60ca179f3e41c1a3610fb3ecdb9e233434&v=4)](https://github.com/atyrell3) | [![](https://avatars.githubusercontent.com/u/144704736?v=4&size=40)](https://github.com/stephanie-owen) |
 
 #### Legal disclaimer
 

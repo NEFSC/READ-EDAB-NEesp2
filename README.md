@@ -1,14 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
-    ## Warning: `git_branch_default()` was deprecated in usethis 2.1.0.
-    ## ℹ Please use `git_default_branch()` instead.
-    ## ℹ The deprecated feature was likely used in the badger package.
-    ##   Please report the issue at <https://github.com/GuangchuangYu/badger/issues>.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    ## generated.
-
 [![](https://img.shields.io/badge/devel%20version-0.1.1-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2)
 [![](https://img.shields.io/github/last-commit/NEFSC/READ-EDAB-NEesp2.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2/commits/main)
 [![](https://img.shields.io/badge/repo%20size-1.25%20GB-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2)
@@ -91,7 +83,7 @@ templates will be added shortly.
 <td><a href="https://github.com/atyrell3"><img
 src="https://avatars.githubusercontent.com/u/77738923?s=100&amp;u=92e54f60ca179f3e41c1a3610fb3ecdb9e233434&amp;v=4" /></a></td>
 <td><a href="https://github.com/stephanie-owen"><img
-src="https://avatars.githubusercontent.com/u/144704736?v=4" /></a></td>
+src="https://avatars.githubusercontent.com/u/144704736?v=4&amp;size=40" /></a></td>
 <td></td>
 </tr>
 </tbody>
