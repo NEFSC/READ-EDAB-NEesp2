@@ -46,10 +46,6 @@ While open source code is certainly a necessary component of a reproducible work
 
 The ESP concept was developed by the Alaska Fisheries Science Center. For detailed information, we refer the reader to Kalei Shotwell's [excellent presentation](https://www.youtube.com/watch?v=kYi1SAI-Xtk) about the Alaska Fisheries Science Center's Ecosystem and Socioeconomic Profiles (ESPs).
 
-```{r, fig.cap = "Alaska ESP checklist", eval = TRUE, out.width = "100%", echo = FALSE}
-knitr::include_graphics("images/esp-checklist.png", dpi = 200)
-```
-
 For the purposes of applying the ESP concept to the Northeast, we identified four major information components to an ESP:
 
 1. **Status of the stock**: A compilation of relevant ecosystem and socioeconomic information to give a snapshot of the stock's current condition. This can include qualitative as well as quantitative information. The Alaska ESP calls this *metrics assessment*.

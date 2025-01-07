@@ -1,10 +1,14 @@
 pandoc: 3.1.1
-pkgdown: 2.0.7
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  general-workflow: general-workflow.html
+  indicator-sources: indicator-sources.html
+  install-and-use-package: install-and-use-package.html
+  rmarkdown-intro: rmarkdown-intro.html
   using_edab_utils: using_edab_utils.html
-last_built: 2024-12-18T17:57Z
+  why-esp: why-esp.html
+last_built: 2025-01-07T20:38Z
 urls:
-  reference: https://nefsc.github.io/READ-EDAB-NEesp/reference
-  article: https://nefsc.github.io/READ-EDAB-NEesp/articles
-
+  reference: https://nefsc.github.io/READ-EDAB-NEesp2/reference
+  article: https://nefsc.github.io/READ-EDAB-NEesp2/articles
