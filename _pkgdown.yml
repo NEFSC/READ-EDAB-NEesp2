@@ -25,6 +25,8 @@ navbar:
          href: articles/indicator-sources.html
       -  text: "Using EDAB-Utils R package"
          href: articles/using_edab_utils.html
+      -  text: "Accessing Bottom Trawl Survey Data"
+         href: articles/accessing-survdat-data.html
     - text: "Functions"
       href: reference/index.html
     - text: "News"
