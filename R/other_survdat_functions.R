@@ -13,23 +13,23 @@ get_var_data <- function(x, variable) {
   # remove NA, zero abundance, length
   y <- x %>%
     dplyr::filter(get(variable) > 0, .data$ABUNDANCE > 0) %>%
-    dplyr::select(.data$Species, .data$YEAR, .data$SEASON, .data$Region, .data$fish_id, .data$date, variable) %>%
+    dplyr::select(.data$pdcomnam, .data$YEAR, .data$SEASON, .data$geoarea, .data$fish_id, .data$date, variable) %>%
     dplyr::distinct() # remove repeated row info
 
   # mean by year
   if (variable == "BIOMASS" | variable == "ABUNDANCE") {
     y <- y %>%
-      dplyr::group_by(.data$Species, .data$YEAR, .data$SEASON, .data$Region) %>%
+      dplyr::group_by(.data$pdcomnam, .data$YEAR, .data$SEASON, .data$geoarea) %>%
       dplyr::summarise(variable2 = sum(get(variable))) %>%
-      dplyr::select(.data$YEAR, .data$SEASON, .data$Species, .data$Region, .data$variable2)
+      dplyr::select(.data$YEAR, .data$SEASON, .data$pdcomnam, .data$geoarea, .data$variable2)
   } else {
     y <- y %>%
-      dplyr::group_by(.data$Species, .data$YEAR, .data$SEASON, .data$Region, .data$fish_id, .data$date) %>%
+      dplyr::group_by(.data$pdcomnam, .data$YEAR, .data$SEASON, .data$geoarea, .data$fish_id, .data$date) %>%
       dplyr::summarise(variable2 = mean(get(variable))) %>% # mean by day
       dplyr::ungroup() %>%
-      dplyr::group_by(.data$Species, .data$YEAR, .data$SEASON, .data$Region) %>%
+      dplyr::group_by(.data$pdcomnam, .data$YEAR, .data$SEASON, .data$geoarea) %>%
       dplyr::summarise(variable3 = mean(.data$variable2)) %>% # mean by season-year
-      dplyr::select(.data$YEAR, .data$SEASON, .data$Species, .data$Region, .data$variable3)
+      dplyr::select(.data$YEAR, .data$SEASON, .data$pdcomnam, .data$geoarea, .data$variable3)
   }
 
   colnames(y) <- c("YEAR", "SEASON", "Species", "Region", "variable")
@@ -59,7 +59,7 @@ plot_variable <- function(x, ytitle = "") {
   ) +
     ggplot2::geom_point(cex = 2) +
     ggplot2::geom_line() +
-    ggplot2::facet_grid(rows = ggplot2::vars(.data$Region)) +
+    ggplot2::facet_grid(rows = ggplot2::vars(.data$geoarea)) +
     nmfspalette::scale_color_nmfs("regional web") +
     ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::theme_bw() +
@@ -69,7 +69,7 @@ plot_variable <- function(x, ytitle = "") {
 
   ecodat <- x %>%
     dplyr::filter(.data$YEAR > 0) %>%
-    dplyr::group_by(.data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$SEASON, .data$geoarea) %>%
     dplyr::mutate(num = length(.data$variable)) %>%
     dplyr::filter(.data$num > 30)
 
@@ -115,7 +115,7 @@ plot_variable <- function(x, ytitle = "") {
 
 data_summary <- function(x) {
   table <- x %>%
-    dplyr::group_by(.data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$SEASON, .data$geoarea) %>%
     dplyr::filter(.data$variable > 0) %>%
     dplyr::summarise(
       total_years = length(.data$variable),
@@ -142,7 +142,7 @@ data_summary_5yr <- function(x) {
   x$YEAR <- as.numeric(x$YEAR)
 
   table <- x %>%
-    dplyr::group_by(.data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$SEASON, .data$geoarea) %>%
     dplyr::mutate(max_year = max(.data$YEAR, na.rm = TRUE)) %>%
     dplyr::filter(
       .data$YEAR > .data$max_year - 5,
@@ -269,14 +269,14 @@ generate_table <- function(x, variable, cap = "", type = "html") {
 get_len_data <- function(x) {
   y <- x %>%
     dplyr::filter(.data$LENGTH > 0, .data$ABUNDANCE > 0) %>%
-    dplyr::select(.data$YEAR, .data$SEASON, .data$Region, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
+    dplyr::select(.data$YEAR, .data$SEASON, .data$geoarea, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
     dplyr::distinct() %>% # problem with repeat rows
-    dplyr::group_by(.data$YEAR, .data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$YEAR, .data$SEASON, .data$geoarea) %>%
     dplyr::mutate(n_fish = sum(.data$NUMLEN)) %>%
     dplyr::filter(.data$n_fish > 10) # only year-season-region with >10 fish
 
   y <- y %>%
-    dplyr::group_by(.data$YEAR, .data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$YEAR, .data$SEASON, .data$geoarea) %>%
     dplyr::summarise(
       mean_len = sum(.data$LENGTH * .data$NUMLEN) / sum(.data$NUMLEN),
       min_len = min(.data$LENGTH),
@@ -312,7 +312,7 @@ plot_len <- function(x) {
     ) +
       ggplot2::geom_line() +
       ggplot2::geom_point(cex = 2) +
-      ggplot2::facet_grid(rows = ggplot2::vars(.data$Region)) +
+      ggplot2::facet_grid(rows = ggplot2::vars(.data$geoarea)) +
       nmfspalette::scale_color_nmfs("regional web",
         name = "",
         label = c("max", "mean", "min")
@@ -324,7 +324,7 @@ plot_len <- function(x) {
 
     ecodat <- y %>%
       dplyr::filter(.data$YEAR > 0) %>%
-      dplyr::group_by(.data$Region, .data$name) %>%
+      dplyr::group_by(.data$geoarea, .data$name) %>%
       dplyr::mutate(num = length(.data$value)) %>%
       dplyr::filter(.data$num > 30)
 
@@ -361,7 +361,7 @@ plot_len_hist <- function(x) {
   # x = direct survdat data
   y <- x %>%
     dplyr::filter(.data$LENGTH > 0, .data$ABUNDANCE > 0) %>%
-    dplyr::select(.data$YEAR, .data$SEASON, .data$Region, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
+    dplyr::select(.data$YEAR, .data$SEASON, .data$geoarea, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
     dplyr::distinct() %>% # problem with repeat rows
     dplyr::mutate(
       Decade = .data$YEAR %>%
@@ -374,9 +374,9 @@ plot_len_hist <- function(x) {
       LENGTH = .data$LENGTH %>%
         round(digits = 0)
     ) %>%
-    dplyr::group_by(.data$Decade, .data$SEASON, .data$Region, .data$LENGTH) %>%
+    dplyr::group_by(.data$Decade, .data$SEASON, .data$geoarea, .data$LENGTH) %>%
     dplyr::summarise(Count = sum(.data$NUMLEN)) %>%
-    dplyr::group_by(.data$Decade, .data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$Decade, .data$SEASON, .data$geoarea) %>%
     dplyr::mutate(Proportion = .data$Count / sum(.data$Count))
 
   mycolors <- nmfspalette::nmfs_palette("regional web")(7)
@@ -395,7 +395,7 @@ plot_len_hist <- function(x) {
       )
     ) +
       ggplot2::geom_line(cex = 1.5) +
-      ggplot2::facet_grid(rows = ggplot2::vars(.data$Region)) +
+      ggplot2::facet_grid(rows = ggplot2::vars(.data$geoarea)) +
       ggplot2::scale_color_manual(values = mycolors) +
       ggplot2::scale_y_continuous(
         labels = scales::comma,
@@ -413,7 +413,7 @@ plot_len_hist <- function(x) {
       )
     ) +
       ggplot2::geom_line(cex = 1.5) +
-      ggplot2::facet_grid(rows = ggplot2::vars(.data$Region)) +
+      ggplot2::facet_grid(rows = ggplot2::vars(.data$geoarea)) +
       ggplot2::scale_color_manual(values = mycolors) +
       ggplot2::scale_y_continuous(limits = c(0, max(x$Proportion, na.rm = TRUE))) +
       ggplot2::theme_bw() +
@@ -461,9 +461,9 @@ generate_len_plot <- function(x) {
 get_len_data_tbl <- function(x) {
   x <- x %>%
     dplyr::filter(.data$LENGTH > 0, .data$ABUNDANCE > 0) %>%
-    dplyr::select(.data$YEAR, .data$SEASON, .data$Region, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
+    dplyr::select(.data$YEAR, .data$SEASON, .data$geoarea, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
     dplyr::distinct() %>% # problem with repeat rows
-    dplyr::group_by(.data$YEAR, .data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$YEAR, .data$SEASON, .data$geoarea) %>%
     dplyr::mutate(n_fish = sum(.data$NUMLEN)) %>%
     dplyr::filter(.data$n_fish > 10) # only year-season-region with >10 fish
 
@@ -482,7 +482,7 @@ get_len_data_tbl <- function(x) {
 
 len_tbl_data <- function(x) {
   x <- x %>%
-    dplyr::group_by(.data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$SEASON, .data$geoarea) %>%
     dplyr::summarise(
       mean_len = sum(.data$LENGTH * .data$NUMLEN) / sum(.data$NUMLEN),
       sd_len = sqrt(sum((.data$LENGTH - .data$mean_len)^2 * .data$NUMLEN) /
@@ -493,7 +493,7 @@ len_tbl_data <- function(x) {
       max_len = max(.data$LENGTH)
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::group_by(.data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$SEASON, .data$geoarea) %>%
     dplyr::summarise(
       mean_value = paste(.data$mean_len %>%
         round(digits = 2),
@@ -532,7 +532,7 @@ len_tbl_data_5yr <- function(x) {
   x$YEAR <- as.numeric(x$YEAR)
 
   x <- x %>%
-    dplyr::group_by(.data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$SEASON, .data$geoarea) %>%
     dplyr::mutate(max_year = max(.data$YEAR)) %>%
     dplyr::filter(.data$YEAR > .data$max_year - 5) %>%
     dplyr::summarise(
@@ -545,7 +545,7 @@ len_tbl_data_5yr <- function(x) {
       max_len = max(.data$LENGTH)
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::group_by(.data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$SEASON, .data$geoarea) %>%
     dplyr::summarise(
       mean_value = paste(.data$mean_len %>%
         round(digits = 2),
@@ -620,14 +620,14 @@ generate_len_table <- function(x) {
 get_len_data_risk <- function(x) {
   y <- x %>%
     dplyr::filter(.data$LENGTH > 0, .data$ABUNDANCE > 0) %>%
-    dplyr::select(.data$Species, .data$YEAR, .data$SEASON, .data$Region, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
+    dplyr::select(.data$pdcomnam, .data$YEAR, .data$SEASON, .data$geoarea, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
     dplyr::distinct() %>% # problem with repeat rows
-    dplyr::group_by(.data$Species, .data$YEAR, .data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$pdcomnam, .data$YEAR, .data$SEASON, .data$geoarea) %>%
     dplyr::mutate(n_fish = sum(.data$NUMLEN)) %>%
     dplyr::filter(.data$n_fish > 10) # only year-season-region with >10 fish
 
   y <- y %>%
-    dplyr::group_by(.data$Species, .data$YEAR, .data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$pdcomnam, .data$YEAR, .data$SEASON, .data$geoarea) %>%
     dplyr::summarise(
       mean_len = sum(.data$LENGTH * .data$NUMLEN) / sum(.data$NUMLEN),
       min_len = min(.data$LENGTH),
@@ -650,14 +650,14 @@ get_len_data_risk <- function(x) {
 get_len_data2 <- function(x) {
   y <- x %>%
     dplyr::filter(.data$LENGTH > 0, .data$ABUNDANCE > 0) %>%
-    dplyr::select(.data$YEAR, .data$SEASON, .data$Region, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
+    dplyr::select(.data$YEAR, .data$SEASON, .data$geoarea, .data$fish_id, .data$LENGTH, .data$NUMLEN) %>%
     dplyr::distinct() %>% # problem with repeat rows
-    dplyr::group_by(.data$YEAR, .data$SEASON, .data$Region) %>%
+    dplyr::group_by(.data$YEAR, .data$SEASON, .data$geoarea) %>%
     dplyr::mutate(n_fish = sum(.data$NUMLEN)) %>%
     dplyr::filter(.data$n_fish > 10) # only year-season-region with >10 fish
 
   y <- y %>%
-    dplyr::group_by(.data$YEAR, .data$SEASON, .data$Region, .data$n_fish) %>%
+    dplyr::group_by(.data$YEAR, .data$SEASON, .data$geoarea, .data$n_fish) %>%
     dplyr::summarise(
       mean_len = sum(.data$LENGTH * .data$NUMLEN) / sum(.data$NUMLEN),
       min_len = min(.data$LENGTH),
@@ -689,13 +689,13 @@ common_names_survdat <- function(survdat_pull_type = "all") {
     sp_key <- NEesp::species_key
 
     survdata.bio.w.codes <- dplyr::inner_join(survdata, sp_key, by = "SVSPP") %>%
-      dplyr::rename("common_name" = "Species")
+      dplyr::rename("common_name" = "pdcomnam")
 
     # print("bio survdata")
     return(survdata.bio.w.codes)
   } else {
     survdata <- NEesp::survey %>%
-      dplyr::rename("common_name" = "Species")
+      dplyr::rename("common_name" = "pdcomnam")
     # print("all survdata")
     return(survdata)
   }
