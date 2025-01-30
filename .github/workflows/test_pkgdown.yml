@@ -8,7 +8,7 @@ on:
     types: published
   workflow_dispatch:
 
-name: Deploy pkgdown new
+name: test pkgdown
 
 permissions: read-all
 
