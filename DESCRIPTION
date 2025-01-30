@@ -23,6 +23,7 @@ Suggests:
     ggthemes,
     here,
     knitr,
+    magrittr,
     nmfspalette,
     rlang,
     rmarkdown,
