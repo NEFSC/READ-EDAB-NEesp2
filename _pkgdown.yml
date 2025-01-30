@@ -11,18 +11,20 @@ authors:
     
 navbar:
   left:
-    - text: "Vignettes"
+    - text: "About ESP"
       menu:
       -  text: "Why ESP?"
          href: articles/why-esp.html
+      -  text: "Indicator Sources for Northeast ESPs"
+         href: articles/indicator-sources.html
+    - text: "Vignettes"
+      menu:
       -  text: "Install and Use Package"
          href: articles/install-and-use-package.html
       -  text: "General Workflow"
          href: articles/general-workflow.html
       -  text: "RMarkdown Intro"
          href: articles/rmarkdown-intro.html
-      -  text: "Indicator Sources for Northeast ESPs"
-         href: articles/indicator-sources.html
       -  text: "Using EDAB-Utils R package"
          href: articles/using_edab_utils.html
       -  text: "Accessing Bottom Trawl Survey Data"
