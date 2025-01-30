@@ -32,11 +32,10 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Load R packages
-      if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          sudo R CMD javareconf
-       Rscript -e 'install.packages(c("pkgdown", "stringi", "car", "devtools"), dependencies = TRUE)'
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
