@@ -1,8 +1,8 @@
 
 
 ## Pull survdat data
-channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
-data <- survdat::get_survdat_data(channel)
+# channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
+# data <- survdat::get_survdat_data(channel)
 
 
 ## Calculate Swept Area Biomass
