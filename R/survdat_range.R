@@ -33,6 +33,12 @@ max <- test[which.max(test$LAT),]
 test_join <- dplyr::full_join(min, max %>%
                            dplyr::group_by(SVSPP))
 
+redfish2 <- redfish |>
+  dplyr::group_by(YEAR, SEASON) |>
+  dplyr::summarise(min_lat = min(LAT),
+                   max_lat = max(LAT)) |>
+  tidyr::pivot_longer(cols = c("min_lat", "max_lat"))
+
 #works kinda but keeps all the rows?
 min <- test %>%
   dplyr::summarise(min(LAT))
