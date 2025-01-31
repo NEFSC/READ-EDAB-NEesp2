@@ -23,7 +23,7 @@ redfish <- subset(join, SVSPP == "155") %>%
   dplyr::distinct()
 
 ##want to end up with 2 rows for each year (one for each season): year | season | min lat | max lat | range | species
-##want species as a parameter in the function but probably not year/season? (likely would want all years/seasons)
+##want species as a parameter in the function but probably not year/season? (likely would want all years/seasons?)
 
 # test min/max for year 2000
 #min/max not in separate rows?
