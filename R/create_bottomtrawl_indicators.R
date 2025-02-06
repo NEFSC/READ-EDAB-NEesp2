@@ -170,19 +170,21 @@ calc_stratified_mean <- function(surveyData, areaPolygon = 'NEFSC strata',
 
 data <- get(load(here::here("data-raw/allfh.RData")))
 
-condition <- function(data) {
-  data %>%
-  dplyr::filter(
-    is.na(.data$pdlen) == FALSE,
-    is.na(.data$pdwgt) == FALSE
-  ) %>%
-  dplyr::select(.data$pdlen, .data$pdwgt, .data$season, .data$geoarea, .data$pdcomnam, .data$year) %>%
-  dplyr::distinct() %>% # remove duplicates
-  dplyr::group_by(.data$geoarea, .data$season) %>%
-  dplyr::mutate(n_fish = length(.data$pdlen)) %>%
-  dplyr::mutate(condition = .data$pdwgt/(.data$pdlen)^3) %>%
-  dplyr::rename(region = .data$geoarea, species = .data$pdcomnam, length = .data$pdlen, weight = .data$pdwgt) %>%
-  dplyr::filter(.data$n_fish > 10) # only region-season with >10 fish 
+species_condition <- function(data) {
+  condition <- data %>%
+    dplyr::filter(
+     is.na(.data$pdlen) == FALSE,
+     is.na(.data$pdwgt) == FALSE
+   ) %>%
+    dplyr::select(.data$pdlen, .data$pdwgt, .data$season, .data$geoarea, .data$pdcomnam, .data$year) %>%
+    dplyr::distinct() %>% # remove duplicates
+    dplyr::group_by(.data$geoarea, .data$season) %>%
+    dplyr::mutate(n_fish = length(.data$pdlen)) %>%
+    dplyr::mutate(condition = .data$pdwgt/(.data$pdlen)^3) %>%
+    dplyr::rename(region = .data$geoarea, species = .data$pdcomnam, length = .data$pdlen, weight = .data$pdwgt) %>%
+    dplyr::filter(.data$n_fish > 10) # only region-season with >10 fish 
+  
+  return(condition)
 } 
 
 
