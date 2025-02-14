@@ -2,11 +2,11 @@
 
 ## Pull survdat data
 channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
-data <- survdat::get_survdat_data(channel)
+surveyData <- survdat::get_survdat_data(channel)
 
 #filter survdat data to year, season, lat, and species code
 survdat_data <- data$survdat %>%
-  dplyr::select(SVSPP, YEAR, SEASON, LAT)
+  dplyr::select(SVSPP, YEAR, SEASON, LAT, LON)
 
 #get species names, filter to species code, scientific + common name
 species <- survdat::get_species(channel)
@@ -19,31 +19,111 @@ join <- dplyr::full_join(survdat_data, species_data %>%
                    dplyr::group_by(SVSPP))
 
 #test subsetting for one species (acadian redfish) 
-redfish <- subset(join, SVSPP == "155") %>%
-  dplyr::distinct()
+#redfish <- subset(join, SVSPP == "155") %>%
+ # dplyr::distinct()
 
-##want to end up with 2 rows for each year (one for each season): year | season | min lat | max lat | range | species
-##want species as a parameter in the function but probably not year/season? (likely would want all years/seasons?)
+#redfish2 <- redfish %>%
+ # dplyr::group_by(YEAR, SEASON) %>%
+  #dplyr::summarise(min_lat = min(LAT),
+   #                max_lat = max(LAT),
+    #               min_lon = min(LON),
+     #              max_lon = max(LON),
+#  ) %>%
+ # dplyr::mutate(range_lat = max_lat - min_lat,
+  #              range_lon = max_lon - min_lon) %>%
+#  tidyr::pivot_longer(cols = c("min_lat", "max_lat", "min_lon", "max_lon", "range_lat", "range_lon")) %>%
+ # dplyr::ungroup()
 
-# test min/max for year 2000
-#min/max not in separate rows?
-test <- redfish[redfish$YEAR %in% c('2000'),]
-min <- test[which.min(test$LAT),] 
-max <- test[which.max(test$LAT),] 
-test_join <- dplyr::full_join(min, max %>%
-                           dplyr::group_by(SVSPP))
+##try for all species
 
-redfish2 <- redfish |>
-  dplyr::group_by(YEAR, SEASON) |>
+##min/max lat/lon for all tows in fall and spring for each year
+all_tows <- join %>%
+  dplyr::group_by(YEAR, SEASON) %>%
   dplyr::summarise(min_lat = min(LAT),
-                   max_lat = max(LAT)) |>
-  tidyr::pivot_longer(cols = c("min_lat", "max_lat"))
+                   max_lat = max(LAT),
+                   min_lon = min(LON),
+                   max_lon = max(LON)) %>%
+  tidyr::pivot_longer(cols = c("min_lat", "max_lat", "min_lon", "max_lon")) %>% 
+  dplyr::rename(indicator_name = name,
+              indicator_value = value) %>%
+  dplyr::ungroup() 
 
-#works kinda but keeps all the rows?
-min <- test %>%
-  dplyr::summarise(min(LAT))
-test$min_lat <- c(min)
+  all_tows$species <- "ALL" 
+  all_tows$SVSPP <- 0
 
-max <- test %>%
-  dplyr::summarise(max(LAT))
-test$max_lat <- c(max)
+
+##min/max/range grouped by species and species code
+all_species <- join %>%
+  dplyr::group_by(YEAR, SEASON, SVSPP, COMNAME) %>%
+  dplyr::summarise(min_lat = min(LAT),
+                   max_lat = max(LAT),
+                   min_lon = min(LON),
+                   max_lon = max(LON),) %>%
+  dplyr::mutate(range_lat = max_lat - min_lat,
+                range_lon = max_lon - min_lon) %>%
+  tidyr::pivot_longer(cols = c("min_lat", "max_lat", "min_lon", "max_lon", "range_lat", "range_lon")) %>%
+  dplyr::rename(indicator_name = name,
+                indicator_value = value,
+                species = COMNAME) %>%
+  dplyr::ungroup()
+
+##join all_tows and all_species
+range <- rbind(all_tows, all_species)
+
+
+
+#####################function###############
+
+species_range <- function(surveyData, species) {
+
+  #filter surveyData to year, season, lat, lon, and species code  
+    survdat_data <- surveyData$survdat %>%
+      dplyr::select(SVSPP, YEAR, SEASON, LAT, LON)
+
+  #get species names, filter to species code, scientific + common name
+    species_data <- species$data %>%
+     tidyr::drop_na(SVSPP) %>%
+     dplyr::select (SVSPP, SCINAME, COMNAME) 
+    
+  #join survdat df with species df grouping by species code
+    join <- dplyr::full_join(survdat_data, species_data %>%
+                               dplyr::group_by(SVSPP)) 
+    
+  ##min/max lat/lon for all tows in fall and spring for each year
+    all_tows <- join %>%
+      dplyr::group_by(YEAR, SEASON) %>%
+      dplyr::summarise(min_lat = min(LAT),
+                   max_lat = max(LAT),
+                   min_lon = min(LON),
+                   max_lon = max(LON)) %>%
+      tidyr::pivot_longer(cols = c("min_lat", "max_lat", "min_lon", "max_lon")) %>% 
+      dplyr::rename(indicator_name = name,
+              indicator_value = value) %>%
+      dplyr::ungroup() 
+
+      all_tows$species <- "ALL" 
+      all_tows$SVSPP <- 0
+  
+    
+   ##min/max/range grouped by species and species code
+    all_species <- join %>%
+      dplyr::group_by(YEAR, SEASON, SVSPP, COMNAME) %>%
+      dplyr::summarise(min_lat = min(LAT),
+                       max_lat = max(LAT),
+                       min_lon = min(LON),
+                       max_lon = max(LON),
+      ) %>%
+      dplyr::mutate(range_lat = max_lat - min_lat,
+                    range_lon = max_lon - min_lon) %>%
+      tidyr::pivot_longer(cols = c("min_lat", "max_lat", "min_lon", "max_lon", "range_lat", "range_lon")) %>%
+      dplyr::rename(indicator_name = name,
+                    indicator_value = value,
+                    species = COMNAME) %>%
+      dplyr::ungroup()
+    
+    ##join all_tows and all_species
+      rbind(all_tows, all_species)
+    }
+
+range_test <- species_range(surveyData, species)
+

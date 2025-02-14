@@ -1,66 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/404.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/accessing-survdat-data.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/general-workflow.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/indicator-sources.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/install-and-use-package.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/rmarkdown-intro.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/using_edab_utils.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/why-esp.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/index.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_coldpool_extent.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_coldpool_index.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_coldpool_persistence.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_gsi.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_wcr.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/grapes-greater-than-grapes.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/nc_to_raster.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/404.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/accessing-survdat-data.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/general-workflow.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/index.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/indicator-sources.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/install-and-use-package.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/rmarkdown-intro.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/using_edab_utils.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/why-esp.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/authors.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/index.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/LICENSE-text.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/news/index.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_coldpool_extent.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_coldpool_index.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_coldpool_persistence.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_gsi.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_wcr.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/grapes-greater-than-grapes.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/index.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/nc_to_raster.html</loc></url>
 </urlset>
+
