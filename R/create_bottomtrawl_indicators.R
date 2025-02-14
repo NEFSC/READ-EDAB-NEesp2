@@ -1,8 +1,8 @@
 
 
 ## Pull survdat data
-# channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
-# data <- survdat::get_survdat_data(channel)
+#channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
+#data <- survdat::get_survdat_data(channel)
 
 
 ## Calculate Swept Area Biomass
@@ -18,59 +18,18 @@
 #' @param tidy boolean. Return output in long format (Default = F).
 #' @param q data frame. Table of survey catchabilities with a column corresponding to groupDescription and a column of catchabilities. If NULL, assumes a q of 1 for each groupDescription (Minimum swept area estimates).
 #' @param a numeric. The average swept area of the trawl. Default value is the swept area of a standard NOAA Ship Albatross IV tow.
-#' @return a data table 
+#' @return a data table 'swept_area'
 
 # to use EPU shapefile run code below prior to function and set parameters areaPolygon=area and areaDescription="EPU":
 #area <- sf::st_read(dsn = system.file("extdata","EPU.shp",package="survdat"),quiet=T) 
 `%>%` <- magrittr::`%>%`
 
-calc_swept_area <- function(surveyData, areaPolygon = 'NEFSC strata',
-                            areaDescription = 'STRATA', filterByArea = "all",
-                            filterBySeason, groupDescription = "SVSPP",
-                            filterByGroup = "all", mergesexFlag = T,
-                            tidy = F, q = NULL, a = 0.0384) {
+create_swept_area <- function(...) { 
+  swept_area <- survdat::calc_swept_area(...) %>%
+    dplyr::select(YEAR, SVSPP, tot.biomass, tot.bio.var, tot.bio.SE) %>%
+    dplyr::rename(swept_area_biomass = tot.biomass, swept_area_var = tot.bio.var, swept_area_se = tot.bio.SE)
   
-  #Run stratified mean
-  stratmeanData <- calc_stratified_mean(surveyData, areaPolygon, areaDescription,
-                                        filterByArea, filterBySeason,
-                                        groupDescription, filterByGroup,
-                                        mergesexFlag, returnPrepData = T)
-  
-  #Calculate total biomass/abundance estimates
-  message("Calculating Swept Area Estimate  ...")
-  sweptareaData <- survdat:::swept_area(prepData = stratmeanData$prepData,
-                                        stratmeanData = stratmeanData$stratmeanData,
-                                        q = q, areaDescription = areaDescription,
-                                        groupDescription = groupDescription)
-  
-  #create tidy data set
-  if(tidy){
-    message("Tidying data  ...")
-    tidyData <- data.table::melt.data.table(sweptareaData, id.vars = c('YEAR',
-                                                                       groupDescription),
-                                            measure.vars = c('strat.biomass',
-                                                             'biomass.var',
-                                                             'strat.abund',
-                                                             'abund.var',
-                                                             'tot.biomass',
-                                                             'tot.bio.var',
-                                                             'tot.abundance',
-                                                             'tot.abund.var'))
-    tidyData[variable == 'strat.biomass', units := 'kg tow^-1']
-    tidyData[variable == 'biomass.var',   units := '(kg tow^-1)^2']
-    tidyData[variable == 'strat.abund',   units := 'number']
-    tidyData[variable == 'abund.var',     units := 'numbers^2']
-    tidyData[variable == 'tot.biomass',   units := 'kg']
-    tidyData[variable == 'tot.bio.var',   units := 'kg^2']
-    tidyData[variable == 'tot.abundance', units := 'number']
-    tidyData[variable == 'tot.abund.var', units := 'numbers^2']
-    
-    sweptareaData <- tidyData
-  }
-  
-  sweptareaData[]
-  
-  return(sweptareaData)
+  return(swept_area)
 }
 
 
@@ -86,78 +45,19 @@ calc_swept_area <- function(surveyData, areaPolygon = 'NEFSC strata',
 #' @param mergesexFlag boolean. Logical value to merge sexed species such as dogfish.
 #' @param tidy boolean. Return output in long format (Default = F).
 #' @param returnPrepData boolean. Return both stratmeanData and prepData as a list object. The default (F) returns only the stratmeanData as a data.table.
-#' @return a data table or list object (if returnPrepData = T)
+#' @return a data table 'strat_mean'
 
 # to use EPU shapefile run code below prior to function and set parameters areaPolygon=area and areaDescription="EPU":
 #area <- sf::st_read(dsn = system.file("extdata","EPU.shp",package="survdat"),quiet=T) 
 `%>%` <- magrittr::`%>%`
 
-calc_stratified_mean <- function(surveyData, areaPolygon = 'NEFSC strata',
-                                 areaDescription = 'STRATA', filterByArea = "all",
-                                 filterBySeason, groupDescription = "SVSPP",
-                                 filterByGroup = "all", mergesexFlag = T,
-                                 tidy = F, returnPrepData = F) {
+create_stratified_mean <- function(...) { 
+  strat_mean <- survdat::calc_stratified_mean(...) %>%
+    dplyr::select(YEAR, SEASON, SVSPP, strat.biomass, biomass.var, biomass.SE) %>%
+    dplyr::rename(strat_mean_biomass = strat.biomass, strat_var = biomass.var, strat_se = biomass.SE)
   
-  # Use original stratified design and built-in shapefile
-  if(!is(areaPolygon, 'sf')) {
-    if (is.character(areaPolygon)) { # not sf but a string
-      if(areaPolygon == 'NEFSC strata') {
-        poststratFlag <- F
-      } else {
-        message("areaPolygon currently only takes \"NEFSC strata\" as character string option")
-        stop("areaPolygon incorrectly defined")
-      }
-    } else { # not sf and not a string
-      message("areaPolygon must be an sf object. For example")
-      message("areaPolygon <- sf::st_read(dsn = \"shapefile.shp\"")
-      stop("areaPolygon incorrectly defined")
-      
-    }
-  } else {
-    poststratFlag <- T
-  }
-  
-  #Run stratification prep
-  message("Prepping data ...")
-  prepData <- survdat:::strat_prep(surveyData, areaPolygon, areaDescription,
-                                   filterByArea, filterBySeason)
-  
-  #Calculate stratified mean
-  message("Calculating Stratified Mean  ...")
-  #Check if calculating mean base on all station or by season
-  if(filterBySeason[1] == "all"){seasonFlag <- F}else{seasonFlag <- T}
-  
-  stratmeanData <- survdat:::strat_mean(prepData, groupDescription, filterByGroup,
-                                        mergesexFlag, seasonFlag = seasonFlag,
-                                        areaDescription, poststratFlag)
-  
-  # create tidy data
-  if(tidy){
-    message("Tidying data  ...")
-    tidyData <- data.table::melt.data.table(stratmeanData, id.vars = c('YEAR',
-                                                                       groupDescription,
-                                                                       'SEASON'),
-                                            measure.vars = c('strat.biomass',
-                                                             'biomass.var',
-                                                             'biomass.SE',
-                                                             'strat.abund',
-                                                             'abund.var',
-                                                             'abund.SE'))
-    tidyData[variable == 'strat.biomass', units := 'kg tow^-1']
-    tidyData[variable == 'biomass.var',   units := '(kg tow^-1)^2']
-    tidyData[variable == 'biomass.SE',    units := 'kg tow^-1']
-    tidyData[variable == 'strat.abund',   units := 'number tow^-1']
-    tidyData[variable == 'abund.var',     units := '(numbers tow^-1)^2']
-    tidyData[variable == 'abund.SE',      units := 'kg tow^-1']
-    stratmeanData <- tidyData
-  }
-  
-  if(returnPrepData) stratmeanData <- list(stratmeanData = stratmeanData,
-                                           prepData = prepData)
-  
-  return(stratmeanData[])
+  return(strat_mean)
 }
-
 
 ## Calculate Species Condition (weight/length^3)
 
