@@ -1,10 +1,13 @@
 ## Create Spatial Indicator Functions
 
-#' Create Bottom Temperature Indicator
+#' Create Spatial Indicator
 #'
-#' This function generates a bottom temperature indicator from a GLORYS netCDF file. 
+#' This function generates a spatially-aggregated indicator from a netCDF file. Has been tested with GLORYS netCDF and OCCCI ERDDAP netCDF. 
 #' The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
 #' Converts .nc files to data frame.
+#' @param indicator_name name of the indicator (character)
+#' @param units units associated with the indicator (character)
+#' @param ... passed to `EDABUtilities::make_2d_summary_ts`
 #' @param data.in Either a character vector of full input file names for a list of spatRasters
 #' @param output.files character vector of full output file names corresponding to each input file
 #' @param shp.file  string. Shape file you wish to crop each input file to
@@ -15,23 +18,32 @@
 #' @param tz string. Time zone to convert. No correction if NA
 #' @param touches logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
 #' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
-#' @return Saves R object `bottomT`, returns bottom temp indicator in a data frame summarized by timestep for each area.names
-#' @importFrom magrittr "%>%"
+#' @return Returns a data frame summarized by timestep for each area.names
+#' @importFrom magrittr %>%
 #' @export
 #'
-`%>%` <- magrittr::`%>%`
+# `%>%` <- magrittr::`%>%`
 
-create_bottomT <- function(...) { 
+create_spatial_indicator <- function(indicator_name,
+                                     units,
+                                     ...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
+  
   df <- make_2d_summary_output %>%
     terra::as.data.frame(na.rm = FALSE) 
-  bottomT <- df %>%
-    dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), month = lubridate::month(time), year = lubridate::year(time)) %>%
-    dplyr::mutate(Units = c ('degC')) %>%
-    subset(select = -c(agg.time, time) ) 
   
-  return(bottomT)
+  output <- df %>%
+    dplyr::mutate(time = as.Date(time),
+                  day = lubridate::day(time), 
+                  month = lubridate::month(time), 
+                  year = lubridate::year(time)) %>%
+    dplyr::mutate(Units = c ('degC')) %>%
+    subset(select = -c(agg.time, time) ) |>
+    dplyr::mutate(INDICATOR_NAME = indicator_name,
+                  INDICATOR_UNITS = units)  %>%
+    purrr::discard(~all(is.na(.)))
+  
+  return(output)
 }
 
 #' Create Sea Surface Temperature Indicator
@@ -39,6 +51,7 @@ create_bottomT <- function(...) {
 #' This function generates a sea surface temperature indicator from an OISST ERDDAP netCDF file. 
 #' The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
 #' Converts .nc files to data frame.
+#' @param ... passed to `EDABUtilities::make_2d_summary_ts()`
 #' @param data.in Either a character vector of full input file names for a list of spatRasters
 #' @param output.files character vector of full output file names corresponding to each input file
 #' @param shp.file  string. Shape file you wish to crop each input file to
@@ -50,18 +63,22 @@ create_bottomT <- function(...) {
 #' @param touches logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
 #' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
 #' @return Saves R object `sst`, returns sea surface temp indicator in a data frame summarized by timestep for each area.names
-#' @importFrom magrittr "%>%"
+#' @importFrom magrittr %>%
 #' @export
 #'
-`%>%` <- magrittr::`%>%`
+# `%>%` <- magrittr::`%>%`
 
 create_sst <- function(...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
+  
   df <- make_2d_summary_output %>%
     terra::as.data.frame(na.rm = FALSE) 
+  
   sst <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), month = lubridate::month(time), year = lubridate::year(time)) %>%
+                  day = lubridate::day(time), 
+                  month = lubridate::month(time), 
+                  year = lubridate::year(time)) %>%
     dplyr::mutate(Units = c ('degC')) %>%
     subset(select = -c(agg.time, time) ) 
   
@@ -84,18 +101,22 @@ create_sst <- function(...) {
 #' @param touches logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
 #' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
 #' @return Saves R object `sal`, returns salinity indicator in a data frame summarized by timestep for each area.names
-#' @importFrom magrittr "%>%"
+#' @importFrom magrittr %>%
 #' @export
 #'
-`%>%` <- magrittr::`%>%`
+# `%>%` <- magrittr::`%>%`
 
 create_sal <- function(...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
+  
   df <- make_2d_summary_output %>%
     terra::as.data.frame(na.rm = FALSE) 
+  
   sal <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), month = lubridate::month(time), year = lubridate::year(time)) %>%
+                  day = lubridate::day(time), 
+                  month = lubridate::month(time), 
+                  year = lubridate::year(time)) %>%
     subset(select = -c(agg.time, time))  %>%
     purrr::discard(~all(is.na(.)))
   
@@ -118,18 +139,22 @@ create_sal <- function(...) {
 #' @param touches logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
 #' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
 #' @return Saves R object `chl`, returns chlorophyll-a indicator in a data frame summarized by timestep for each area.names
-#' @importFrom magrittr "%>%"
+#' @importFrom magrittr %>%
 #' @export
 #'
 `%>%` <- magrittr::`%>%`
 
 create_chl <- function(...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
-  df <- make_2d_summary_output %>%
+ 
+   df <- make_2d_summary_output %>%
     terra::as.data.frame(na.rm = FALSE) 
-  chl <- df %>%
+  
+   chl <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), month = lubridate::month(time), year = lubridate::year(time)) %>%
+                  day = lubridate::day(time), 
+                  month = lubridate::month(time), 
+                  year = lubridate::year(time)) %>%
     dplyr::mutate(Units = c ('mg m^-3')) %>%
     subset(select = -c(agg.time, time) ) 
   
@@ -153,18 +178,22 @@ create_chl <- function(...) {
 #' @param touches logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
 #' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
 #' @return Saves R object `pp`, returns primary production indicator in a data frame summarized by timestep for each area.names
-#' @importFrom magrittr "%>%"
+#' @importFrom magrittr %>%
 #' @export
 #'
-`%>%` <- magrittr::`%>%`
+# `%>%` <- magrittr::`%>%`
 
 create_pp <- function(...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
+  
   df <- make_2d_summary_output %>%
     terra::as.data.frame(na.rm = FALSE) 
-  pp <- df %>%
+ 
+   pp <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), month = lubridate::month(time), year = lubridate::year(time)) %>%
+                  day = lubridate::day(time), 
+                  month = lubridate::month(time), 
+                  year = lubridate::year(time)) %>%
     dplyr::mutate(Units = c ('mg m^-3')) %>%
     subset(select = -c(agg.time, time) ) 
   

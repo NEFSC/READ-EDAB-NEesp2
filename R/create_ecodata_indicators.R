@@ -10,7 +10,7 @@
 #' @param data Filepath to the indicator data
 #' @param return Boolean. Whether to return the indicator as an object in the global environment
 #' @return Saves R object `coldpool_index`, returns cold pool index indicator
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
 #' @export
  
 
@@ -33,7 +33,7 @@ create_coldpool_index <- function(data){
 #' @param data Filepath to the indicator data
 #' @param return Boolean. Whether to return the indicator as an object in the global environment
 #' @return Saves R object `coldpool_extent`, returns cold pool extent indicator
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
 #' @export
 
 
@@ -56,7 +56,7 @@ create_coldpool_extent <- function(data){
 #' @param data Filepath to the indicator data
 #' @param return Boolean. Whether to return the indicator as an object in the global environment
 #' @return Saves R object `coldpool_persistence`, returns cold pool persistence indicator
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
 #' @export
 
 create_coldpool_persistence <- function(data){
@@ -78,7 +78,7 @@ create_coldpool_persistence <- function(data){
 #' @param data Filepath to the indicator data
 #' @param return Boolean. Whether to return the indicator as an object in the global environment
 #' @return Saves R object `gsi`, returns Gulf Stream Index indicator
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
 #' @export
 
 create_gsi <- function(data){
@@ -97,7 +97,7 @@ create_gsi <- function(data){
 #' @param data Filepath to the indicator data
 #' @param return Boolean. Whether to return the indicator as an object in the global environment
 #' @return Saves R object `wcr`, returns warm core rings indicator
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
 #' @export
 
 create_wcr <- function(data){

@@ -6,6 +6,8 @@
 #' This function creates the total recreational catch indicator
 #' @param data The mrip data (R object `mrip_catch`), already subset to species of interest only from downloaded csv file
 #' @param return Boolean. Whether to return the indicator as an object in the global environment
+#' @param states vector of states to include. Default is all states in the Northeast region.
+#' @importFrom magrittr %>%
 #' @return Saves the R data object `total_rec_catch`
 #'
 #' For new data queries, use MRIP Query Tool (https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries)
@@ -15,28 +17,28 @@
 #'
 #' @export
 #'
-`%>%` <- magrittr::`%>%`
+# `%>%` <- magrittr::`%>%`
 
 #removes extra info at the top of file and formats  correct columns
-mrip_catch <- read.csv(here::here('data-raw/mrip_BLACK_SEA_BASS_catch_series.csv'),
-                       skip = 46, # of rows you want to ignore
-                       na.strings = ".")
+# mrip_catch <- read.csv(here::here('data-raw/mrip_BLACK_SEA_BASS_catch_series.csv'),
+#                        skip = 46, # of rows you want to ignore
+#                        na.strings = ".")
 
-create_total_rec_catch <- function(data = mrip_catch, return = TRUE){
+create_total_rec_catch <- function(data = mrip_catch, 
+                                   states = c('MAINE',
+                                              'CONNECTICUT',
+                                              'MASSACHUSETTS',
+                                              'NEW HAMPSHIRE',
+                                              'NEW JERSEY',
+                                              'NEW YORK',
+                                              'RHODE ISLAND',
+                                              'MARYLAND',
+                                              'DELAWARE',
+                                              'NORTH CAROLINA'),
+                                   return = TRUE){
   total_rec_catch <- data %>%
     dplyr::rename(tot_cat = Total.Catch..A.B1.B2.) %>%
-    dplyr::filter(State %in%
-                    c('MAINE',
-                      'CONNECTICUT',
-                      'MASSACHUSETTS',
-                      'NEW HAMPSHIRE',
-                      'NEW JERSEY',
-                      'NEW YORK',
-                      'RHODE ISLAND',
-                      'MARYLAND',
-                      'DELAWARE',
-                      'NORTH CAROLINA'
-                    )) %>%
+    dplyr::filter(State %in% states) %>%
     dplyr::group_by(Year) %>% # changed y to Y
     dplyr::summarise(DATA_VALUE = sum(tot_cat, na.rm = TRUE)) %>%
     dplyr::mutate(CATEGORY = "Recreational",
@@ -49,5 +51,5 @@ create_total_rec_catch <- function(data = mrip_catch, return = TRUE){
   # usethis::use_data(total_rec_catch, overwrite = TRUE)
   if(return) return(total_rec_catch)
 }
- create_total_rec_catch(mrip_catch)
+ # create_total_rec_catch(mrip_catch)
  
