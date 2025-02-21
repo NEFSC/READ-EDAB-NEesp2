@@ -156,7 +156,7 @@ create_prop_sp_trips <- function(total_trips,
 #'
 #' This function creates an indicator for total recreational landings
 #' @param data The MRIP harvest data (R object `mrip_landing`)
-#' #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
+#' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
 #' @param return Boolean. Whether to return the indicator as an object in the global environment
 #' @return Saves the R data object `total_rec_landings`
 #'
