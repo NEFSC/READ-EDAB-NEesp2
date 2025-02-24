@@ -29,6 +29,8 @@ navbar:
          href: articles/using_edab_utils.html
       -  text: "Accessing Bottom Trawl Survey Data"
          href: articles/accessing-survdat-data.html
+      -  text: "USing MRIP Data for Recreational Indicators"
+         href: articles/using_mrip_data.html
     - text: "Functions"
       href: reference/index.html
     - text: "News"
