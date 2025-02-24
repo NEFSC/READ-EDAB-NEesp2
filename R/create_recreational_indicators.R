@@ -3,7 +3,7 @@
 #' This function creates the total recreational catch indicator
 #' @param data The mrip data (R object `mrip_catch`), already subset to species of interest only from downloaded csv file
 #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
-#' @param return Boolean. Whether to return the indicator as an object in the global environment
+#' @importFrom magrittr %>%
 #' @return Saves the R data object `total_rec_catch`
 #'
 #' For new data queries, use MRIP Query Tool (https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries)
@@ -13,7 +13,6 @@
 #'
 #' @export
 #'
-`%>%` <- magrittr::`%>%`
 
 create_total_rec_catch <- function(data, 
                                    states = c('MAINE',
@@ -49,7 +48,7 @@ create_total_rec_catch <- function(data,
 #' This function creates a total recreational trips indicator
 #' @param files A list of the full file names of annual directed trip data (.csv format). Must download for each year in MRIP query tool. 
 #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
-#' @param return Boolean. Whether to return the indicator as an object in the global environment
+#' @importFrom magrittr %>%
 #' @return Saves R object `rec_trips`, returns directed recreational trips indicator
 #'
 #' For new data queries, use MRIP Query Tool (https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries)
@@ -103,7 +102,7 @@ create_rec_trips <- function(files,
 #' @param total_trips The MRIP trip data (R object `mrip_effort`) of total annual angler trips from downloaded csv file
 #' @param species_trips The directed trips data for species of interest (R object `rec_trips`) from function 'create_rec_trips'
 #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
-#' @param return Boolean. Whether to return the indicator as an object in the global environment
+#' @importFrom magrittr %>%
 #' @return Saves the R data object `prop_sp_trips`
 #'
 #'
@@ -157,7 +156,7 @@ create_prop_sp_trips <- function(total_trips,
 #' This function creates an indicator for total recreational landings
 #' @param data The MRIP harvest data (R object `mrip_landing`)
 #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
-#' @param return Boolean. Whether to return the indicator as an object in the global environment
+#' @importFrom magrittr %>%
 #' @return Saves the R data object `total_rec_landings`
 #'
 #'
