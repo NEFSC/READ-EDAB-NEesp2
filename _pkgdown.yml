@@ -17,6 +17,8 @@ navbar:
          href: articles/why-esp.html
       -  text: "Indicator Sources for Northeast ESPs"
          href: articles/indicator-sources.html
+      -  text: "Northeast ESP Links"
+         href: articles/esp-links.html
     - text: "Vignettes"
       menu:
       -  text: "Install and Use Package"
