@@ -1,0 +1,43 @@
+---
+title: "Northeast ESP Links"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Indicator Sources for Northeast ESPs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  eval = FALSE
+)
+```
+
+## ESPs at the NEFSC
+
+An overview of ESPs and history of ESPs at the Northeast Fisheries Science Center can be found on our project page (https://www.fisheries.noaa.gov/new-england-mid-atlantic/science-data/ecosystem-and-socioeconomic-profiles-northeast-united-states). 
+
+Links to all Northeast ESP reports and associated working papers by stock can be found at https://www.fisheries.noaa.gov/new-england-mid-atlantic/ecosystems/ecosystem-and-socioeconomic-profile-development-and-reports. POC for each ESP is listed under each respective stock.
+
+## Project-specific code and resources
+
+### Bluefish
+
+Github repository for the 2022 Bluefish ESP
+
+https://github.com/atyrell3/RT2022/tree/main/bluefishESP
+
+### Black Sea Bass
+
+Github repository for the 2023 Black sea bass ESP and ESP report card
+
+https://github.com/ScottLarge-NOAA/bsb
+
+### Golden Tilefish
+
+Github repository for the 2024 Golden tilefish ESP
+
+https://github.com/SSalois1/tilefish_indicators 
