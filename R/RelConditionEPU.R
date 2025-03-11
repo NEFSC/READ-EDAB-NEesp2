@@ -204,7 +204,7 @@ gis.dir  <- "gis"
 #When parsing EPUs based on survey strata instead of through suvdat:
 fall <- survey.data %>% filter(SEASON == 'FALL') %>% dplyr::mutate(sex = if_else(is.na(SEX), '0', SEX))
 #fall <- survey.data %>% filter(SEASON == 'FALL') %>% dplyr::mutate(sex = as.character(CATCHSEX))%>%
-  dplyr::mutate(sex = if_else(is.na(sex), '0', sex))
+  #dplyr::mutate(sex = if_else(is.na(sex), '0', sex))
  #about 1/4 of fish with indwt have sex = 0:
 #fall_indwt <- fall %>% filter(!is.na(INDWT))
 
