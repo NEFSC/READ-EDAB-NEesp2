@@ -1,14 +1,5 @@
 
-library(devtools)
-library(remotes)
-library(survdat)
-library(data.table)
-library(dplyr)
-library(tidyr)
-library(tidyverse)
-library(magrittr)
-library(rpart)
-library(rpart.plot)
+
 `%>%` <- magrittr::`%>%`
 
 ########################################
@@ -16,6 +7,9 @@ library(rpart.plot)
 #connect to survdat - must set getBio and getLengths = T
 channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
 data <- survdat::get_survdat_data(channel, getBio = T, getLengths = T)
+
+##Function here##
+species_condition <- function(data, LWparams, species) {
 
 #Parsing survey data to EPU based on STRATUM instead of EPU.shp files in survdat and filter out NA
 survey.data <- data$survdat %>% 
@@ -26,10 +20,10 @@ survey.data <- data$survdat %>%
 EPUna <- survey.data %>% dplyr::filter(is.na(EPU))
 
 #Change sex = NA to sex = 0
-fall <- survey.data %>% filter(SEASON == 'FALL') %>% dplyr::mutate(sex = if_else(is.na(SEX), '0', SEX))
+fall <- survey.data %>% 
+  dplyr::filter(SEASON == 'FALL') %>% 
+  dplyr::mutate(sex = dplyr::if_else(is.na(SEX), '0', SEX))
 
-#Wigley et al. 2003 L-W parameters:
-LWparams <- readr::read_csv(here::here("data-raw/tech_memo_parameters_table_format.csv"))
 
 #Standardize syntax of Condition L-W data for merge with survey data:
 LWparams1 <- dplyr::mutate(LWparams,
@@ -38,13 +32,13 @@ LWparams1 <- dplyr::mutate(LWparams,
 
 #Parse data by season
 LWpar <- LWparams1 %>% 
-  dplyr::mutate(SEASON = if_else(Season == 'Autumn', as.character('FALL'),
-                                                      if_else(Season == 'Win/Aut', as.character('FALL'),
-                                                              if_else(Season == 'Spr/Aut', as.character('FALL'),
-                                                                      if_else(Season == 'Win/Spr/Aut', as.character('FALL'),        
-                                                                              if_else(Season == 'Win/Spr', as.character('SPRING'),
-                                                                                      if_else(Season == 'Spring', as.character('SPRING'), 
-                                                                                              if_else(Season == 'Winter', as.character('WINTER'),'NA'))))))))
+  dplyr::mutate(SEASON = dplyr::if_else(Season == 'Autumn', as.character('FALL'),
+                                                      dplyr::if_else(Season == 'Win/Aut', as.character('FALL'),
+                                                              dplyr::if_else(Season == 'Spr/Aut', as.character('FALL'),
+                                                                      dplyr::if_else(Season == 'Win/Spr/Aut', as.character('FALL'),        
+                                                                              dplyr::if_else(Season == 'Win/Spr', as.character('SPRING'),
+                                                                                      dplyr::if_else(Season == 'Spring', as.character('SPRING'), 
+                                                                                              dplyr::if_else(Season == 'Winter', as.character('WINTER'),'NA'))))))))
 LWfall <- LWpar %>% dplyr::filter(SEASON == 'FALL')
 
 #By Species: Parse Combined gender L-Ws by sex if no sex-specific parameters available. Otherwise assign SEX codes:
@@ -53,7 +47,7 @@ LWfall <- LWfall[-c(1:nrow(LWfall)),]
 speciesList <- unique(LWfall_orig$SpeciesName)
 numSpecies <- length(speciesList)
 for (spp in 1:numSpecies) {
-  sppTibble <- filter(LWfall_orig,SpeciesName == speciesList[spp])
+  sppTibble <- dplyr::filter(LWfall_orig,SpeciesName == speciesList[spp])
   if (nrow(sppTibble) == 1) {
     LWfall <- rbind(LWfall,sppTibble)
     newRow <- sppTibble[1,]
@@ -69,22 +63,24 @@ for (spp in 1:numSpecies) {
 
 #Add SEX for Combined gender back into Wigley at all data (loses 4 Gender==Unsexed):
 LWpar_sexed <- LWfall %>% 
-  dplyr::mutate(sex = if_else(Gender == 'Combined', as.character(0),
-                              if_else(Gender == 'Unsexed', as.character(0),
-                                      if_else(Gender == 'Male', as.character(1),
-                                              if_else(Gender == 'Female', as.character(2),'NA')))))
+  dplyr::mutate(sex = dplyr::if_else(Gender == 'Combined', as.character(0),
+                              dplyr::if_else(Gender == 'Unsexed', as.character(0),
+                                      dplyr::if_else(Gender == 'Male', as.character(1),
+                                              dplyr::if_else(Gender == 'Female', as.character(2),'NA')))))
 
 #Duplicate Combined for sex=0 and sex=4 (Trans) for BSB:
-LWpar_BSB <- LWpar_sexed %>% dplyr::filter(LW_SVSPP == 141, Gender == 'Combined') %>%
-  slice(1) %>%
-  mutate(sex = as.character(4))
+LWpar_BSB <- LWpar_sexed %>% 
+  dplyr::filter(LW_SVSPP == 141, Gender == 'Combined') %>%
+  dplyr::slice(1) %>%
+  dplyr::mutate(sex = as.character(4))
 
 LWpar_sex <- dplyr::bind_rows(LWpar_sexed, LWpar_BSB)
 
-LWpar_spp <- LWpar_sex %>% mutate(SVSPP = as.numeric(LW_SVSPP))
+LWpar_spp <- LWpar_sex %>% 
+  dplyr::mutate(SVSPP = as.numeric(LW_SVSPP))
 
 #Join survdat data with LW data
-mergedata <- left_join(fall, LWpar_spp, by= c('SEASON', 'SVSPP', 'sex'))
+mergedata <- dplyr::left_join(fall, LWpar_spp, by= c('SEASON', 'SVSPP', 'sex'))
 
 #filters out values without losing rows with NAs:
 mergewt <- dplyr::filter(mergedata, is.na(INDWT) | INDWT<900)
@@ -106,46 +102,32 @@ cond <- dplyr::filter(condcalc, is.na(RelCond) | RelCond<300)
 
 #If parsing by strata, change to cond.epu, condnoEPU for no EPUs
 cond.epu <- cond
-condnoEPU <- filter(cond.epu, is.na(EPU))
+condnoEPU <- dplyr::filter(cond.epu, is.na(EPU))
 
 #calculate single standard deviation and mean of relative condition for each species and sex:
-condstdev <- group_by(cond.epu, SVSPP, SEX) %>% summarize(mean = mean(RelCond), sd = sd(RelCond))
+condstdev <- dplyr::group_by(cond.epu, SVSPP, SEX) %>% 
+  dplyr:: summarize(mean = mean(RelCond), sd = sd(RelCond))
 
 #Remove relative conditions that are outside of 1 standard deviation
-condsd <- left_join(cond.epu, condstdev, by=c('SVSPP', 'SEX'))
-ungroup(condsd)
-cond.sd <- filter(condsd, RelCond < (mean+(2*sd)) & RelCond > (mean-(2*sd)))
+condsd <- dplyr::left_join(cond.epu, condstdev, by=c('SVSPP', 'SEX'))
+dplyr::ungroup(condsd)
+cond.sd <- dplyr::filter(condsd, RelCond < (mean+(2*sd)) & RelCond > (mean-(2*sd)))
 
 #Only including condition that is within 1 standard deviation of mean for each species:
 cond.epu <- cond.sd %>% dplyr::filter(is.na(sex) | sex != 4)
 cond.epu <- cond.epu %>% dplyr::mutate(sexMF = sex)
 
 #Read in df of SVSPP codes + Species names and join by Species
-species_codes <- read.csv(here::here("data/bottomtrawl_species_codes_names.csv"))
-cond.epu <- left_join(cond.epu, species_codes, by= c('SVSPP'))
-
-#check how many rows are not in an EPU (3146)
-count(cond.epu, is.na(EPU))
-
-#Summarize annually and filter based on count of condition data by species
-#annualcond <- cond.epu %>% 
- # dplyr::group_by(Species, YEAR) %>% 
-  #dplyr::summarize(MeanCond = mean(RelCond), nCond = dplyr::n())
-
-#condNshelf <- dplyr::filter(annualcond, nCond>=3) %>% ungroup()
-
-#condNshelfSpp <- condNshelf %>% 
- # dplyr::add_count(Species) %>% 
-  #dplyr::filter(n >= 20)
-
-#condNYrSpp <- condNshelfSpp %>% dplyr::distinct(Species)
+species_codes <- utils::read.csv(here::here("data/bottomtrawl_species_codes_names.csv"))
+cond.epu <- dplyr::left_join(cond.epu, species_codes, by= c('SVSPP'))
 
 #Summarize annually by EPU 
 annualcondEPU <- cond.epu %>% 
   dplyr::group_by(Species,EPU, YEAR) %>% 
   dplyr::summarize(MeanCond = mean(RelCond), nCond = dplyr::n())
 
-condN <- dplyr::filter(annualcondEPU, nCond>=3) %>% ungroup()
+condN <- dplyr::filter(annualcondEPU, nCond>=3) %>% 
+  dplyr::ungroup()
 
 condNSppEPU <- condN %>% 
   dplyr::add_count(Species, EPU) %>% 
@@ -155,3 +137,35 @@ condNSppEPU <- condN %>%
 cond_ecodata <- condNSppEPU %>% dplyr::rename(Time = YEAR, Var = Species)
 rel_condition <- cond_ecodata %>% dplyr::select(Var, EPU, Time, MeanCond)
 #write.csv(rel_condition, "conditionEPU.csv", row.names = F)
+
+#Add scale and breaks for plotting
+condition <- rel_condition %>%
+  dplyr::group_by(Var) %>%
+  dplyr::mutate(scaleCond = scale(MeanCond,scale =T,center=T))
+
+xs <- quantile(condition$scaleCond, seq(0,1, length.out = 6), na.rm = TRUE)
+
+condition <- condition %>%
+  dplyr::mutate(category = cut(scaleCond,
+                               breaks = xs,
+                               labels = c( "Poor Condition",
+                                           "Below Average",
+                                           "Neutral",
+                                           "Above Average",
+                                           "Good Condition"),
+                               include.lowest = TRUE))
+
+#Save for use later
+#write.csv(condition, "conditionwscale.csv", row.names = F)
+
+#Add variance and sd
+condition <- condition %>%
+  dplyr::rename(Species = Var) %>%
+  dplyr::mutate(sd = sd(MeanCond, na.rm = TRUE),
+                var = var(MeanCond, na.rm = TRUE))
+
+  return(condition)
+} 
+
+#works
+test <- species_condition(data=data, LWparams = LWparams)
