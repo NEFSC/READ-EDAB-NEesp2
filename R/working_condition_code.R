@@ -9,7 +9,7 @@ channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
 data <- survdat::get_survdat_data(channel, getBio = T, getLengths = T)
 
 ##Function here##
-species_condition <- function(data, LWparams, species) {
+species_condition <- function(data, LWparams, species.codes, species.name) {
 
 #Parsing survey data to EPU based on STRATUM instead of EPU.shp files in survdat and filter out NA
 survey.data <- data$survdat %>% 
@@ -118,8 +118,8 @@ cond.epu <- cond.sd %>% dplyr::filter(is.na(sex) | sex != 4)
 cond.epu <- cond.epu %>% dplyr::mutate(sexMF = sex)
 
 #Read in df of SVSPP codes + Species names and join by Species
-species_codes <- utils::read.csv(here::here("data/bottomtrawl_species_codes_names.csv"))
-cond.epu <- dplyr::left_join(cond.epu, species_codes, by= c('SVSPP'))
+species.codes <- utils::read.csv(here::here("data/bottomtrawl_species_codes_names.csv"))
+cond.epu <- dplyr::left_join(cond.epu, species.codes, by= c('SVSPP'))
 
 #Summarize annually by EPU 
 annualcondEPU <- cond.epu %>% 
@@ -168,4 +168,4 @@ condition <- condition %>%
 } 
 
 #works
-test <- species_condition(data=data, LWparams = LWparams)
+test <- species_condition(data=data, LWparams = LWparams, species.codes = species.codes)
