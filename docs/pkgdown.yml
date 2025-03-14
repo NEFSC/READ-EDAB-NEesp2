@@ -1,8 +1,9 @@
-pandoc: 3.1.1
+pandoc: 2.19.2
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   accessing-survdat-data: accessing-survdat-data.html
+  esp-links: esp-links.html
   general-workflow: general-workflow.html
   indicator-sources: indicator-sources.html
   install-and-use-package: install-and-use-package.html
@@ -10,7 +11,7 @@ articles:
   using_edab_utils: using_edab_utils.html
   using_mrip_data: using_mrip_data.html
   why-esp: why-esp.html
-last_built: 2025-02-25T18:38Z
+last_built: 2025-03-14T18:09Z
 urls:
   reference: https://nefsc.github.io/READ-EDAB-NEesp2/reference
   article: https://nefsc.github.io/READ-EDAB-NEesp2/articles

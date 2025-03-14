@@ -1,9 +1,12 @@
 
-## Calculate Swept Area Biomass
-
+#' Calculate Swept Area Biomass
+#' 
+#' This function calculates swept area biomass
+#' 
 #' @param ... passed to 'survdat::calc_swept_area()`
 #' @importFrom magrittr %>%
 #' @return a data table 'swept_area'
+
 
 # to use EPU shapefile run code below prior to function and set parameters areaPolygon=area and areaDescription="EPU":
 #area <- sf::st_read(dsn = system.file("extdata","EPU.shp",package="survdat"),quiet=T) 
@@ -20,8 +23,10 @@ create_swept_area <- function(...) {
 }
 
 
-## Calculate Stratified Mean Biomass
-
+#' Calculate Stratified Mean Biomass
+#' 
+#' This function calculates stratified mean biomass
+#' 
 #' @param ... passed to `survdat::calc_stratified_mean()`
 #' @importFrom magrittr %>%
 #' @return a data table 'strat_mean'
@@ -40,8 +45,10 @@ create_stratified_mean <- function(...) {
   return(strat_mean)
 }
 
-## Calculate Species Condition (weight/length^3)
-
+#' Calculate Species Condition (weight/length^3)
+#' 
+#' This function calculates condition (Fulton's K)
+#' 
 #' @param data  A data frame from `allfh`.
 #' @return a data frame
 #' @importFrom magrittr %>%

@@ -2,16 +2,8 @@
 % Please edit documentation in R/create_spatial_indicators.R
 \name{\%>\%}
 \alias{\%>\%}
-\title{Create Bottom Temperature Indicator}
+\title{Create Chlorophyll-a Indicator}
 \usage{
-lhs \%>\% rhs
-
-lhs \%>\% rhs
-
-lhs \%>\% rhs
-
-lhs \%>\% rhs
-
 lhs \%>\% rhs
 }
 \arguments{
@@ -21,7 +13,7 @@ lhs \%>\% rhs
 
 \item{shp.file}{string. Shape file you wish to crop each input file to}
 
-\item{var.name}{string. Variable name you wish to extract = 'pp'}
+\item{var.name}{string. Variable name you wish to extract = 'chl'}
 
 \item{area.names}{character vector. Names of shape file areas you want to summarize.}
 
@@ -36,34 +28,10 @@ lhs \%>\% rhs
 \item{write.out}{logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters}
 }
 \value{
-Saves R object \code{bottomT}, returns bottom temp indicator in a data frame summarized by timestep for each area.names
-
-Saves R object \code{sst}, returns sea surface temp indicator in a data frame summarized by timestep for each area.names
-
-Saves R object \code{sal}, returns salinity indicator in a data frame summarized by timestep for each area.names
-
 Saves R object \code{chl}, returns chlorophyll-a indicator in a data frame summarized by timestep for each area.names
-
-Saves R object \code{pp}, returns primary production indicator in a data frame summarized by timestep for each area.names
 }
 \description{
-This function generates a bottom temperature indicator from a GLORYS netCDF file.
-The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
-Converts .nc files to data frame.
-
-This function generates a sea surface temperature indicator from an OISST ERDDAP netCDF file.
-The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
-Converts .nc files to data frame.
-
-This function generates a salinity indicator from a GLORYS netCDF file.
-The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
-Converts .nc files to data frame.
-
 This function generates a chlorophyll-a indicator from an OCCCI ERDDAP netCDF file.
-The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
-Converts .nc files to data frame.
-
-This function generates a primary productivity indicator from an ERDDAP netCDF file.
 The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
 Converts .nc files to data frame.
 }

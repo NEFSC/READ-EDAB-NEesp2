@@ -9,6 +9,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
 ```
 
 ## Obtaining Raw MRIP Data
@@ -23,23 +24,27 @@ Catch, landings, and effort data can be read in as one file with multiple years.
 # catch data
 mrip_catch <- read.csv(here::here('data-raw/mrip_BLACK_SEA_BASS_catch_series.csv'),
                                   skip = 46, # of rows you want to ignore
-                                  na.strings = ".")
+                                  na.strings = ".") |>
+  janitor::clean_names(case = "all_caps")
 
 # landings data
 mrip_landing <- read.csv(here::here('data-raw/mrip_BLACK_SEA_BASS_harvest.csv'),
                          skip = 46, # of rows you want to ignore
-                         na.strings = ".")
+                         na.strings = ".") |>
+  janitor::clean_names(case = "all_caps")
 
 # effort data 
 mrip_effort <- read.csv(here::here('data-raw/mrip_effort_series.csv'),
                         skip = 44, # of rows you want to ignore
-                        na.strings = ".")
+                        na.strings = ".") |>
+  janitor::clean_names(case = "all_caps")
 
 # trips files
 path = (here::here('data-raw/mrip_directed_trips'))
 
-files <- list.files(path = path, pattern = glob2rx('mrip*.csv'),
-                       full.names = TRUE)
+files <- list.files(path = path, 
+                    pattern = utils::glob2rx('mrip*.csv'),
+                    full.names = TRUE)
 ```
 
 This vignette shows example data pulls and plots used for the 2025 black sea bass ESP report card:
@@ -103,7 +108,8 @@ Choose years of interest, summarize by Annual, Calendar Year, Atlantic Coast by 
 
 Download csv as output
 ```{r}
-prop_sp_trips <- create_prop_sp_trips(total_trips = mrip_effort, species_trips = rec_trips)
+prop_sp_trips <- create_prop_sp_trips(total_trips = mrip_effort, 
+                                      species_trips = rec_trips)
 
 plt_indicator(prop_sp_trips)
 ```
