@@ -45,35 +45,6 @@ create_stratified_mean <- function(...) {
   return(strat_mean)
 }
 
-#' Calculate Species Condition (weight/length^3)
-#' 
-#' This function calculates condition (Fulton's K)
-#' 
-#' @param data  A data frame from `allfh`.
-#' @return a data frame
-#' @importFrom magrittr %>%
-#' @importFrom rlang .data
-#' @export
-
-# data <- get(load(here::here("data-raw/allfh.RData")))
-
-species_condition <- function(data) {
-  condition <- data %>%
-    dplyr::filter(
-     is.na(.data$pdlen) == FALSE,
-     is.na(.data$pdwgt) == FALSE
-   ) %>%
-    dplyr::select(.data$pdlen, .data$pdwgt, .data$season, .data$geoarea, .data$pdcomnam, .data$year) %>%
-    dplyr::distinct() %>% # remove duplicates
-    dplyr::group_by(.data$geoarea, .data$season) %>%
-    dplyr::mutate(n_fish = length(.data$pdlen)) %>%
-    dplyr::mutate(condition = .data$pdwgt/(.data$pdlen)^3) %>%
-    dplyr::rename(region = .data$geoarea, species = .data$pdcomnam, length = .data$pdlen, weight = .data$pdwgt) %>%
-    dplyr::filter(.data$n_fish > 10) # only region-season with >10 fish 
-  
-  return(condition)
-} 
-
 
 #' Create a table of diet data
 #'
