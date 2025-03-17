@@ -3,7 +3,7 @@
 #' 
 #' This function calculates swept area biomass
 #' 
-#' @param ... passed to 'survdat::calc_swept_area()`
+#' @param ... passed to `survdat::calc_swept_area()`. Parameters here: https://noaa-edab.github.io/survdat/reference/calc_swept_area.html
 #' @importFrom magrittr %>%
 #' @return a data table 'swept_area'
 
@@ -14,10 +14,13 @@ create_swept_area <- function(...) {
   swept_area <- survdat::calc_swept_area(...) %>%
     dplyr::select(YEAR, SVSPP, tot.biomass, tot.bio.var, tot.bio.SE) %>%
     dplyr::rename(swept_area_biomass = tot.biomass, 
-                  swept_area_var = tot.bio.var,
-                  swept_area_se = tot.bio.SE)
-  
-  # TODO: pivot longer, format into data template, join species names (if needed)
+                  variance = tot.bio.var,
+                  se = tot.bio.SE,
+                  Year = YEAR) %>%
+    dplyr::mutate(sd = sd(swept_area_biomass, na.rm = TRUE)) %>%
+    tidyr::pivot_longer(cols = c("swept_area_biomass")) %>%
+    dplyr::rename(indicator_name = name,
+                  indicator_value = value)
   
   return(swept_area)
 }
@@ -27,7 +30,7 @@ create_swept_area <- function(...) {
 #' 
 #' This function calculates stratified mean biomass
 #' 
-#' @param ... passed to `survdat::calc_stratified_mean()`
+#' @param ... passed to `survdat::calc_stratified_mean()`. Parameters here: https://noaa-edab.github.io/survdat/reference/calc_stratified_mean.html
 #' @importFrom magrittr %>%
 #' @return a data table 'strat_mean'
 
@@ -37,10 +40,14 @@ create_stratified_mean <- function(...) {
   strat_mean <- survdat::calc_stratified_mean(...) %>%
     dplyr::select(YEAR, SEASON, SVSPP, strat.biomass, biomass.var, biomass.SE) %>%
     dplyr::rename(strat_mean_biomass = strat.biomass, 
-                  strat_var = biomass.var, 
-                  strat_se = biomass.SE)
+                  variance = biomass.var, 
+                  se = biomass.SE,
+                  Year = YEAR) %>%
+    dplyr::mutate(sd = sd(strat_mean_biomass, na.rm = TRUE)) %>%
+    tidyr::pivot_longer(cols = c("strat_mean_biomass")) %>%
+    dplyr::rename(indicator_name = name,
+                  indicator_value = value)
   
-  # TODO: pivot longer, format into data template, join species names (if needed)
   
   return(strat_mean)
 }
