@@ -8,6 +8,7 @@ create_rec_trips(
   files,
   states = c("MAINE", "CONNECTICUT", "MASSACHUSETTS", "NEW HAMPSHIRE", "NEW JERSEY",
     "NEW YORK", "RHODE ISLAND", "MARYLAND", "DELAWARE", "NORTH CAROLINA"),
+  groupby_state = FALSE,
   return = TRUE
 )
 }

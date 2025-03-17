@@ -8,6 +8,7 @@ create_total_rec_catch(
   data,
   states = c("MAINE", "CONNECTICUT", "MASSACHUSETTS", "NEW HAMPSHIRE", "NEW JERSEY",
     "NEW YORK", "RHODE ISLAND", "MARYLAND", "DELAWARE", "NORTH CAROLINA"),
+  groupby_state = FALSE,
   return = TRUE
 )
 }
@@ -15,6 +16,8 @@ create_total_rec_catch(
 \item{data}{The mrip data (R object \code{mrip_catch}), already subset to species of interest only from downloaded csv file}
 
 \item{states}{States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'}
+
+\item{groupby_state}{Whether to group results by state}
 }
 \value{
 Saves the R data object \code{total_rec_catch}
