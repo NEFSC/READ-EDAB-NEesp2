@@ -160,5 +160,3 @@ species_condition <- function(data, LWparams, species.codes) {
   
   return(condition)
 } 
-
-condition <- species_condition(data = data, LWparams = LWparams, species.codes = species.codes)
