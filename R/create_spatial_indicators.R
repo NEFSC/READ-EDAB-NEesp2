@@ -21,8 +21,6 @@
 #' @return Returns a data frame summarized by timestep for each area.names
 #' @importFrom magrittr %>%
 #' @export
-#'
-# `%>%` <- magrittr::`%>%`
 
 create_spatial_indicator <- function(indicator_name,
                                      units,
@@ -61,12 +59,10 @@ create_spatial_indicator <- function(indicator_name,
 #' @param agg.time character. Time scale to calculate over (days, doy, months, season, or years)
 #' @param tz string. Time zone to convert. No correction if NA
 #' @param touches logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
-#' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
+#' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters'
 #' @return Saves R object `sst`, returns sea surface temp indicator in a data frame summarized by timestep for each area.names
 #' @importFrom magrittr %>%
 #' @export
-#'
-# `%>%` <- magrittr::`%>%`
 
 create_sst <- function(...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
@@ -103,8 +99,7 @@ create_sst <- function(...) {
 #' @return Saves R object `sal`, returns salinity indicator in a data frame summarized by timestep for each area.names
 #' @importFrom magrittr %>%
 #' @export
-#'
-# `%>%` <- magrittr::`%>%`
+
 
 create_sal <- function(...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
@@ -141,8 +136,7 @@ create_sal <- function(...) {
 #' @return Saves R object `chl`, returns chlorophyll-a indicator in a data frame summarized by timestep for each area.names
 #' @importFrom magrittr %>%
 #' @export
-#'
-`%>%` <- magrittr::`%>%`
+
 
 create_chl <- function(...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
@@ -180,8 +174,6 @@ create_chl <- function(...) {
 #' @return Saves R object `pp`, returns primary production indicator in a data frame summarized by timestep for each area.names
 #' @importFrom magrittr %>%
 #' @export
-#'
-# `%>%` <- magrittr::`%>%`
 
 create_pp <- function(...) { 
   make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
