@@ -27,7 +27,7 @@ create_sst(...)
 
 \item{touches}{logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon}
 
-\item{write.out}{logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters}
+\item{write.out}{logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters'}
 }
 \value{
 Saves R object \code{sst}, returns sea surface temp indicator in a data frame summarized by timestep for each area.names

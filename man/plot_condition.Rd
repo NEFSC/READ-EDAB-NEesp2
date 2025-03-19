@@ -4,26 +4,12 @@
 \alias{plot_condition}
 \title{Plot Condition}
 \usage{
-plot_condition(
-  data,
-  var = c("Acadian redfish", "American plaice", "Atlantic cod", "Atlantic croaker",
-    "Atlantic herring", "Atlantic mackerel", "Atlantic menhaden", "Atlantic wolffish",
-    "Barndoor skate", "Black sea bass", "Blackbelly rosefish", "Bluefish",
-    "Bluntnose stingray", "Bullnose ray", "Butterfish", "Clearnose skate", "Cusk",
-    "Fourspot", "Goosefish", "Haddock", "Little skate", "Longhorn sculpin", "Ocean pout",
-    "Offshore hake", "Pollock", "Red hake", "Rosette skate", "Roughtail stingray",
-    "Scup", "Sea raven", "Silver hake", 
-     "Smooth dogfish", "Smooth skate",
-    "Spiny butterfly ray", "Spiny dogfish", "Spot", "Spotted hake", "Summer flounder",
-    "Thorny skate", "Weakfish", "White hake", "Windowpane", "Winter flounder",
-    "Winter skate", "Witch flounder", "Yellowtail flounder"),
-  return = TRUE
-)
+plot_condition(data, var, return = TRUE)
 }
 \arguments{
-\item{data}{data frame with condition data from bottom trawl survey}
+\item{data}{A data frame of species condition from 'species_condition' function}
 
-\item{species}{species of interest to plot}
+\item{var}{species of interest to plot}
 }
 \value{
 A ggplot

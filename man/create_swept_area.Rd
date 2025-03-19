@@ -7,7 +7,7 @@
 create_swept_area(...)
 }
 \arguments{
-\item{...}{passed to 'survdat::calc_swept_area()`}
+\item{...}{passed to \code{survdat::calc_swept_area()}. Parameters here: https://noaa-edab.github.io/survdat/reference/calc_swept_area.html}
 }
 \value{
 a data table 'swept_area'

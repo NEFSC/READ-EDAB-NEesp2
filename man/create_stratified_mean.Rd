@@ -7,7 +7,7 @@
 create_stratified_mean(...)
 }
 \arguments{
-\item{...}{passed to \code{survdat::calc_stratified_mean()}}
+\item{...}{passed to \code{survdat::calc_stratified_mean()}. Parameters here: https://noaa-edab.github.io/survdat/reference/calc_stratified_mean.html}
 }
 \value{
 a data table 'strat_mean'

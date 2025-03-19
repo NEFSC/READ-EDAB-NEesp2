@@ -168,7 +168,7 @@ get_diet_plot <- function(data) {
       
       # only look at season/year combinations with >20 predator samples
       dplyr::group_by(.data$year, .data$season, .data$geoarea) %>%
-      dplyr::mutate(n_predators = .data$fish_id %>%
+      dplyr::mutate(n_predators = .data$gensci %>%
                       unique() %>%
                       length()) %>%
       dplyr::filter(.data$n_predators > 20)
