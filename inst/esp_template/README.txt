@@ -21,3 +21,7 @@ script_template.R has a sample layout for scripts
 # 05_images
 
 Describe the purpose of the figures in this folder
+
+# 06_docs
+
+Contains template files to create an ESP report card
