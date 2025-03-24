@@ -1,13 +1,31 @@
 % load packages
 %% will have to request ITD add these to the container image
-\usepackage{geometry}
-\usepackage{xcolor}
-\usepackage{eso-pic}
-\usepackage{fancyhdr}
-\usepackage{sectsty}
-\usepackage{fontspec}
-\usepackage{titlesec}
+% \usepackage{geometry}
+% \usepackage{xcolor}
+% \usepackage{eso-pic}
+% \usepackage{fancyhdr}
+% \usepackage{sectsty}
+% \usepackage{fontspec}
+% \usepackage{titlesec}
 
 %% style header font
- \titleformat{\section}
-  {\normalfont\scshape}{\thesection}{1em}{}
+% \titlespacing{\section}{12pc}{0ex plus .1ex minus .2ex}{1pc}
+% \titlespacing{\subsection}{12pc}{0ex plus .1ex minus .2ex}{1pc}
+% \let\raggedsection\centering
+\RedeclareSectionCommand[font=\centering\large]{section}
+\RedeclareSectionCommand[
+  runin=false,
+  afterindent=false,
+  font = \normalfont\textbf,
+  beforeskip=1pt,
+  afterskip=0pt]{subsection}
+% \addtokomafont{disposition}{\rmfamily}
+% \let\raggedchapter\centering
+
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\setlength{\labelsep}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\parsep}{0pt}
+\setlength{\partopsep}{0pt}

@@ -9,6 +9,7 @@ format:
     fontsize: "10pt"
     linestretch: 1
     indent: true
+    include-in-header: tex_template.tex
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -17,12 +18,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 \vspace{-2.5cm}
 
-\centering
-\large \textbf{Spring 2024}
-\vspace{0.25cm}
+\section{Spring 2024}
 
-\raggedright
-\normalsize
 Black sea bass is an important Mid-Atlantic stock with high commercial value and recreational engagement. There are two stock subunits, divided at the Hudson Canyon. Overfishing is not occurring and the stock is not overfished. The stock assessment model uses winter bottom temperature as a recruitment covariate to incorporate the observed link between cold temperature and smaller year classes.
 
 :::: {layout="[ [0.4, 0.025, 0.575], [1], [0.575, 0.025, 0.4]] "}
@@ -36,51 +33,40 @@ Black sea bass is an important Mid-Atlantic stock with high commercial value and
 :::
 
 ::: {}
-\centering
-\large \textbf{2024 in Review}
-\vspace{-0.25cm}
+\section{2024 in Review}
 
-\raggedright
-\normalsize
-### Fishing Community Observations
+\subsection{Fishing Community Observations}
 - Steady or increasing availability 
 - Expanding distributions and changes in migration timing
 - Local regulatory complexity affects fishing opportunities
-\vspace{-0.4cm}
 
-### Commercial Fishery
+\subsection{Commercial Fishery}
 - Number of active vessels declined in 2024, but total landings increased from 2023 
 - Total revenue decreased slightly along with average prices ($/lb)
 - Average revenue per vessel increased, following an upward trend over the past three years for vessels that remain in the fishery
-\vspace{-0.4cm}
 
-### Recreational Fishery
+\subsection{Recreational Fishery}
 - Number of targeted trips, catch, and landings all down from 2023
 - But number of trips still above the historic average 
 - Not clear if catch per angler has continued to increase in 2024
-\vspace{-0.4cm}
 
-### Ecosystem
+\subsection{Ecosystem}
 - Cold winter in the north but near average in the south
 - Poor or below average fish condition in recent years
 :::
 
 ::: {}
 \vspace{0.5cm}
-\centering
-\large \textbf{Key Points from the Mid-Atlantic Risk Assessment}
-\vspace{0.25cm}
+\section{Key Points from the Mid-Atlantic Risk Assessment}
 :::
 
 ::: {}
 \vspace{-3cm}
+
 \raggedright
-\normalsize
+<!-- maybe this is being centered because it's the only section without a header? -->
 According to the [Mid-Atlantic 2024 EAFM risk assessment update](https://static1.squarespace.com/static/511cdc7fe4b00307a2628ac6/t/6747560a3cf66936045e5547/1732728332670/05_EAFM+Risk+Assessment.pdf), Black Sea Bass scored high and/or moderately high risk in the following elements:
 
-\setlength{\itemsep}{1pt}
-\setlength{\parskip}{1pt}
-\setlength{\parsep}{1pt}
 - Moderate-high to high risk to the stock due to:
   - Very high exposure to changes in climate 
   - Observed and potential changes in distribution; northward shift into the Gulf of Maine
