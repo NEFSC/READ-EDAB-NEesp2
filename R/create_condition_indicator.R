@@ -14,7 +14,7 @@
 species_condition <- function(data, LWparams, species.codes) {
   
   #Parsing survey data to EPU based on STRATUM instead of EPU.shp files in survdat and filter out NA
-  survey.data <- data$survdat %>% 
+  survey.data <- data %>% 
     dplyr::mutate(EPU = dplyr::case_when(STRATUM %in% c(1010:1080, 1100:1120, 1600:1750, 3010:3450, 3470, 3500, 3510) ~ 'MAB',
                                          STRATUM %in% c(1090, 1130:1210, 1230, 1250, 3460, 3480, 3490, 3520:3550) ~ 'GB',
                                          STRATUM %in% c(1220, 1240, 1260:1290, 1360:1400, 3560:3830)~ 'GOM',
@@ -141,4 +141,4 @@ species_condition <- function(data, LWparams, species.codes) {
                   variance = var(MeanCond, na.rm = TRUE))
   
   return(condition)
-} 
+}

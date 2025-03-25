@@ -18,13 +18,10 @@ This package contains functions for producing bottom trawl indicators from {surv
 
 For more information on accessing {survdat} data, see vignette "Accessing Bottom Trawl Survey Data".
 
-### Generate {survdat} data pull
-
+### Load subset of {survdat} data
 
 ```{r}
-channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
-data <- survdat::get_survdat_data(channel, getBio = T, getLengths = T)
-species <- survdat::get_species(channel)
+data <- load(here::here("data/survdat_subset.rda"))
 ```
 
 ### Species Condition - Black sea bass
@@ -90,7 +87,7 @@ Modified from 'calc_swept_area' in {survdat} package.
 
 ```{r}
 bsb_swept_area <- create_swept_area(
-  surveyData = data$survdat,
+  surveyData = data,
   areaPolygon = "NEFSC strata",
   areaDescription = "STRATA",
   filterByArea = "all",
@@ -129,7 +126,7 @@ Modified from 'calc_stratified_mean' in {survdat} package.
 
 ```{r}
 bsb_strat_mean <- create_stratified_mean(
-  surveyData = data$survdat,
+  surveyData = data,
   areaPolygon = "NEFSC strata",
   areaDescription = "STRATA",
   filterByArea = "all",
