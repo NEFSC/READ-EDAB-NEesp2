@@ -5,7 +5,7 @@ species <- survdat::get_species(channel)
 `%>%` <- magrittr::`%>%`
 
 ## create a subset of data to save in package for running vignette ----
-survdat_subset <- data |>
+survdat_subset <- data$survdat |>
   dplyr::filter(YEAR == 2024)
 usethis::use_data(survdat_subset) # this will create a data object in the data folder
 # documentation for the data needs to be added manually
