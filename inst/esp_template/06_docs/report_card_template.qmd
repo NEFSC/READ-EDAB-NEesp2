@@ -1,5 +1,5 @@
 ---
-title: "Black Sea Bass (Centropristis striata)\nEcosystem & Socioeconomic Profile Report Card"
+title: "Black Sea Bass (\\protect\\textit{Centropristis striata}) \\protect\\newline Ecosystem & Socioeconomic Profile Report Card"
 format: 
   pdf:
     margin-left: "0.5in"
@@ -9,16 +9,29 @@ format:
     fontsize: "10pt"
     linestretch: 1
     indent: true
-    include-in-header: tex_template.tex    
-    keep-tex: true
+    include-in-header: template.tex    
+    # keep-tex: true
     papersize: letter
 params:
   widths: !expr c(0.9, 0.75, 3, 3)
+  img1: !expr here::here("inst/esp_template/05_images/noaa_logo.png")
+  img2: !expr here::here("inst/esp_template/05_images/noaa_logo.png")
+  img3: !expr here::here("inst/esp_template/05_images/noaa_logo.png")
+  tbl_file: !expr here::here("inst/esp_template/06_docs/table_template.xlsx")
+  img_dir: !expr here::here("inst/esp_template/05_images")
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-here::i_am("inst/esp_template/06_docs/report card pg 1.qmd")
+# here::i_am("inst/esp_template/06_docs/report card pg 1.qmd")
+devtools::load_all()
 ``` 
+\backgroundsetup{
+  scale=1,
+  angle=0,
+  opacity=0,
+  contents={\includegraphics[width=\paperwidth,height=\paperheight]{bg_pg1.jpg}}
+ }
+\BgThispage
 
 \vspace{-2.5cm}
 
@@ -29,7 +42,7 @@ Black sea bass is an important Mid-Atlantic stock with high commercial value and
 :::: {layout="[ [0.4, 0.025, 0.575], [1], [0.575, 0.025, 0.4]] "}
 
 ::: {}
-![](../05_images/noaa_logo.png)
+![](`r params$img1`)
 :::
 
 ::: {}
@@ -91,61 +104,34 @@ According to the [Mid-Atlantic 2024 EAFM risk assessment update](https://static1
 :::
 
 ::: {}
-![](../05_images/noaa_logo.png)
-![](../05_images/noaa_logo.png)
+![](`r params$img2`)
+![](`r params$img3`)
 :::
 
 ::::
 
+\newpage
+
+\backgroundsetup{
+  contents={\includegraphics[width=\paperwidth,height=\paperheight]{bg_pg2.jpg}}
+  }
+\BgThispage
+<!-- not sure why this doesn't work -->
+
+\newgeometry{top=0.25in, left=0.25in, right=0.25in, bottom=0.25in}
+
 ```{r}
-data <- readxl::read_excel("table_template.xlsx") |>
+data <- readxl::read_excel(params$tbl_file) |>
   janitor::clean_names() |>
-  dplyr::mutate(figure =  paste0("../05_images/", time_series)) |>
+  dplyr::mutate(figure =  paste0(params$img_dir, "/", time_series)) |>
   dplyr::select(-time_series)
 ```
 
-
-```{r}
-small_dat <- data |>
-  dplyr::mutate(figure = NA) |>
-  dplyr::select(-c(w, h)) |>
-  dplyr::rename(time_series = figure)
-
-colnames(small_dat) <- colnames(small_dat) |>
-  stringr::str_replace_all("_", " ") |>
-  stringr::str_to_title()
-```
-
-```{r}
-flextable::set_flextable_defaults(font.size = 10)
-tbl <- flextable::flextable(small_dat) 
-tbl <- flextable::width(tbl, j = 1:4, 
-                        width = params$widths,
-                        unit = "in")
-tbl <- flextable::theme_box(tbl)
-```
-
-
-```{r}
-for(i in 1:nrow(small_dat)){
-  tbl <- flextable::compose(tbl,
-                          i = i,
-                          j = 4,
-                          value = flextable::as_paragraph(
-                            flextable::as_image(src = data$figure[i],
-                                                width = data$w[i],
-                                                height = data$h[i],
-                                                unit = "in",
-                                                guess_size = FALSE)))
-}
-
-tbl <- flextable::align(tbl, i = 1, j = 1:4, align = "center", part = "header")
-tbl <- flextable::align(tbl, i = 1:nrow(small_dat), j = 4, align = "center")
-```
-
 ::: {}
-\newgeometry{top=0.25in, left=0.25in, right=0.25in, bottom=0.25in}
-```{r} 
-tbl
+```{r}
+NEesp2::rpt_card_table(data)
 ```
+
+\centering
+Please contact [nefsc.esp.leads@noaa.gov](nefsc.esp.leads@noaa.gov) with any questions or comments.
 :::
