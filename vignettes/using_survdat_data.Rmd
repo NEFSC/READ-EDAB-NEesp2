@@ -21,7 +21,7 @@ For more information on accessing {survdat} data, see vignette "Accessing Bottom
 ### Load subset of {survdat} data
 
 ```{r}
-data <- load(here::here("data/survdat_subset.rda"))
+survdat_subset <- load(here::here("data/survdat_subset.rda"))
 ```
 
 ### Species Condition - Black sea bass
@@ -29,7 +29,7 @@ data <- load(here::here("data/survdat_subset.rda"))
 Uses 'species_condition' and 'plot_condition' functions in R/create_condition_indicator.R and R/plot_condition.R
 
 ```{r}
-condition <- species_condition(data = data, LWparams = LWparams, species.codes = species.codes) 
+condition <- species_condition(data = survdat_subset, LWparams = LWparams, species.codes = species.codes) 
 bsb_condition <- condition %>%
   subset(Species == 'Black sea bass')
 head(bsb_condition)
@@ -44,7 +44,7 @@ plot_condition(data = bsb_condition, var = 'Black sea bass')
 Uses 'species_range' function in R/create_bottomtrawl_indicators.R
 
 ```{r}
-range <- species_range(data = data, species = species)
+range <- species_range(data = survdat_subset, species = species)
 bsb_range <- range %>%
   subset(species == 'BLACK SEA BASS') %>%
   subset(SEASON == 'FALL') %>%
@@ -87,7 +87,7 @@ Modified from 'calc_swept_area' in {survdat} package.
 
 ```{r}
 bsb_swept_area <- create_swept_area(
-  surveyData = data,
+  surveyData = survdat_subset,
   areaPolygon = "NEFSC strata",
   areaDescription = "STRATA",
   filterByArea = "all",
@@ -126,7 +126,7 @@ Modified from 'calc_stratified_mean' in {survdat} package.
 
 ```{r}
 bsb_strat_mean <- create_stratified_mean(
-  surveyData = data,
+  surveyData = survdat_subset,
   areaPolygon = "NEFSC strata",
   areaDescription = "STRATA",
   filterByArea = "all",

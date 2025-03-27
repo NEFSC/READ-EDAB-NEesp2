@@ -6,13 +6,14 @@ species <- survdat::get_species(channel)
 
 ## create a subset of data to save in package for running vignette ----
 survdat_subset <- data$survdat |>
-  dplyr::filter(YEAR == 2024)
-usethis::use_data(survdat_subset) # this will create a data object in the data folder
+  dplyr::filter(SVSPP == '141')
+usethis::use_data(survdat_subset, overwrite = T) # this will create a data object in the data folder
 # documentation for the data needs to be added manually
 # everything in the data folder is loaded when you load the NEesp2 R package
 roxygen2::roxygenise()
 
 
+str(survdat_subset)
 ##species condition - BLACK SEA BASS## ----
 
 condition <- species_condition (data = data, LWparams = LWparams, species.codes = species.codes) 
