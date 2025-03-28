@@ -7,7 +7,9 @@ species <- survdat::get_species(channel)
 ## create a subset of data to save in package for running vignette ----
 survdat_subset <- data$survdat |>
   dplyr::filter(SVSPP == '141')
-usethis::use_data(survdat_subset, overwrite = T) # this will create a data object in the data folder
+usethis::use_data(survdat_subset, overwrite = T)
+usethis::use_data(species)
+# this will create a data object in the data folder
 # documentation for the data needs to be added manually
 # everything in the data folder is loaded when you load the NEesp2 R package
 roxygen2::roxygenise()
@@ -16,7 +18,7 @@ roxygen2::roxygenise()
 str(survdat_subset)
 ##species condition - BLACK SEA BASS## ----
 
-condition <- species_condition (data = data, LWparams = LWparams, species.codes = species.codes) 
+condition <- species_condition (data = survdat_subset, LWparams = LWparams, species.codes = species.codes) 
 bsb_condition <- condition %>%
   subset(Species == 'Black sea bass')
 head(bsb_condition)
@@ -25,7 +27,7 @@ plot_condition(data = condition, var = 'Black sea bass')
 
 ##species range - Black sea bass in Fall##
 
-range <- species_range(data = data, species = species)
+range <- species_range(data = survdat_subset, species = species)
 bsb_range <- range %>%
   subset(species == 'BLACK SEA BASS') %>%
   subset(SEASON == 'FALL') %>%
@@ -47,7 +49,6 @@ bsb_range %>%
                 y = "Range (degrees)") +
   ggplot2::facet_wrap('INDICATOR_NAME')
 
-
 ##diet##
 
 allfh <- get(load(here::here("data-raw/allfh.RData")))
@@ -59,7 +60,7 @@ head(diet)
 ##swept area biomass - black sea bass in fall##
 
 bsb_swept_area <- create_swept_area(
-  surveyData = data,
+  surveyData = survdat_subset,
   areaPolygon = "NEFSC strata",
   areaDescription = "STRATA",
   filterByArea = "all",
@@ -87,7 +88,7 @@ bsb_swept_area %>%
 ##stratified mean biomass in fall##
 
 bsb_strat_mean <- create_stratified_mean(
-  surveyData = data,
+  surveyData = survdat_subset,
   areaPolygon = "NEFSC strata",
   areaDescription = "STRATA",
   filterByArea = "all",
