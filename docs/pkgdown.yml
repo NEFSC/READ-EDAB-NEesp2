@@ -10,8 +10,9 @@ articles:
   rmarkdown-intro: rmarkdown-intro.html
   using_edab_utils: using_edab_utils.html
   using_mrip_data: using_mrip_data.html
+  using_survdat_data: using_survdat_data.html
   why-esp: why-esp.html
-last_built: 2025-03-19T14:17Z
+last_built: 2025-03-28T17:10Z
 urls:
   reference: https://nefsc.github.io/READ-EDAB-NEesp2/reference
   article: https://nefsc.github.io/READ-EDAB-NEesp2/articles
