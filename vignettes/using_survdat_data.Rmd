@@ -1,0 +1,158 @@
+---
+title: "Using {survdat} for Bottom Trawl Indicators"
+author: "Stephanie Owen"
+vignette: >
+  %\VignetteIndexEntry{Using survdat for Bottom Trawl Indicators}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+```
+
+## Bottom Trawl Indicators in NEESP2
+
+This package contains functions for producing bottom trawl indicators from {survdat} data pulls: swept area biomass, stratified mean biomass, species condition, diet, and range. This vignette provides example output data tables and plots using these functions. 
+
+For more information on accessing {survdat} data, see vignette "Accessing Bottom Trawl Survey Data".
+
+### Load subset of {survdat} data
+
+```{r}
+#NEesp2::survdat_subset
+#NEesp2::species
+```
+
+### Species Condition - Black sea bass
+
+Uses 'species_condition' and 'plot_condition' functions in R/create_condition_indicator.R and R/plot_condition.R
+
+```{r}
+condition <- species_condition(data = NEesp2::survdat_subset, LWparams = LWparams, species.codes = species.codes) 
+bsb_condition <- condition %>%
+  subset(Species == 'Black sea bass')
+head(bsb_condition)
+```
+
+```{r}
+plot_condition(data = bsb_condition, var = 'Black sea bass') 
+```
+
+### Species Range - Black sea bass in fall
+
+Uses 'species_range' function in R/create_bottomtrawl_indicators.R
+
+```{r}
+range <- species_range(data = NEesp2::survdat_subset, species = NEesp2::species)
+bsb_range <- range %>%
+  subset(species == 'BLACK SEA BASS') %>%
+  subset(SEASON == 'FALL') %>%
+  subset(indicator_name == c('range_lat','range_lon')) %>%
+  dplyr::rename(INDICATOR_NAME = indicator_name,
+                DATA_VALUE = indicator_value) 
+head(bsb_range)
+```
+
+```{r}
+bsb_range %>%
+  ggplot2::ggplot(ggplot2::aes(x = YEAR,
+                               y = DATA_VALUE,
+                               color = INDICATOR_NAME,
+  )) +
+  ggplot2::geom_point() +
+  ggplot2::geom_path() + 
+  ggplot2::theme_bw() +
+  ggplot2::labs(title = "Black Sea Bass Range in Fall (Lat + Lon)", 
+                x = "Year",
+                y = "Range (degrees)") +
+  ggplot2::facet_wrap('INDICATOR_NAME')
+```
+
+### Species diet table
+
+Uses 'diet' function in R/create_bottomtrawl_indicators.R
+
+```{r}
+allfh <- get(load(here::here("data-raw/allfh.RData")))
+diet <- diet(data = allfh)
+head(diet)
+```
+
+### Swept area biomass - Black sea bass in fall
+
+Uses 'create_swept_area' indicator in R/create_bottomtrawl_indicators.R 
+
+Modified from 'calc_swept_area' in {survdat} package.
+
+```{r}
+bsb_swept_area <- create_swept_area(
+  surveyData = NEesp2::survdat_subset,
+  areaPolygon = "NEFSC strata",
+  areaDescription = "STRATA",
+  filterByArea = "all",
+  filterBySeason = "FALL",
+  groupDescription = "SVSPP",
+  filterByGroup = "all",
+  mergesexFlag = T,
+  tidy = F,
+  q = NULL,
+  a = 0.0384
+) %>%
+  dplyr::filter(SVSPP == "141")
+
+head(bsb_swept_area)
+```
+
+```{r}
+bsb_swept_area %>%
+  ggplot2::ggplot(ggplot2::aes(x = Year,
+                               y = indicator_value,
+  )) +
+  ggplot2::geom_point() +
+  ggplot2::geom_path() + 
+  ggplot2::theme_bw() +
+  ggplot2::labs(title = "Black Sea Bass Swept Area Biomass (Fall)", 
+                x = "Year",
+                y = "Swept Area Biomass") 
+```
+
+
+### Stratified mean biomass - Black sea bass in fall
+
+Uses 'create_stratified_mean' indicator in R/create_bottomtrawl_indicators.R 
+
+Modified from 'calc_stratified_mean' in {survdat} package.
+
+```{r}
+bsb_strat_mean <- create_stratified_mean(
+  surveyData = survdat_subset,
+  areaPolygon = "NEFSC strata",
+  areaDescription = "STRATA",
+  filterByArea = "all",
+  filterBySeason = "FALL",
+  groupDescription = "SVSPP",
+  filterByGroup = "all",
+  mergesexFlag = T,
+  tidy = F,
+  returnPrepData = F
+) %>%
+  dplyr::filter(SVSPP == "141")
+
+head(bsb_strat_mean)
+```
+
+```{r}
+bsb_strat_mean %>%
+  ggplot2::ggplot(ggplot2::aes(x = Year,
+                               y = indicator_value,
+  )) +
+  ggplot2::geom_point() +
+  ggplot2::geom_path() + 
+  ggplot2::theme_bw() +
+  ggplot2::labs(title = "Black Sea Bass Stratified Mean Biomass (Fall)", 
+                x = "Year",
+                y = "Stratified Mean Biomass") 
+```
+

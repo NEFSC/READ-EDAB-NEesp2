@@ -1,0 +1,53 @@
+url: https://nefsc.github.io/READ-EDAB-NEesp2/
+
+news:
+  one_page: true
+
+authors:
+  Abigail Tyrell:
+    href: https://github.com/atyrell3
+  Stephanie Owen:
+    href: https://github.com/stephanie-owen
+    
+navbar:
+  left:
+    - text: "About ESP"
+      menu:
+      -  text: "Why ESP?"
+         href: articles/why-esp.html
+      -  text: "Indicator Sources for Northeast ESPs"
+         href: articles/indicator-sources.html
+      -  text: "Northeast ESP Links"
+         href: articles/esp-links.html
+    - text: "Vignettes"
+      menu:
+      -  text: "Install and Use Package"
+         href: articles/install-and-use-package.html
+      -  text: "General Workflow"
+         href: articles/general-workflow.html
+      -  text: "RMarkdown Intro"
+         href: articles/rmarkdown-intro.html
+      -  text: "Using EDAB-Utils R package"
+         href: articles/using_edab_utils.html
+      -  text: "Accessing Bottom Trawl Survey Data"
+         href: articles/accessing-survdat-data.html
+      -  text: "Using MRIP Data for Recreational Indicators"
+         href: articles/using_mrip_data.html
+      -  text: "Using {survdat} for Bottom Trawl Indicators"
+         href: articles/using_survdat_data.html
+    - text: "Functions"
+      href: reference/index.html
+    - text: "News"
+      href: news/index.html
+  right:
+    - icon: fas fa-paper-plane fa-lg
+      href: mailto:stephanie.owen@noaa.gov
+    - icon: fas fa-question-circle fa-lg
+      href: https://github.com/NEFSC/READ-EDAB-NEesp2/issues/
+    - icon: fab fa-github fa-lg
+      href: https://github.com/NEFSC/READ-EDAB-NEesp2
+    - icon: fa-fish
+      href: https://nmfs-general-modeling-tools.github.io/
+  
+template:
+  bootstrap: 5

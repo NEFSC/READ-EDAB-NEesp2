@@ -1,0 +1,17 @@
+^.github$
+^pkgdown$
+^Ricky$
+^docs$
+^images$
+^data-raw$
+^black-sea-bass$
+^LICENSE\.txt$
+README\.md$
+README\.Rmd$
+^\.Rproj\.user$
+^.*\.Rproj$
+^_pkgdown\.yml$
+^NEWS\.md$
+.RData
+
+^\.github$

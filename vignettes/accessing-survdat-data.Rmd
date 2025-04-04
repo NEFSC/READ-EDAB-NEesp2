@@ -1,0 +1,58 @@
+---
+title: "Accessing Bottom Trawl Survey Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Accessing Bottom Trawl Survey Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  eval = FALSE
+)
+```
+
+## NEFSC Bottom Trawl Survey Data in {survdat}
+
+The R package {survdat} allows you to pull and process NEFSC bottom trawl survey data. More information on the {survdat} package can be found here: https://noaa-edab.github.io/survdat/index.html
+
+Before using this package, you will need to submit a number of ITD tickets:
+- Install of Oracle Instant Client 
+- Creation of Oracle username and password. Also request access to NEFSCDB1 and NEFSC_USERS databases in this ticket. 
+- Install of {ROracle} package
+
+You must also be behind the NEFSC firewall (remote using VPN) for R to connect to Oracle databases. 
+
+## Installation
+
+To install {survdat} directly from Github:
+```{r}
+remotes::install_github("NOAA-EDAB/survdat",build_vignettes = TRUE)
+```
+
+The package {dbutils} must also be installed for R to connect to Oracle databases. More info on {dbutils} here: https://andybeet.github.io/dbutils/
+```{r}
+remotes::install_github("andybeet/dbutils")
+```
+
+To connect to Oracle databases and pull survdat data
+```{r}
+channel <- dbutils::connect_to_database("server name","your username")
+survdat::get_survdat_data(channel)
+```
+
+The function get_survdat_data() has parameters to include conversion factors (conversion.factor), species biological data (getBio), and length data (getLengths) which can be set = TRUE or FALSE.
+
+## POC for Troubleshooting
+
+Contact Andy Beet (andrew.beet@noaa.gov) for issues with {dbutils} and {survdat} package help and data pulls.
+
+If you do not have access to all the required tables in SVDBS to run {survdat} functions, the function 'get_survdat_data' will result in the following error:
+
+"Error in .oci.GetQuery(conn, statment, data = data, prefetch = prefetch,...) ORA-00942: table or view does not exist"
+
+If this occurs, contact Jakub Kircun with PEMAD (jakub.cirkun@noaa.gov) for SVDBS table access.

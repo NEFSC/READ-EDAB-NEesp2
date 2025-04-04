@@ -1,0 +1,32 @@
+---
+title: "Install and use package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Install and use package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  eval = FALSE
+)
+```
+
+## Install the `NEesp2` package
+
+Install the versioned package:
+```{r}
+remotes::install_github("READ-EDAB/NEesp2", ref = "v0.1.0")
+```
+
+Or install the most recent development package:
+```{r}
+remotes::install_github("READ-EDAB/NEesp2", ref = "main")
+```
+
+
+

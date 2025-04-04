@@ -1,0 +1,62 @@
+---
+title: "Why ESP?"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Why ESP?}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Ecosystem Based Management
+
+The development and implementation of [Ecosystem Based Management](https://ecosystems.noaa.gov/Home.aspx) (EBM) is one of NOAA's operating priorities.
+
+## Integrated Ecosystem Assessment
+
+[Integrated Ecosystem Assessment](https://www.integratedecosystemassessment.noaa.gov/) (IEA) seeks to improve understanding and management of fisheries through incorporating natural, social, and economic data into fisheries analyses and management plans. Ecosystem and Socioeconomic Profiles (ESPs) are a structured framework to facilitate the inclusion of ecosystem and socioeconomic data in the stock advice process. Generally, ESPs consist of three components: 
+1. Stock metrics: information about the stock
+2. Ecosystem and socioeconomic indicators: relevant information about the ecosystem and human dimensions
+3. Analysis: Correlation and other modeling of relationships between stock metrics and ecosystem and socioeconomic indicators; summaries of current conditions and determination as to qualitative "favorability" for the stock.
+Within this general framework, ESPs have a flexible structure that allows for both quantitative and qualitative data and a variety of tailored analyses depending on the stock details. This flexibility makes ESPs a practicable method for implementing Ecosystem Based Fisheries Management in the Northeast. 
+
+## Operationalizing the SOE reports
+
+The State of the Ecosystem (SOE) reports have been positively received by both the Northeast and Mid Atlantic Fisheries Management Councils. However, the SOEs are general reports and do not easily translate into management advice for most stocks. 
+
+### Ecosystem data on the stock scale
+
+ESPs re-calculate SOE data on the stock scale, which allows for the exploration of stock-relevant ecosystem and socioeconomic trends. 
+
+## Open data science
+
+We are approaching ESP development through the lens of open data science. This means that our process is oriented around open access to data and transparent methods.
+
+## Towards a reproducable workflow
+
+While open source code is certainly a necessary component of a reproducible workflow, code without documentation is a dangerous thing. Although all `NEesp2` functions and data have some level of documentation, function-level documentation obscures the forest for the trees, and the overall goals and purpose of the `NEesp2` package are hard to identify based on the package documentation alone. Therefore, this vignette outlines the high-level organization and functionality of the `NEesp2` package with the goal of facilitating use of the package, as well as facilitating future updates and changes. 
+
+## Components of an ESP
+
+The ESP concept was developed by the Alaska Fisheries Science Center. For detailed information, we refer the reader to Kalei Shotwell's [excellent presentation](https://www.youtube.com/watch?v=kYi1SAI-Xtk) about the Alaska Fisheries Science Center's Ecosystem and Socioeconomic Profiles (ESPs).
+
+For the purposes of applying the ESP concept to the Northeast, we identified four major information components to an ESP:
+
+1. **Status of the stock**: A compilation of relevant ecosystem and socioeconomic information to give a snapshot of the stock's current condition. This can include qualitative as well as quantitative information. The Alaska ESP calls this *metrics assessment*.
+
+2. **Conceptual modeling**: The conceptual model identifies key linkages and bottlenecks that affect the stock and/or fishery. This step identifies what data can give the most informative knowledge about the stock. This is part of the Alaska ESP's *indicator assessment: indicator suite*.
+
+3. **Analysis**: This step can involve multiple analyses of varying complexity. The Alaska ESP calls this analysis step *indicator assessment: indicator monitoring analysis*, and they identify three levels of analysis:
+    - Level 1: At a minimum, an analysis determines the recent trends in the relevant ecosystem and socioeconomic data identified by the conceptual model. 
+    - Level 2: Further analysis identifies linkages between ecosystem and socioeconomic data and stock performance. 
+    - Level 3: Ecosystem and socioeconomic data are incorporated into a stock assessment model.
+
+4. **Summary**: Because the goal of an ESP is to inform stock advice, the results must be communicated clearly and succinctly. This involves a written summary of key points and implications, as well as summary visualizations.
+
+
