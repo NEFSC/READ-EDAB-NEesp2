@@ -24,8 +24,8 @@ plot_risk <- function(risk_elements = tibble::tibble(stock = c(1, 5, 2, 0),
   
   data$level = factor(data$level, levels = rev(c("Low", "Lowmod", "Modhigh", "High")))
 
-  # plt <-
-    data |>
+  plt <-
+     data |>
     ggplot2::ggplot(ggplot2::aes(x = xlab,
                                 y = percent,
                                 # color = level, 
@@ -33,6 +33,8 @@ plot_risk <- function(risk_elements = tibble::tibble(stock = c(1, 5, 2, 0),
     ggplot2::geom_col() +
       ggplot2::geom_text(ggplot2::aes(y = pos - 0.05,
                                        label = lab)) +
+    ggplot2::geom_text(ggplot2::aes(y = -0.05,
+                                    label = xlab)) +
       ggplot2::theme_classic() +
       ggplot2::ylab("Percent of Risk Elements") +
       ggplot2::scale_y_continuous(labels = scales::label_percent()) +
@@ -42,7 +44,8 @@ plot_risk <- function(risk_elements = tibble::tibble(stock = c(1, 5, 2, 0),
                      axis.line = ggplot2::element_blank(),
                      axis.ticks = ggplot2::element_blank(),
                      panel.grid.major.y = ggplot2::element_line(color = "gray"),
-                     axis.text = ggplot2::element_text(color = "black"))
+                     axis.text.y = ggplot2::element_text(color = "black"),
+                     axis.text.x = ggplot2::element_blank())
   
   return(plt)
 }
