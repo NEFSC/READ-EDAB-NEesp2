@@ -49,5 +49,25 @@ navbar:
     - icon: fa-fish
       href: https://nmfs-general-modeling-tools.github.io/
   
+reference:
+  - title: NEesp2 Functions
+    desc: Functions to create Northeast ESPS
+      
+  - title: Create indicators
+    contents:
+    - c(starts_with("create"), matches("species"))
+  - title: Data visualization
+  - subtitle: Plot indicators
+    contents:
+    - c(matches("plot"), matches("plt"))
+  - subtitle: Create tables
+    contents:
+    - matches("table")
+    
+  - title: Other functions
+    contents:
+    - -c(starts_with("create"), matches("species"), matches("plot"), matches("plt"), matches("table"))
+      
+  
 template:
   bootstrap: 5
