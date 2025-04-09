@@ -4,10 +4,12 @@
 \alias{plt_indicator}
 \title{Plot indicator time series}
 \usage{
-plt_indicator(data)
+plt_indicator(data, ar = 1/4)
 }
 \arguments{
 \item{data}{A data frame with columns of YEAR, INDICATOR_NAME, and DATA_VALUE}
+
+\item{ar}{Aspect Ratio for the resulting plot}
 }
 \value{
 A ggplot

@@ -3,6 +3,8 @@
 #' @param data A data frame of species condition from 'species_condition' function
 #' @param var species of interest to plot
 #' @return A ggplot
+#' 
+#' @export
 
 plot_condition <- function(data, 
                            var,
