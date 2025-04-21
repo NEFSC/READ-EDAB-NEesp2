@@ -4,7 +4,7 @@
 \alias{plt_indicator}
 \title{Plot indicator time series}
 \usage{
-plt_indicator(data, ar = 1/4)
+plt_indicator(data, ar = 1/4, include_trends = TRUE)
 }
 \arguments{
 \item{data}{A data frame with columns of YEAR, INDICATOR_NAME, and DATA_VALUE}
