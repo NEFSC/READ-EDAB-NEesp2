@@ -10,7 +10,8 @@
 #' @export
 #' 
 plt_indicator <- function(data,
-                          ar = 1/4) {
+                          ar = 1/4,
+                          include_trends = TRUE) {
   plt <- data |>
     dplyr::group_by(INDICATOR_NAME) |>
     dplyr::mutate(mean = mean(DATA_VALUE, na.rm = TRUE),
@@ -39,14 +40,24 @@ plt_indicator <- function(data,
     ggplot2::geom_point() +
     ggplot2::geom_path() +
     ggplot2::scale_y_continuous(labels = scales::comma) +
+    # ecodata::theme_ts() +
     ggplot2::theme_classic(base_size = 16) +
     ggplot2::theme(strip.text = ggplot2::element_text(size = 16),
                    axis.title = ggplot2::element_blank(),
                    aspect.ratio = ar,
                    plot.background = ggplot2::element_rect(fill='transparent'))
   
+  if(include_trends) {
+    plt <- plt +
+      ecodata::geom_gls() +
+      ecodata::geom_lm()
+  }
+  
   return(plt)
 }
+
+# dat <- read.csv(here::here("../bsb/data/bsb_rec_catch.csv"))
+# plt_indicator(dat)
 
 # png(here::here("inst/esp_template/05_images/test.png"),
 #     bg = "transparent",
@@ -56,3 +67,26 @@ plt_indicator <- function(data,
 #     res = 72)
 # plt_indicator(dat)
 # dev.off()
+  
+  # get_esp_data <- function(stock = NULL) {
+  #   base_url <- "https://apex.psmfc.org/akfin/data_marts/akmp/esp_indicators?"
+  #   
+  #   url <- ifelse(is.null(stock),
+  #                 base_url,
+  #                 paste0(base_url,
+  #                        "intended_esp=",
+  #                        stock %>%
+  #                          stringr::str_replace_all(" ", "%20")))
+  #   
+  #   data <- httr::content(httr::GET(url),
+  #                         type = "application/json"
+  #   ) %>%
+  #     dplyr::bind_rows()
+  #   
+  #   # temporary fix that should be updated???
+  #   data <- data %>%
+  #     dplyr::rename(DATA_VALUE = INDICATOR_VALUE)
+  #   
+  #   return(data)
+  # }
+

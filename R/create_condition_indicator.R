@@ -57,31 +57,53 @@ species_condition <- function(data,
   LWfall <- LWparams %>% dplyr::filter(SEASON == 'FALL')
   
   #By Species: Parse Combined gender L-Ws by sex if no sex-specific parameters available. Otherwise assign SEX codes:
-  LWfall_orig <- LWfall
-  LWfall <- LWfall[-c(1:nrow(LWfall)),]
-  speciesList <- unique(LWfall_orig$SpeciesName)
-  numSpecies <- length(speciesList)
-  for (spp in 1:numSpecies) {
-    sppTibble <- dplyr::filter(LWfall_orig,SpeciesName == speciesList[spp])
-    if (nrow(sppTibble) == 1) {
-      LWfall <- rbind(LWfall,sppTibble)
-      newRow <- sppTibble[1,]
-      newRow$Gender <- "Male"
-      LWfall <- rbind(LWfall,newRow)
-      newRow <- sppTibble[1,]
-      newRow$Gender <- "Female"
-      LWfall <- rbind(LWfall,newRow)
-    } else if (nrow(sppTibble) == 3) {
-      LWfall <- rbind(LWfall,sppTibble)
-    }
-  }
+  # LWfall_orig <- LWfall
+  # LWfall <- LWfall[-c(1:nrow(LWfall)),] # this creates an empty tibble
+  # speciesList <- unique(LWfall_orig$SpeciesName)
+  # numSpecies <- length(speciesList)
+  # for (spp in 1:numSpecies) {
+  #   sppTibble <- dplyr::filter(LWfall_orig,SpeciesName == speciesList[spp])
+  #   
+  #   if (nrow(sppTibble) == 1) {
+  #     # add "male" and "female" rows if the gender is marked as "combined" or "unsexed"
+  #     LWfall <- rbind(LWfall,sppTibble)
+  #     newRow <- sppTibble[1,]
+  #     newRow$Gender <- "Male"
+  #     LWfall <- rbind(LWfall,newRow)
+  #     newRow <- sppTibble[1,]
+  #     newRow$Gender <- "Female"
+  #     LWfall <- rbind(LWfall,newRow)
+  #   
+  #     } else if (nrow(sppTibble) == 3) {
+  #     LWfall <- rbind(LWfall,sppTibble)
+  #   }
+  # }
   
-  #Add SEX for Combined gender back into Wigley at all data (loses 4 Gender==Unsexed):
-  LWpar_sexed <- LWfall %>% 
-    dplyr::mutate(sex = dplyr::if_else(Gender == 'Combined', as.character(0),
-                                       dplyr::if_else(Gender == 'Unsexed', as.character(0),
-                                                      dplyr::if_else(Gender == 'Male', as.character(1),
-                                                                     dplyr::if_else(Gender == 'Female', as.character(2),'NA')))))
+  add_sexes <- LWfall_orig |>
+    dplyr::group_by(SpeciesName) |>
+    dplyr::mutate(count = dplyr::n()) |>
+    dplyr::filter(count == 1) |>
+    dplyr::select(-Gender) |>
+    dplyr::full_join(tibble::tibble(count = 1,
+                                    Gender = c("Male", "Female"))) |>
+    dplyr::select(-count)
+  
+  new_dat <- dplyr::bind_rows(LWfall_orig, add_sexes) |>
+    dplyr::arrange(SpeciesName)
+  
+  
+   #Add SEX for Combined gender back into Wigley at all data (loses 4 Gender==Unsexed):
+  # LWpar_sexed <- LWfall %>% 
+  #   dplyr::mutate(sex = dplyr::if_else(Gender == 'Combined', as.character(0),
+  #                                      dplyr::if_else(Gender == 'Unsexed', as.character(0),
+  #                                                     dplyr::if_else(Gender == 'Male', as.character(1),
+  #                                                                    dplyr::if_else(Gender == 'Female', as.character(2),'NA')))))
+  
+  LWpar_sexed <- new_dat |>
+    dplyr::mutate(sex = dplyr::case_when(Gender == "Combined" | Gender == "Unsexed" ~ as.character(0),
+                                         Gender == "Male" ~ as.character(1),
+                                         Gender == "Female" ~ as.character(2),
+                                         TRUE ~ NA))
   
   #Duplicate Combined for sex=0 and sex=4 (Trans) for BSB:
   LWpar_BSB <- LWpar_sexed %>% 
@@ -98,33 +120,45 @@ species_condition <- function(data,
   mergedata <- dplyr::left_join(fall, LWpar_spp, by= c('SEASON', 'SVSPP', 'sex'))
   
   #filters out values without losing rows with NAs:
-  mergewt <- dplyr::filter(mergedata, is.na(INDWT) | INDWT<900)
-  mergewtno0 <- dplyr::filter(mergewt, is.na(INDWT) | INDWT>0.004)
-  mergelenno0 <- dplyr::filter(mergewtno0, is.na(LENGTH) | LENGTH>0)
-  mergelen <- dplyr::filter(mergelenno0, !is.na(LENGTH))
-  mergeindwt <- dplyr::filter(mergelen, !is.na(INDWT))
-  mergeLW <- dplyr::filter(mergeindwt, !is.na(lna))
+  # mergewt <- dplyr::filter(mergedata, is.na(INDWT) | INDWT<900)
+  # mergewtno0 <- dplyr::filter(mergewt, is.na(INDWT) | INDWT>0.004)
+  # mergelenno0 <- dplyr::filter(mergewtno0, is.na(LENGTH) | LENGTH>0)
+  # mergelen <- dplyr::filter(mergelenno0, !is.na(LENGTH))
+  # mergeindwt <- dplyr::filter(mergelen, !is.na(INDWT))
+  # mergeLW <- dplyr::filter(mergeindwt, !is.na(lna))
+  
+  mergeLW2 <- mergedata |>
+    dplyr::filter(!is.na(LENGTH),
+                  !is.na(INDWT),
+                  !is.na(lna),
+                  INDWT < 900 | INDWT > 0.004,
+                  LENGTH > 0)
   
   ###########################################
   ### Calculate species condition ###
   
-  condcalc <- dplyr::mutate(mergeLW, 
-                            predwt = (exp(lna))*LENGTH^b,
-                            RelCond = INDWT/predwt)
+  condcalc <- mergeLW |>
+    dplyr::mutate(predwt = (exp(lna))*LENGTH^b,
+                  RelCond = INDWT/predwt)
   
-  cond.epu <- dplyr::filter(condcalc, is.na(RelCond) | RelCond<300)
+  # not sure what the purpose of this is? why would RelCond be >300??
+  cond.epu <- condcalc |>
+    dplyr::filter(is.na(RelCond) | RelCond<300)
   
   #calculate single standard deviation and mean of relative condition for each species and sex:
-  condstdev <- dplyr::group_by(cond.epu, SVSPP, SEX) %>% 
+  condstdev <- cond.epu |>
+    dplyr::group_by(SVSPP, SEX) %>% 
     dplyr:: summarize(mean = mean(RelCond), sd = sd(RelCond))
   
   #Remove relative conditions that are outside of 1 standard deviation
+  # this code is actually removing points that are outside 2SD
+  # are we sure we want to remove outliers?
   condsd <- dplyr::left_join(cond.epu, condstdev, by=c('SVSPP', 'SEX'))
   dplyr::ungroup(condsd)
   cond.sd <- dplyr::filter(condsd, RelCond < (mean+(2*sd)) & RelCond > (mean-(2*sd)))
   
   #Only including condition that is within 1 standard deviation of mean for each species:
-  cond.epu <- cond.sd %>% dplyr::filter(is.na(sex) | sex != 4)
+  cond.epu <- cond.sd %>% dplyr::filter(is.na(sex) | sex != 4) # filters out BSB intersex fish
   cond.epu <- cond.epu %>% dplyr::mutate(sexMF = sex)
   
   #Read in df of SVSPP codes + Species names and join by Species
