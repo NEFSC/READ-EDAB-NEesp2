@@ -55,7 +55,8 @@ create_total_rec_catch <- function(data,
     dplyr::summarise(DATA_VALUE = sum(tot_cat, na.rm = TRUE)) %>%
     dplyr::mutate(CATEGORY = "Recreational",
                   INDICATOR_TYPE = "Socioeconomic",
-                  INDICATOR_NAME = "total_recreational_catch_n") %>%
+                  INDICATOR_NAME = "total_recreational_catch_n",
+                  INDICATOR_UNITS = lbs) %>%
     # dplyr::rename(YEAR = Year,
     #               STATE = State) %>% #remove STATE = State if wanting all states summed
     dplyr::ungroup()## %>%
@@ -109,7 +110,8 @@ create_rec_trips <- function(files,
     dplyr::summarise(DATA_VALUE = sum(DIRECTED_TRIPS, na.rm = TRUE)) %>%
     dplyr::mutate(CATEGORY = "Recreational",
                   INDICATOR_TYPE = "Socioeconomic",
-                  INDICATOR_NAME = "rec_trips")
+                  INDICATOR_NAME = "rec_trips",
+                  INDICATOR_UNITS = n)
   
   if(return) return(rec_trips)
   
@@ -159,7 +161,8 @@ create_prop_sp_trips <- function(total_trips,
                                     sp,
                                     by = c("YEAR")) %>%
     dplyr::mutate(DATA_VALUE = DATA_VALUE/total_trips,
-                  INDICATOR_NAME = "proportion_sp_trips") %>%
+                  INDICATOR_NAME = "proportion_sp_trips",
+                  INDICATOR_UNITS = "%") %>%
     dplyr::select(-total_trips) |>
   # comment out the following lines if wanting all states summed
   dplyr::ungroup() #%>%
@@ -205,7 +208,8 @@ create_total_rec_landings <- function(data,
     dplyr::summarise(DATA_VALUE = sum(lbs_ab1, na.rm = TRUE)) %>%
     dplyr::mutate(CATEGORY = "Recreational",
                   INDICATOR_TYPE = "Socioeconomic",
-                  INDICATOR_NAME = "total_recreational_landings_lbs") %>%
+                  INDICATOR_NAME = "total_recreational_landings_lbs",
+                  INDICATOR_UNITS = lbs) %>%
     # dplyr::rename(YEAR = Year,
     #               STATE = State) %>% #remove STATE = State here if want all states summed
     dplyr::ungroup() %>%
