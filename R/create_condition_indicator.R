@@ -134,11 +134,15 @@ species_condition_orig <- function(data, LWparams, species.codes) {
   cond_ecodata <- condNSppEPU %>% dplyr::rename(Time = YEAR, Var = Species)
   rel_condition <- cond_ecodata %>% dplyr::select(Var, EPU, Time, MeanCond, nCond)
   
-  #Add variance and sd
+  #Add variance and sd, rename columns
   condition <- rel_condition %>%
-    dplyr::rename(Species = Var) %>%
-    dplyr::mutate(sd = sd(MeanCond, na.rm = TRUE),
-                  variance = var(MeanCond, na.rm = TRUE))
+    dplyr::rename(SPECIES = Var,
+                  YEAR = Time,
+                  DATA_VALUE = MeanCond,
+                  n = nCond) %>%
+    dplyr::mutate(sd = sd(DATA_VALUE, na.rm = TRUE),
+                  variance = var(DATA_VALUE, na.rm = TRUE),
+                  INDICATOR_NAME = "species condition")
   
   return(condition)
 }

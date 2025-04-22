@@ -68,16 +68,22 @@ all_species <- join %>%
   dplyr::ungroup()
 
 ##join all_tows and all_species
-range <- rbind(all_tows, all_species)
+range <- rbind(all_tows, all_species) 
+
+range <- range %>%
+  dplyr::rename(INDICATOR_NAME = indicator_name,
+                DATA_VALUE = indicator_value,
+                SPECIES = species) %>%
+  dplyr::mutate(INDICATOR_UNITS = "degrees")
 
 
 
 #####################function###############
 
-species_range <- function(surveyData, species) {
+species_range <- function(data, species) {
 
   #filter surveyData to year, season, lat, lon, and species code  
-    survdat_data <- surveyData$survdat %>%
+    survdat_data <- data$survdat %>%
       dplyr::select(SVSPP, YEAR, SEASON, LAT, LON)
 
   #get species names, filter to species code, scientific + common name
@@ -122,8 +128,12 @@ species_range <- function(surveyData, species) {
       dplyr::ungroup()
     
     ##join all_tows and all_species
-      rbind(all_tows, all_species)
+      range <- rbind(all_tows, all_species) %>%
+        dplyr::rename(INDICATOR_NAME = indicator_name,
+                      DATA_VALUE = indicator_value,
+                      SPECIES = species) %>%
+        dplyr::mutate(INDICATOR_UNITS = "degrees")
     }
 
-range_test <- species_range(surveyData, species)
+range_test <- species_range(data = data, species)
 

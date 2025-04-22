@@ -15,12 +15,12 @@ create_swept_area <- function(...) {
     dplyr::select(YEAR, SVSPP, tot.biomass, tot.bio.var, tot.bio.SE) %>%
     dplyr::rename(swept_area_biomass = tot.biomass, 
                   variance = tot.bio.var,
-                  se = tot.bio.SE,
-                  Year = YEAR) %>%
-    dplyr::mutate(sd = sd(swept_area_biomass, na.rm = TRUE)) %>%
+                  se = tot.bio.SE) %>%
+    dplyr::mutate(sd = sd(swept_area_biomass, na.rm = TRUE),
+                  INDICATOR_UNITS = "numberstow-1") %>%
     tidyr::pivot_longer(cols = c("swept_area_biomass")) %>%
-    dplyr::rename(indicator_name = name,
-                  indicator_value = value)
+    dplyr::rename(INDICATOR_NAME = name,
+                  DATA_VALUE = value)
   
   return(swept_area)
 }
@@ -41,12 +41,12 @@ create_stratified_mean <- function(...) {
     dplyr::select(YEAR, SEASON, SVSPP, strat.biomass, biomass.var, biomass.SE) %>%
     dplyr::rename(strat_mean_biomass = strat.biomass, 
                   variance = biomass.var, 
-                  se = biomass.SE,
-                  Year = YEAR) %>%
-    dplyr::mutate(sd = sd(strat_mean_biomass, na.rm = TRUE)) %>%
+                  se = biomass.SE) %>%
+    dplyr::mutate(sd = sd(strat_mean_biomass, na.rm = TRUE),
+                  INDICATOR_UNITS = "kgtow-1") %>%
     tidyr::pivot_longer(cols = c("strat_mean_biomass")) %>%
-    dplyr::rename(indicator_name = name,
-                  indicator_value = value)
+    dplyr::rename(INDICATOR_NAME = name,
+                  DATA_VALUE = value)
   
   
   return(strat_mean)
@@ -140,8 +140,9 @@ diet <- function(data) {
 
 species_range <- function(data, species) {
   
+  
   #filter surveyData to year, season, lat, lon, and species code  
-  survdat_data <- data %>%
+  survdat_data <- data$survdat %>%
     dplyr::select(SVSPP, YEAR, SEASON, LAT, LON)
   
   #get species names, filter to species code, scientific + common name
@@ -163,10 +164,12 @@ species_range <- function(data, species) {
     tidyr::pivot_longer(cols = c("min_lat", "max_lat", "min_lon", "max_lon")) %>% 
     dplyr::rename(indicator_name = name,
                   indicator_value = value) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(species = "ALL",
-                  SVSPP = 0)
-
+    dplyr::ungroup() 
+  
+  all_tows$species <- "ALL" 
+  all_tows$SVSPP <- 0
+  
+  
   ##min/max/range grouped by species and species code
   all_species <- join %>%
     dplyr::group_by(YEAR, SEASON, SVSPP, COMNAME) %>%
@@ -184,7 +187,11 @@ species_range <- function(data, species) {
     dplyr::ungroup()
   
   ##join all_tows and all_species
-  output <- rbind(all_tows, all_species)
-  return(output)
+  range <- rbind(all_tows, all_species) %>%
+    dplyr::rename(INDICATOR_NAME = indicator_name,
+                  DATA_VALUE = indicator_value,
+                  SPECIES = species) %>%
+    dplyr::mutate(INDICATOR_UNITS = "degrees")
+  return(range)
 } 
   
