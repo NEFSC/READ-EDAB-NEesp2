@@ -6,7 +6,8 @@
 #' @return A flextable
 #' @export
 
-rpt_card_table <- function(data) {
+rpt_card_table <- function(data,
+                           widths) {
   
   if(sum(!colnames(data) %in% c("figure", "w", "h", "indicator_units", "status_in_2024", "implications")) != 0) {
     stop("Your input data is missing columns or has incorrect column names")
@@ -24,7 +25,7 @@ rpt_card_table <- function(data) {
   flextable::set_flextable_defaults(font.size = 10)
   tbl <- flextable::flextable(small_dat) 
   tbl <- flextable::width(tbl, j = 1:4, 
-                          width = params$widths,
+                          width = widths,
                           unit = "in")
   tbl <- flextable::theme_box(tbl)
   
@@ -44,4 +45,28 @@ rpt_card_table <- function(data) {
   tbl <- flextable::align(tbl, i = 1:nrow(small_dat), j = 4, align = "center")
   
   return(tbl)
+}
+
+#' Format data from report card spreadsheet 
+#'
+#' This function formats the data to prep for flextable creation.
+#'
+#' @param file the file path
+#' @param term_year the terminal year to use in the table header
+#' @param dir the directory where the time series images are saved
+#' @return A tibble
+#' @export
+
+
+format_tbl_data <- function(file,
+                            term_year,
+                            dir) {
+  output <- readxl::read_excel(params$tbl_file) |>
+    janitor::clean_names() |>
+    dplyr::mutate(figure =  paste0(params$img_dir, "/", time_series)) |>
+    dplyr::rename_with(.fn = ~paste(.x, "in", params$terminal_year, sep = "_"),
+                       .cols = "status") |>
+    dplyr::select(-time_series)
+  
+  return(output)
 }

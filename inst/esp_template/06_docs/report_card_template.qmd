@@ -130,17 +130,22 @@ According to the [Mid-Atlantic `r params$terminal_year` EAFM risk assessment upd
 \newgeometry{top=0.25in, left=0.25in, right=0.25in, bottom=0.25in}
 
 ```{r}
-data <- readxl::read_excel(params$tbl_file) |>
-  janitor::clean_names() |>
-  dplyr::mutate(figure =  paste0(params$img_dir, "/", time_series)) |>
-  dplyr::rename_with(.fn = ~paste(.x, "in", params$terminal_year, sep = "_"),
-                .cols = "status") |>
-  dplyr::select(-time_series)
+# data <- readxl::read_excel(params$tbl_file) |>
+#   janitor::clean_names() |>
+#   dplyr::mutate(figure =  paste0(params$img_dir, "/", time_series)) |>
+#   dplyr::rename_with(.fn = ~paste(.x, "in", params$terminal_year, sep = "_"),
+#                 .cols = "status") |>
+#   dplyr::select(-time_series)
+
+data <- NEesp2::format_tbl_data(file = params$tbl_file,
+                            term_year = params$terminal_year,
+                            dir = params$img_dir)
 ```
 
 ::: {}
 ```{r}
-NEesp2::rpt_card_table(data)
+NEesp2::rpt_card_table(data,
+                       widths = params$widths)
 ```
 
 \centering
