@@ -17,11 +17,13 @@
 create_coldpool_index <- function(data){
   coldpool_index <- data |>
     dplyr::filter(Var == 'cold_pool_index') %>%
-    dplyr::rename(Year = Time)
+    dplyr::rename(YEAR = Time,
+                  DATA_VALUE = Value,
+                  INDICATOR_NAME = Var) %>%
+    subset(select = -c(source))
   
   return(coldpool_index)
 }
-
 
 #' Create Cold Pool Extent
 #'
@@ -40,7 +42,10 @@ create_coldpool_index <- function(data){
 create_coldpool_extent <- function(data){
   coldpool_extent <- data |>
     dplyr::filter(Var == 'extent_index') %>%
-    dplyr::rename(Year = Time)
+    dplyr::rename(YEAR = Time,
+                  DATA_VALUE = Value,
+                  INDICATOR_NAME = Var) %>%
+    subset(select = -c(source))
   
   return(coldpool_extent)
 }
@@ -62,7 +67,10 @@ create_coldpool_extent <- function(data){
 create_coldpool_persistence <- function(data){
   coldpool_persistence <- data |>
     dplyr::filter(Var == 'persistence_index') %>%
-    dplyr::rename(Year = Time)
+    dplyr::rename(YEAR = Time,
+                  DATA_VALUE = Value,
+                  INDICATOR_NAME = Var) %>%
+    subset(select = -c(source))
   
   return(coldpool_persistence)
 }
@@ -83,7 +91,11 @@ create_coldpool_persistence <- function(data){
 
 create_gsi <- function(data){
   gsi <- data |>
-    tidyr::separate(Time, c("Year", "Month"), sep = "\\.")
+    tidyr::separate(Time, c("Year", "Month"), sep = "\\.") %>%
+    dplyr::rename(YEAR = Year,
+                  MONTH = Month,
+                  INDICATOR_NAME = Var,
+                  DATA_VALUE = Value)
   
   return(gsi)
 }
@@ -102,7 +114,10 @@ create_gsi <- function(data){
 
 create_wcr <- function(data){
   wcr <- data |>
-    dplyr::rename(Year = Time)
+    dplyr::rename(YEAR = Time,
+                  INDICATOR_NAME = Var,
+                  DATA_VALUE = Value,
+                  INDICATOR_UNITS = Units)
   
   return(wcr)
 }
