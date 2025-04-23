@@ -142,6 +142,10 @@ Catch</p>
 <code class="sourceCode R"><span><span class="va">total_rec_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">mrip_catch</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">total_rec_catch</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in loadNamespace(x) : there is no package called 'arfit'</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Computation failed in `stat_lm()`.</span></span>
+<span><span class="co">## Caused by error in `linear_ar1$pValue`:</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> $ operator is invalid for atomic vectors</span></span></code></pre>
 <p><img src="using_mrip_data_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -152,10 +156,14 @@ Catch</p>
 Atlantic Coast by State, Black Sea Bass, all modes and areas, Harvest (A
 + B1), choose # of fish/weight (lbs), mean length and weight</p>
 <p>Download csv as output</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_rec_landings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_landings.html">create_total_rec_landings</a></span><span class="op">(</span><span class="va">mrip_landing</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">total_rec_landings</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in loadNamespace(x) : there is no package called 'arfit'</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Computation failed in `stat_lm()`.</span></span>
+<span><span class="co">## Caused by error in `linear_ar1$pValue`:</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> $ operator is invalid for atomic vectors</span></span></code></pre>
 <p><img src="using_mrip_data_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -165,10 +173,14 @@ Atlantic Coast by State, Black Sea Bass, all modes and areas, Harvest (A
 <p>Choose year of interest, summarize by Annual, Calendar Year, Atlantic
 coast by state, Black Sea Bass, all modes and areas, Primary Target</p>
 <p>Download csv as output</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rec_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_rec_trips.html">create_rec_trips</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">files</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">rec_trips</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in loadNamespace(x) : there is no package called 'arfit'</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Computation failed in `stat_lm()`.</span></span>
+<span><span class="co">## Caused by error in `linear_ar1$pValue`:</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> $ operator is invalid for atomic vectors</span></span></code></pre>
 <p><img src="using_mrip_data_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -180,11 +192,15 @@ dataset.</p>
 <p>Choose years of interest, summarize by Annual, Calendar Year,
 Atlantic Coast by State, all modes and areas</p>
 <p>Download csv as output</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prop_sp_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_prop_sp_trips.html">create_prop_sp_trips</a></span><span class="op">(</span>total_trips <span class="op">=</span> <span class="va">mrip_effort</span>, </span>
 <span>                                      species_trips <span class="op">=</span> <span class="va">rec_trips</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">prop_sp_trips</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in loadNamespace(x) : there is no package called 'arfit'</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Computation failed in `stat_lm()`.</span></span>
+<span><span class="co">## Caused by error in `linear_ar1$pValue`:</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> $ operator is invalid for atomic vectors</span></span></code></pre>
 <p><img src="using_mrip_data_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 </div>

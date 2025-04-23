@@ -65,7 +65,7 @@ species_range <- function(data, species) {
   
   
   #filter surveyData to year, season, lat, lon, and species code  
-  survdat_data <- data$survdat %>%
+  survdat_data <- data %>%
     dplyr::select(SVSPP, YEAR, SEASON, LAT, LON)
   
   #get species names, filter to species code, scientific + common name

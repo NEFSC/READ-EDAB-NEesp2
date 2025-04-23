@@ -10,13 +10,13 @@ plot_condition <- function(data,
                            var,
                            return = TRUE){
   condition <- data |>
-    dplyr::select(Time,
-                  Var = Species,
+    dplyr::select(YEAR,
+                  Species,
                   EPU,
-                  Value = MeanCond,
+                  DATA_VALUE,
                   nCond) |>
-    dplyr::group_by(Var) |>
-    dplyr::mutate(scaleCond = scale(Value,scale =T,center=T))
+    dplyr::group_by(Species) |>
+    dplyr::mutate(scaleCond = scale(DATA_VALUE,scale =T,center=T))
   
   xs <- quantile(condition$scaleCond, seq(0,1, length.out = 6), na.rm = TRUE)
   
@@ -31,14 +31,14 @@ plot_condition <- function(data,
                                  include.lowest = TRUE))
   
   condition <- condition |>
-    dplyr::filter(Var %in% var) |>
+    dplyr::filter(Species %in% var) |>
     dplyr::ungroup() |>
-    dplyr::arrange(Time) |>
+    dplyr::arrange(YEAR) |>
     dplyr::group_by(EPU) |>
-    dplyr::mutate(mean = mean(Value, na.rm = TRUE),
-                  sd = sd(Value, na.rm = TRUE)) |>
-    ggplot2::ggplot(ggplot2::aes(x = Time,
-                                 y = Value,
+    dplyr::mutate(mean = mean(DATA_VALUE, na.rm = TRUE),
+                  sd = sd(DATA_VALUE, na.rm = TRUE)) |>
+    ggplot2::ggplot(ggplot2::aes(x = YEAR,
+                                 y = DATA_VALUE,
                                  color = category,
                                  shape = EPU
     )) +

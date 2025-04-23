@@ -33,5 +33,6 @@ Saves R object \code{chl}, returns chlorophyll-a indicator in a data frame summa
 \description{
 This function generates a chlorophyll-a indicator from an OCCCI ERDDAP netCDF file.
 The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
+**NOTE: OCCCI DATA DOES NOT WORK WITH EDAB_UTILS. FUNCTION WILL RUN BUT ALL 'DATA_VALUE' WILL BE NA
 Converts .nc files to data frame.
 }

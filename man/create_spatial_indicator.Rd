@@ -19,7 +19,7 @@ create_spatial_indicator(indicator_name, units, ...)
 
 \item{shp.file}{string. Shape file you wish to crop each input file to}
 
-\item{var.name}{string. Variable name you wish to extract = 'bottomT'}
+\item{var.name}{string. Variable name you wish to extract.}
 
 \item{area.names}{character vector. Names of shape file areas you want to summarize.}
 

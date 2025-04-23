@@ -59,7 +59,11 @@ Methods derived from Laurel Smith (https://github.com/Laurels1/Condition/blob/ma
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">species_condition</span><span class="op">(</span><span class="va">data</span>, <span class="va">LWparams</span>, <span class="va">species.codes</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">species_condition</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  LWparams <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">LWparams</span>,</span>
+<span>  species.codes <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">species.codes</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,11 +75,11 @@ Methods derived from Laurel Smith (https://github.com/Laurels1/Condition/blob/ma
 
 
 <dt id="arg-lwparams">LWparams<a class="anchor" aria-label="anchor" href="#arg-lwparams"></a></dt>
-<dd><p>L-W parameters from Wigley et al. 2003 from 'data-raw/tech_memo_parameters_table_format.csv'</p></dd>
+<dd><p>L-W parameters from Wigley et al. 2003 from NEesp2::LWparams</p></dd>
 
 
 <dt id="arg-species-codes">species.codes<a class="anchor" aria-label="anchor" href="#arg-species-codes"></a></dt>
-<dd><p>data table. Species codes and names from 'data-raw/bottomtrawl_species_codes_names.csv'</p></dd>
+<dd><p>data table. Species codes and names from NEesp2::species.codes</p></dd>
 
 </dl></div>
     <div class="section level2">

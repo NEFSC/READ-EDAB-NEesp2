@@ -35,5 +35,6 @@ Saves R object \code{sst}, returns sea surface temp indicator in a data frame su
 \description{
 This function generates a sea surface temperature indicator from an OISST ERDDAP netCDF file.
 The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
+**NOTE: OISST DATA DOES NOT WORK WITH EDAB_UTILS. FUNCTION WILL RUN BUT ALL 'DATA_VALUE' WILL BE NA
 Converts .nc files to data frame.
 }
