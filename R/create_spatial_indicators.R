@@ -32,16 +32,13 @@ create_spatial_indicator <- function(indicator_name,
   
   output <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), 
-                  month = lubridate::month(time), 
-                  year = lubridate::year(time)) %>%
+                  DAY = lubridate::day(time), 
+                  MONTH = lubridate::month(time), 
+                  YEAR = lubridate::year(time)) %>%
     subset(select = -c(agg.time, time, ls.id, var.name) ) |>
     dplyr::mutate(INDICATOR_NAME = indicator_name,
                   INDICATOR_UNITS = units)  %>%
     dplyr::rename(DATA_VALUE = value,
-                  YEAR = year,
-                  MONTH = month,
-                  DAY = day,
                   AREA = area,
                   STATISTIC = statistic) %>%
     purrr::discard(~all(is.na(.)))
@@ -53,6 +50,7 @@ create_spatial_indicator <- function(indicator_name,
 #'
 #' This function generates a sea surface temperature indicator from an OISST ERDDAP netCDF file. 
 #' The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
+#' **NOTE: OISST DATA DOES NOT WORK WITH EDAB_UTILS. FUNCTION WILL RUN BUT ALL 'DATA_VALUE' WILL BE NA
 #' Converts .nc files to data frame.
 #' @param ... passed to `EDABUtilities::make_2d_summary_ts()`
 #' @param data.in Either a character vector of full input file names for a list of spatRasters
@@ -77,11 +75,15 @@ create_sst <- function(...) {
   
   sst <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), 
-                  month = lubridate::month(time), 
-                  year = lubridate::year(time)) %>%
+                  DAY = lubridate::day(time), 
+                  MONTH = lubridate::month(time), 
+                  YEAR = lubridate::year(time)) %>%
     dplyr::mutate(INDICATOR_UNITS = c ('degC')) %>%
-    subset(select = -c(agg.time, time) ) 
+    subset(select = -c(agg.time, time, ls.id) ) %>%
+    dplyr::rename(INDICATOR_NAME = var.name,
+                  DATA_VALUE = value,
+                  AREA = area,
+                  STATISTIC = statistic) %>%
   
   return(sst)
 }
@@ -114,17 +116,15 @@ create_sal <- function(...) {
   
   sal <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), 
-                  month = lubridate::month(time), 
-                  year = lubridate::year(time),
+                  DAY = lubridate::day(time), 
+                  MONTH = lubridate::month(time), 
+                  YEAR = lubridate::year(time),
                   INDICATOR_UNITS = "degC") %>%
-    subset(select = -c(agg.time, time, ls.id, statistic))  %>%
+    subset(select = -c(agg.time, time, ls.id))  %>%
     dplyr::rename(INDICATOR_NAME = var.name,
-                  YEAR = year,
-                  MONTH = month,
-                  DAY = day,
                   DATA_VALUE = value,
-                  AREA = area) %>%
+                  AREA = area,
+                  STATISTIC = statistic) %>%
     purrr::discard(~all(is.na(.)))
   
   return(sal)
@@ -134,6 +134,7 @@ create_sal <- function(...) {
 #'
 #' This function generates a chlorophyll-a indicator from an OCCCI ERDDAP netCDF file. 
 #' The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
+#' **NOTE: OCCCI DATA DOES NOT WORK WITH EDAB_UTILS. FUNCTION WILL RUN BUT ALL 'DATA_VALUE' WILL BE NA
 #' Converts .nc files to data frame.
 #' @param data.in Either a character vector of full input file names for a list of spatRasters
 #' @param output.files character vector of full output file names corresponding to each input file
@@ -158,11 +159,15 @@ create_chl <- function(...) {
   
    chl <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), 
-                  month = lubridate::month(time), 
-                  year = lubridate::year(time)) %>%
-    dplyr::mutate(Units = c ('mg m^-3')) %>%
-    subset(select = -c(agg.time, time) ) 
+                  DAY = lubridate::day(time), 
+                  MONTH = lubridate::month(time), 
+                  YEAR = lubridate::year(time)) %>%
+    dplyr::mutate(INDICATOR_UNITS = c ('mg m^-3')) %>%
+     subset(select = -c(agg.time, time, ls.id))  %>%
+     dplyr::rename(INDICATOR_NAME = var.name,
+                   DATA_VALUE = value,
+                   AREA = area,
+                   STATISTIC = statistic) 
   
   return(chl)
 }
@@ -195,11 +200,15 @@ create_pp <- function(...) {
  
    pp <- df %>%
     dplyr::mutate(time = as.Date(time),
-                  day = lubridate::day(time), 
-                  month = lubridate::month(time), 
-                  year = lubridate::year(time)) %>%
-    dplyr::mutate(Units = c ('mg m^-3')) %>%
-    subset(select = -c(agg.time, time) ) 
+                  DAY = lubridate::day(time), 
+                  MONTH = lubridate::month(time), 
+                  YEAR = lubridate::year(time)) %>%
+    dplyr::mutate(INDICATOR_UNITS = c ('mg m^-3')) %>%
+     subset(select = -c(agg.time, time, ls.id))  %>%
+     dplyr::rename(INDICATOR_NAME = var.name,
+                   DATA_VALUE = value,
+                   AREA = area,
+                   STATISTIC = statistic) 
   
   return(pp)
 }
