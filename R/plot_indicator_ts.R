@@ -55,38 +55,3 @@ plt_indicator <- function(data,
   
   return(plt)
 }
-
-# dat <- read.csv(here::here("../bsb/data/bsb_rec_catch.csv"))
-# plt_indicator(dat)
-
-# png(here::here("inst/esp_template/05_images/test.png"),
-#     bg = "transparent",
-#     width = 6,
-#     height = 1.5,
-#     units = "in",
-#     res = 72)
-# plt_indicator(dat)
-# dev.off()
-  
-  # get_esp_data <- function(stock = NULL) {
-  #   base_url <- "https://apex.psmfc.org/akfin/data_marts/akmp/esp_indicators?"
-  #   
-  #   url <- ifelse(is.null(stock),
-  #                 base_url,
-  #                 paste0(base_url,
-  #                        "intended_esp=",
-  #                        stock %>%
-  #                          stringr::str_replace_all(" ", "%20")))
-  #   
-  #   data <- httr::content(httr::GET(url),
-  #                         type = "application/json"
-  #   ) %>%
-  #     dplyr::bind_rows()
-  #   
-  #   # temporary fix that should be updated???
-  #   data <- data %>%
-  #     dplyr::rename(DATA_VALUE = INDICATOR_VALUE)
-  #   
-  #   return(data)
-  # }
-

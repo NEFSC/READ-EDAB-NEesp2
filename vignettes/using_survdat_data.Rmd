@@ -18,13 +18,6 @@ This package contains functions for producing bottom trawl indicators from {surv
 
 For more information on accessing {survdat} data, see vignette "Accessing Bottom Trawl Survey Data".
 
-### Load subset of {survdat} data
-
-```{r}
-#NEesp2::survdat_subset
-#NEesp2::species
-```
-
 ### Species Condition - Black sea bass
 
 Uses 'species_condition' and 'plot_condition' functions in R/create_condition_indicator.R and R/plot_condition.R
@@ -68,16 +61,6 @@ bsb_range %>%
                 x = "Year",
                 y = "Range (degrees)") +
   ggplot2::facet_wrap('INDICATOR_NAME')
-```
-
-### Species diet table
-
-Uses 'diet' function in R/create_bottomtrawl_indicators.R
-
-```{r}
-allfh <- get(load(here::here("data-raw/allfh.RData")))
-diet <- diet(data = allfh)
-head(diet)
 ```
 
 ### Swept area biomass - Black sea bass in fall
