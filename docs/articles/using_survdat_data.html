@@ -103,7 +103,7 @@ R/create_condition_indicator.R and R/plot_condition.R</p>
 <code class="sourceCode R"><span><span class="va">bsb_condition</span> <span class="op">&lt;-</span> <span class="va">condition</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">==</span> <span class="st">'Black sea bass'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_condition</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 x 8</span></span></span>
 <span><span class="co">##   Species        EPU    YEAR DATA_VALUE nCond     sd variance INDICATOR_NAME</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">1</span> Black sea bass GB     <span style="text-decoration: underline;">1</span>994      0.983     4 0.033<span style="text-decoration: underline;">0</span>  0.001<span style="text-decoration: underline;">09</span> mean condition</span></span>
@@ -130,7 +130,7 @@ R/create_bottomtrawl_indicators.R</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">SEASON</span> <span class="op">==</span> <span class="st">'FALL'</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">INDICATOR_NAME</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'range_lat'</span>,<span class="st">'range_lon'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_range</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 x 7</span></span></span>
 <span><span class="co">##    YEAR SEASON INDICATOR_NAME DATA_VALUE SPECIES        SVSPP INDICATOR_UNITS</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983 FALL   range_lat            5.33 BLACK SEA BASS   141 degrees        </span></span>
@@ -177,8 +177,7 @@ R/create_bottomtrawl_indicators.R</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">SVSPP</span> <span class="op">==</span> <span class="st">"141"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Prepping data ...</span></span></code></pre>
 <pre><code><span><span class="co">## Spherical geometry (s2) switched off</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: package 'sf' was built under R version 4.3.3</span></span></code></pre>
-<pre><code><span><span class="co">## Linking to GEOS 3.11.2, GDAL 3.8.2, PROJ 9.3.1; sf_use_s2() is FALSE</span></span></code></pre>
+<pre><code><span><span class="co">## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is FALSE</span></span></code></pre>
 <pre><code><span><span class="co">## Filtering data ...</span></span></code></pre>
 <pre><code><span><span class="co">##   [1]  3820  3880  3890  3900  3920  1352     0  3860  3840  3870  1390  1351</span></span>
 <span><span class="co">##  [13]  1380  3850  1360  1330  1340  3760  3790  3830  3800  3730  3810  1400</span></span>
@@ -197,18 +196,18 @@ R/create_bottomtrawl_indicators.R</p>
 <span><span class="co">## [169]  7620  7630  7640  8580  7650  7660  7670  8590  8600  8770</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating Stratified Mean  ...</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating Swept Area Estimate  ...</span></span></code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_swept_area</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 x 8</span></span></span>
 <span><span class="co">##    YEAR SVSPP   variance     se     sd INDICATOR_UNITS INDICATOR_NAME DATA_VALUE</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983   141    6.11<span style="color: #949494;">e</span> 8 2.47<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">313</span>872.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>984   141    3.83<span style="color: #949494;">e</span> 7 6.19<span style="color: #949494;">e</span>3 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…   2<span style="text-decoration: underline;">867</span>870.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>985   141    1.41<span style="color: #949494;">e</span> 9 3.76<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">696</span>770.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986   141    2.78<span style="color: #949494;">e</span> 9 5.27<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">428</span>373.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987   141    4.42<span style="color: #949494;">e</span>10 2.10<span style="color: #949494;">e</span>5 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">639</span>254.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988   141    5.16<span style="color: #949494;">e</span> 9 7.19<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">229</span>675.</span></span></code></pre>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983   141    6.11<span style="color: #949494;">e</span> 8 2.47<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi~    <span style="text-decoration: underline;">313</span>872.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>984   141    3.83<span style="color: #949494;">e</span> 7 6.19<span style="color: #949494;">e</span>3 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi~   2<span style="text-decoration: underline;">867</span>870.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>985   141    1.41<span style="color: #949494;">e</span> 9 3.76<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi~    <span style="text-decoration: underline;">696</span>770.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986   141    2.78<span style="color: #949494;">e</span> 9 5.27<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi~    <span style="text-decoration: underline;">428</span>373.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987   141    4.42<span style="color: #949494;">e</span>10 2.10<span style="color: #949494;">e</span>5 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi~    <span style="text-decoration: underline;">639</span>254.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988   141    5.16<span style="color: #949494;">e</span> 9 7.19<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi~    <span style="text-decoration: underline;">229</span>675.</span></span></code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_swept_area</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>,</span>
 <span>                               y <span class="op">=</span> <span class="va">DATA_VALUE</span>,</span>
@@ -227,7 +226,7 @@ R/create_bottomtrawl_indicators.R</p>
 <p>Uses ‘create_stratified_mean’ indicator in
 R/create_bottomtrawl_indicators.R</p>
 <p>Modified from ‘calc_stratified_mean’ in {survdat} package.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_strat_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_stratified_mean.html">create_stratified_mean</a></span><span class="op">(</span></span>
 <span>  surveyData <span class="op">=</span> <span class="va">survdat_subset</span>,</span>
 <span>  areaPolygon <span class="op">=</span> <span class="st">"NEFSC strata"</span>,</span>
@@ -259,9 +258,9 @@ R/create_bottomtrawl_indicators.R</p>
 <span><span class="co">## [157]  7550 99999  7590  8540  7530  7570  7600  7580  8550  7610  8560  8570</span></span>
 <span><span class="co">## [169]  7620  7630  7640  8580  7650  7660  7670  8590  8600  8770</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating Stratified Mean  ...</span></span></code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_strat_mean</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 x 9</span></span></span>
 <span><span class="co">##    YEAR SEASON SVSPP variance     se    sd INDICATOR_UNITS INDICATOR_NAME    </span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983 FALL     141 0.000<span style="text-decoration: underline;">850</span> 0.029<span style="text-decoration: underline;">2</span> 0.845 kgtow-1         strat_mean_biomass</span></span>
@@ -270,8 +269,8 @@ R/create_bottomtrawl_indicators.R</p>
 <span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986 FALL     141 0.001<span style="text-decoration: underline;">19</span>  0.034<span style="text-decoration: underline;">4</span> 0.845 kgtow-1         strat_mean_biomass</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987 FALL     141 0.063<span style="text-decoration: underline;">6</span>   0.252  0.845 kgtow-1         strat_mean_biomass</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988 FALL     141 0.023<span style="text-decoration: underline;">3</span>   0.153  0.845 kgtow-1         strat_mean_biomass</span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: DATA_VALUE &lt;dbl&gt;</span></span></span></code></pre>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<span><span class="co">## <span style="color: #949494;"># i 1 more variable: DATA_VALUE &lt;dbl&gt;</span></span></span></code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_strat_mean</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>,</span>
 <span>                               y <span class="op">=</span> <span class="va">DATA_VALUE</span>,</span>

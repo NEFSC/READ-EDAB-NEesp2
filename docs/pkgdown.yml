@@ -1,4 +1,4 @@
-pandoc: 3.1.1
+pandoc: 2.19.2
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
@@ -12,11 +12,7 @@ articles:
   using_mrip_data: using_mrip_data.html
   using_survdat_data: using_survdat_data.html
   why-esp: why-esp.html
-<<<<<<< HEAD
-last_built: 2025-04-23T19:21Z
-=======
-last_built: 2025-04-23T18:14Z
->>>>>>> 1be336b4f4e747c709481e2a1f192b05300bec15
+last_built: 2025-04-23T19:25Z
 urls:
   reference: https://nefsc.github.io/READ-EDAB-NEesp2/reference
   article: https://nefsc.github.io/READ-EDAB-NEesp2/articles
