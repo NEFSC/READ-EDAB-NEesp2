@@ -11,7 +11,7 @@
 #' @param data.in Either a character vector of full input file names for a list of spatRasters
 #' @param output.files character vector of full output file names corresponding to each input file
 #' @param shp.file  string. Shape file you wish to crop each input file to
-#' @param var.name string. Variable name you wish to extract = 'bottomT'
+#' @param var.name string. Variable name you wish to extract.
 #' @param area.names character vector. Names of shape file areas you want to summarize. 
 #' @param statistic string. Which statistic to calculate = 'mean'
 #' @param agg.time character. Time scale to calculate over (days, doy, months, season, or years)
@@ -88,47 +88,6 @@ create_sst <- function(...) {
   return(sst)
 }
 
-#' Create Salinity Indicator
-#'
-#' This function generates a salinity indicator from a GLORYS netCDF file. 
-#' The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
-#' Converts .nc files to data frame.
-#' @param data.in Either a character vector of full input file names for a list of spatRasters
-#' @param output.files character vector of full output file names corresponding to each input file
-#' @param shp.file  string. Shape file you wish to crop each input file to
-#' @param var.name string. Variable name you wish to extract = 'sal'
-#' @param area.names character vector. Names of shape file areas you want to summarize. 
-#' @param statistic string. Which statistic to calculate = 'mean'
-#' @param agg.time character. Time scale to calculate over (days, doy, months, season, or years)
-#' @param tz string. Time zone to convert. No correction if NA
-#' @param touches logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
-#' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
-#' @return Saves R object `sal`, returns salinity indicator in a data frame summarized by timestep for each area.names
-#' @importFrom magrittr %>%
-#' @export
-
-
-create_sal <- function(...) { 
-  make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
-  
-  df <- make_2d_summary_output %>%
-    terra::as.data.frame(na.rm = FALSE) 
-  
-  sal <- df %>%
-    dplyr::mutate(time = as.Date(time),
-                  DAY = lubridate::day(time), 
-                  MONTH = lubridate::month(time), 
-                  YEAR = lubridate::year(time),
-                  INDICATOR_UNITS = "degC") %>%
-    subset(select = -c(agg.time, time, ls.id))  %>%
-    dplyr::rename(INDICATOR_NAME = var.name,
-                  DATA_VALUE = value,
-                  AREA = area,
-                  STATISTIC = statistic) %>%
-    purrr::discard(~all(is.na(.)))
-  
-  return(sal)
-}
 
 #' Create Chlorophyll-a Indicator
 #'
@@ -170,45 +129,4 @@ create_chl <- function(...) {
                    STATISTIC = statistic) 
   
   return(chl)
-}
-
-
-#' Create Primary Production Indicator
-#'
-#' This function generates a primary productivity indicator from an ERDDAP netCDF file. 
-#' The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area.
-#' Converts .nc files to data frame.
-#' @param data.in Either a character vector of full input file names for a list of spatRasters
-#' @param output.files character vector of full output file names corresponding to each input file
-#' @param shp.file  string. Shape file you wish to crop each input file to
-#' @param var.name string. Variable name you wish to extract = 'pp'
-#' @param area.names character vector. Names of shape file areas you want to summarize. 
-#' @param statistic string. Which statistic to calculate = 'mean'
-#' @param agg.time character. Time scale to calculate over (days, doy, months, season, or years)
-#' @param tz string. Time zone to convert. No correction if NA
-#' @param touches logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
-#' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
-#' @return Saves R object `pp`, returns primary production indicator in a data frame summarized by timestep for each area.names
-#' @importFrom magrittr %>%
-#' @export
-
-create_pp <- function(...) { 
-  make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
-  
-  df <- make_2d_summary_output %>%
-    terra::as.data.frame(na.rm = FALSE) 
- 
-   pp <- df %>%
-    dplyr::mutate(time = as.Date(time),
-                  DAY = lubridate::day(time), 
-                  MONTH = lubridate::month(time), 
-                  YEAR = lubridate::year(time)) %>%
-    dplyr::mutate(INDICATOR_UNITS = c ('mg m^-3')) %>%
-     subset(select = -c(agg.time, time, ls.id))  %>%
-     dplyr::rename(INDICATOR_NAME = var.name,
-                   DATA_VALUE = value,
-                   AREA = area,
-                   STATISTIC = statistic) 
-  
-  return(pp)
 }

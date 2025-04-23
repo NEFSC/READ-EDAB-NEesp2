@@ -44,6 +44,8 @@ range <- species_range(data = data, species)
 ###CONDITION
 condition <- species_condition_orig(data=data$survdat, LWparams = LWparams, species.codes = species.codes)
 
+condition <- species_condition(data = data$survdat, LWparams, species.codes)
+pkgdown::build_site()
 ###SPATIAL
 
 sal <- create_sal(data.in = c(here::here('data-raw','glorys_bottomS.nc')),

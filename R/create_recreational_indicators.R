@@ -56,7 +56,7 @@ create_total_rec_catch <- function(data,
     dplyr::mutate(CATEGORY = "Recreational",
                   INDICATOR_TYPE = "Socioeconomic",
                   INDICATOR_NAME = "total_recreational_catch_n",
-                  INDICATOR_UNITS = lbs) %>%
+                  INDICATOR_UNITS = "lbs") %>%
     # dplyr::rename(YEAR = Year,
     #               STATE = State) %>% #remove STATE = State if wanting all states summed
     dplyr::ungroup()## %>%
@@ -111,7 +111,7 @@ create_rec_trips <- function(files,
     dplyr::mutate(CATEGORY = "Recreational",
                   INDICATOR_TYPE = "Socioeconomic",
                   INDICATOR_NAME = "rec_trips",
-                  INDICATOR_UNITS = n)
+                  INDICATOR_UNITS = "n")
   
   if(return) return(rec_trips)
   
@@ -202,14 +202,14 @@ create_total_rec_landings <- function(data,
                                       groupby_state = FALSE,
                                       return = TRUE){
   total_rec_landings <- data %>%
-    dplyr::rename(lbs_ab1 = HARVEST_A_B1_TOTAL_WEIGHT_LB) %>%
+   dplyr::rename(lbs_ab1 = HARVEST_A_B1_TOTAL_WEIGHT_LB) %>%
     dplyr::filter(STATE %in% states) %>%
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(lbs_ab1, na.rm = TRUE)) %>%
     dplyr::mutate(CATEGORY = "Recreational",
                   INDICATOR_TYPE = "Socioeconomic",
                   INDICATOR_NAME = "total_recreational_landings_lbs",
-                  INDICATOR_UNITS = lbs) %>%
+                  INDICATOR_UNITS = "lbs") %>%
     # dplyr::rename(YEAR = Year,
     #               STATE = State) %>% #remove STATE = State here if want all states summed
     dplyr::ungroup() %>%

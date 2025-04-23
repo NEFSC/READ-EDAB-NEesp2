@@ -1,6 +1,5 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/404.html</loc></url>
-<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/LICENSE-text.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/accessing-survdat-data.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/esp-links.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/general-workflow.html</loc></url>
@@ -14,6 +13,7 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/why-esp.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/authors.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/index.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/LICENSE-text.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/news/index.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/character_to_factor.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/common_names_survdat.html</loc></url>
@@ -32,6 +32,7 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_sst.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_stratified_mean.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_swept_area.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_template.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_total_rec_catch.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_total_rec_landings.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_wcr.html</loc></url>
@@ -41,6 +42,7 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/diet.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/find_files.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/format_numbers.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/format_tbl_data.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/generate_len_plot.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/generate_len_table.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/generate_plot.html</loc></url>
@@ -86,6 +88,7 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/rpt_card_table.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/save_data.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/species_condition.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/species_condition_orig.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/species_range.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/status.html</loc></url>
 </urlset>
