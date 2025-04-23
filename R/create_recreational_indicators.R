@@ -202,7 +202,7 @@ create_total_rec_landings <- function(data,
                                       groupby_state = FALSE,
                                       return = TRUE){
   total_rec_landings <- data %>%
-   # dplyr::rename(lbs_ab1 = HARVEST_A_B1_TOTAL_WEIGHT_LB) %>%
+   dplyr::rename(lbs_ab1 = HARVEST_A_B1_TOTAL_WEIGHT_LB) %>%
     dplyr::filter(STATE %in% states) %>%
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(lbs_ab1, na.rm = TRUE)) %>%
