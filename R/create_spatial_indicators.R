@@ -35,10 +35,15 @@ create_spatial_indicator <- function(indicator_name,
                   day = lubridate::day(time), 
                   month = lubridate::month(time), 
                   year = lubridate::year(time)) %>%
-    dplyr::mutate(Units = c ('degC')) %>%
-    subset(select = -c(agg.time, time) ) |>
+    subset(select = -c(agg.time, time, ls.id, var.name) ) |>
     dplyr::mutate(INDICATOR_NAME = indicator_name,
                   INDICATOR_UNITS = units)  %>%
+    dplyr::rename(DATA_VALUE = value,
+                  YEAR = year,
+                  MONTH = month,
+                  DAY = day,
+                  AREA = area,
+                  STATISTIC = statistic) %>%
     purrr::discard(~all(is.na(.)))
   
   return(output)
@@ -75,7 +80,7 @@ create_sst <- function(...) {
                   day = lubridate::day(time), 
                   month = lubridate::month(time), 
                   year = lubridate::year(time)) %>%
-    dplyr::mutate(Units = c ('degC')) %>%
+    dplyr::mutate(INDICATOR_UNITS = c ('degC')) %>%
     subset(select = -c(agg.time, time) ) 
   
   return(sst)
@@ -111,8 +116,15 @@ create_sal <- function(...) {
     dplyr::mutate(time = as.Date(time),
                   day = lubridate::day(time), 
                   month = lubridate::month(time), 
-                  year = lubridate::year(time)) %>%
-    subset(select = -c(agg.time, time))  %>%
+                  year = lubridate::year(time),
+                  INDICATOR_UNITS = "degC") %>%
+    subset(select = -c(agg.time, time, ls.id, statistic))  %>%
+    dplyr::rename(INDICATOR_NAME = var.name,
+                  YEAR = year,
+                  MONTH = month,
+                  DAY = day,
+                  DATA_VALUE = value,
+                  AREA = area) %>%
     purrr::discard(~all(is.na(.)))
   
   return(sal)
