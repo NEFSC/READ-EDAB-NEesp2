@@ -30,7 +30,7 @@ format_indicator <- function(out_dir,
                              indicator_value,
                              ... # getting an error that there are unused arguments -- hacky fix
                              ) {
-  filename <- paste0(out_dir, "/", indicator_name, ".txt")
+  filename <- paste0(out_dir, "/", indicator_name, "_", Sys.Date(), ".txt")
 
   cat(
     "#Ecosystem and Socioeconomic Profile (ESP) indicator template for Northeast ESPs \n",
