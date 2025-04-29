@@ -103,8 +103,14 @@ format_from_template <- function(key,
 
 add_fig_paths <- function(path,
                           list_files) {
+  
+  if(stringr::str_detect(path, "csv$")) {
+    output <- read.csv(path)
+  } else {
+    output <- readxl::read_excel(path)
+  }
 
-  output <- readxl::read_excel(path) |>
+  output <- output |>
     dplyr::mutate(time_series = list_files)
 
   return(output)
