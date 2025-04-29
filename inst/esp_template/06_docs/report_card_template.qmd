@@ -1,5 +1,5 @@
 ---
-title: "Black Sea Bass (\\protect\\textit{Centropristis striata})\\protect\\newline Ecosystem & Socioeconomic Profile Report Card"
+title: "Black Sea Bass (\\protect\\textit{Centropristis striata}) \\linebreak Ecosystem & Socioeconomic Profile Report Card"
 format: 
   pdf:
     margin-left: "0.5in"
