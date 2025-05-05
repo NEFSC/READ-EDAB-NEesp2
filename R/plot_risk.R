@@ -31,7 +31,7 @@ plot_risk <- function(risk_elements = tibble::tibble(stock = c(1, 5, 2, 0),
                                 # color = level, 
                                 fill = level)) +
     ggplot2::geom_col() +
-      ggplot2::geom_text(ggplot2::aes(y = pos - 0.05,
+      ggplot2::geom_text(ggplot2::aes(y = pos,
                                        label = lab)) +
     ggplot2::geom_text(ggplot2::aes(y = -0.05,
                                     label = xlab)) +
