@@ -22,7 +22,7 @@ species_condition <- function(data,
   #Change sex = NA to sex = 0
   fall <- survey.data %>% 
     dplyr::filter(SEASON == 'FALL') %>% 
-    dplyr::mutate(sex = dplyr::if_else(is.na(SEX), 0, SEX))
+    dplyr::mutate(sex = dplyr::if_else(is.na(SEX), '0', as.character(SEX)))
   
   # filter LWparams to fall only, add in male/female if data is "combined"
   LWfall <- LWparams %>% 
