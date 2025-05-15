@@ -49,23 +49,27 @@ get_mrip_catch <- function(species) {
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
+
+# species <- "Atlantic cod"
+# region <- "mid-atlantic"
+# year <- 2003
 get_mrip_trips <- function(species,
                            region,
                            year) {
-  species <- species |> 
+  new_species <- species |> 
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
   
-  region <- region |> 
+  new_region <- region |> 
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "+")
   
 url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_directed_trip&qyearfrom=",
               year,
               "&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=",
-              region,
+              new_region,
               "&qspecies=",
-              species,
+              new_species,
               "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qsp_opt=PRIMARY&qsp_opt=SECONDARY&qsp_opt=CAUGHT&qsp_opt=HARVESTED&qsp_opt=RELEASED&qoutput_type=TABLE&qsource=PRODUCTION")
 
 
@@ -93,36 +97,6 @@ output <- list(data = tbl2,
 return(output)
 }
 
-# get_mrip_trips(species = "black sea bass",
-#                year = 2024,
-#                region = "north atlantic")
-# 
-# species <- c("Atlantic cod",
-#               "Atlantic mackerel",
-#               "Black sea bass",
-#               "Chub mackerel",
-#               "Haddock",
-#               "Pollock",
-#               "Scup",
-#               "Striped bass",
-#               "Summer flounder",
-#               "Winter flounder")
-# 
-# params <- expand.grid(region = c("north atlantic", "mid-atlantic"), 
-#                       year = 1981:1982) #,
-#                       # species = species)
-# 
-# purrr::map(purrr::list_transpose(list(region = params$region, 
-#                                       year = params$year)),
-#             ~save_trips(this_species = "black sea bass",
-#                         this_year = .x$year,
-#                         this_region = .x$region,
-#                         out_folder = here::here("data-raw/test")))
-# 
-# get_mrip_trips(species = "black sea bass",
-#                year = 1981,
-#                region = "north atlantic")
-
 #' Scrape and save MRIP trip data from MRIP Query tool
 #' 
 #' This function scrapes MRIP trip data from the MRIP Query tool and saves it as an Rds. 
@@ -132,11 +106,21 @@ return(output)
 #' @param this_region the name of the region. Can be a state name, "North Atlantic", "Mid-Atlantic", etc. Capitalization does not matter. 
 #' @param this_year the year of data to query. Must be a single value. The earliest year possible is 1981.
 #' @param out_folder where to save the data
+#' @param wait whether to pause after saving the data. Default is TRUE.
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
-save_trips <- function(this_species, this_year, this_region, out_folder) {
-  fname <- paste0(out_folder, 
+save_trips <- function(this_species, this_year, this_region, out_folder,
+                       wait = TRUE) {
+  species_dir <- paste0(out_folder, 
+                        paste0("/", this_species, "_trips"))  |>
+    stringr::str_replace_all(" ", "_")
+  
+  if(!dir.exists(species_dir)) {
+    dir.create(species_dir)
+  }
+  
+  fname <- paste0(species_dir,
                   paste("/trips", this_species, this_region, this_year, sep = "_"),
                 ".Rds") |>
     stringr::str_replace_all(" ", "_")
@@ -146,6 +130,11 @@ save_trips <- function(this_species, this_year, this_region, out_folder) {
                         region = this_region)
   
   saveRDS(out, fname)
+  
+  if(wait){
+    Sys.sleep(90)
+  }
+  
 }
 
 #' Scrape and save MRIP catch data from MRIP Query tool
@@ -155,10 +144,11 @@ save_trips <- function(this_species, this_year, this_region, out_folder) {
 #' 
 #' @param this_species the common name of the species as it appears in the MRIP data. capitalization does not matter.
 #' @param out_folder where to save the data
+#' @param wait whether to pause after saving the data. Default is TRUE.
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
-save_catch <- function(this_species, out_folder) {
+save_catch <- function(this_species, out_folder, wait = TRUE) {
   fname <- paste0(out_folder, 
                   "/catch_",
                   this_species,
@@ -168,6 +158,11 @@ save_catch <- function(this_species, out_folder) {
   out <- get_mrip_catch(species = this_species)
   
   saveRDS(out, fname)
+  
+  if(wait){
+    Sys.sleep(90)
+  }
+  
 }
 
 # save_catch(this_species = "black sea bass", 
