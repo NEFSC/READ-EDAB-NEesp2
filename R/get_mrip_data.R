@@ -127,7 +127,16 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
   
   out <- get_mrip_trips(species = this_species,
                         year = this_year,
-                        region = this_region)
+                        region = this_region) |>
+    try()
+  
+  if(class(out) == "try-error") {
+    message(paste("Error in MRIP query:", this_species, this_region, this_year))
+    fname <- paste0(species_dir,
+                    paste("/trips", this_species, this_region, this_year, "ERROR", sep = "_"),
+                    ".Rds") |>
+      stringr::str_replace_all(" ", "_")
+  }
   
   saveRDS(out, fname)
   

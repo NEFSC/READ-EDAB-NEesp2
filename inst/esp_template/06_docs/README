@@ -1,8 +1,8 @@
 This folder contains templates to create a two-page Ecosysten and Socioeconomic Profile report card.
 
-`report card pg 1.qmd` can be edited to produce the first page of the report card. `tex_template.tex` is a necessary helper file, which can be updated if desired. 
+`report_card_template.qmd` can be edited to produce the first page of the report card. `template.tex` is a necessary helper file, which can be updated if desired. 
 
-`table_template.Rmd` can be run to create the summary table of indicator data. `table_template.xlsx` should  be updated with relevant indicator information, including file paths to figures. `table_template.Rmd` should not be updated.
+`table_template.csv` should  be updated with relevant indicator information, including file paths to figures. 
 
 Backgrounds for page 1 and 2 of the report card must be added in Adobe Acrobat, as bugs in the code prevent the backgrounds from loading directly into the PDF from the qmd file. 
 To add backgrounds:
