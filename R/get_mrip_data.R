@@ -158,8 +158,7 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
     
   } else if (out$data[1] == "no data") {
     message(paste("No data in MRIP query:", this_species, this_region, this_year))
-    fname <- paste0(species_dir,
-                    fname_base, 
+    fname <- paste0(fname_base, 
                     "_NODATA.Rds")
   } else {
     message(paste("MRIP query successful:", this_species, this_region, this_year))
