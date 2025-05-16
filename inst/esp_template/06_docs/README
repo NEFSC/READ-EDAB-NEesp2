@@ -1,4 +1,4 @@
-This folder contains templates to create a two-page Ecosysten and Socioeconomic Profile report card.
+This folder contains templates to create a two-page Ecosystem and Socioeconomic Profile report card.
 
 `report_card_template.qmd` can be edited to produce the first page of the report card. `template.tex` is a necessary helper file, which can be updated if desired. 
 
