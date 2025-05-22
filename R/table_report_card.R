@@ -7,7 +7,7 @@
 #' @export
 
 rpt_card_table <- function(data,
-                           widths) {
+                           widths =  c(0.9, 0.75, 3, 3)) {
   
   if(sum(!colnames(data) %in% c("figure", "w", "h", "indicator_units", "status_in_2024", "implications")) != 0) {
     stop("Your input data is missing columns or has incorrect column names")
