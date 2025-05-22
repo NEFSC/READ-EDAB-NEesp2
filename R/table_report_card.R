@@ -61,10 +61,18 @@ rpt_card_table <- function(data,
 format_tbl_data <- function(file,
                             term_year,
                             dir) {
-  output <- readxl::read_excel(params$tbl_file) |>
+  if(stringr::str_detect(file, "csv$")) {
+    out <- read.csv(file)
+  } else if(stringr::str_detect(file, "xlsx$")) {
+    out <- readxl::read_excel(file)
+  } else {
+    stop("File must be a .csv or .xlsx")
+  }
+  
+  output <- out |>
     janitor::clean_names() |>
-    dplyr::mutate(figure =  paste0(params$img_dir, "/", time_series)) |>
-    dplyr::rename_with(.fn = ~paste(.x, "in", params$terminal_year, sep = "_"),
+    dplyr::mutate(figure =  paste0(dir, "/", time_series)) |>
+    dplyr::rename_with(.fn = ~paste(.x, "in", term_year, sep = "_"),
                        .cols = "status") |>
     dplyr::select(-time_series)
   
