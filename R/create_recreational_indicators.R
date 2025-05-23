@@ -111,6 +111,28 @@ create_total_rec_catch <- function(data,
 # }
 
 
+#' Get MRIP trips file list
+#'
+#' This function returns a list of MRIP trip files
+#' @param dir A directory that has subfolders with species-level data
+#' @param species the species of interest
+#' @return A vector of files
+#' @export
+
+get_trip_files <- function(dir, species) {
+  new_dir <- list.dirs(dir, 
+                       full.names = TRUE)
+  this_dir <- new_dir[which(stringr::str_detect(stringr::str_to_upper(new_dir),
+                                                pattern = stringr::str_to_upper(species) |>
+                                                  stringr::str_replace_all(" ", "_")))]
+  
+  files <- list.files(this_dir, 
+                      pattern = "[0-9].Rds",
+                      full.names = TRUE)
+  
+  return(files)
+}
+
 #' Create MRIP total recreational trips indicator
 #'
 #' This function creates a total recreational trips indicator
@@ -125,23 +147,10 @@ create_total_rec_catch <- function(data,
 #' @export
 # `%>%` <- magrittr::`%>%`
 
-# TODO: split this so getting the list of files is its own function and this function just takes a list of files
 
-create_rec_trips <- function(dir, 
-                             species,
+create_rec_trips <- function(files,
                              remove_non_standard = TRUE) {
-  
-  new_dir <- list.dirs(dir, 
-                       full.names = TRUE)
-  this_dir <- new_dir[which(stringr::str_detect(stringr::str_to_upper(new_dir),
-                                                pattern = stringr::str_to_upper(species) |>
-                                                  stringr::str_replace_all(" ", "_")))]
-  
-  files <- list.files(this_dir, 
-                      pattern = "[0-9].Rds",
-                       full.names = TRUE)
-  
-  # rec_directed_trips <- c()
+    # rec_directed_trips <- c()
   # for (i in files) {
   #   this_dat <- readRDS(i)
   #   rec_directed_trips <- rbind(rec_directed_trips, this_dat)
