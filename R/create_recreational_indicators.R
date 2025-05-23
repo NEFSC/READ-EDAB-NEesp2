@@ -177,7 +177,7 @@ create_rec_trips <- function(files,
                   INDICATOR_TYPE = "Socioeconomic",
                   INDICATOR_NAME = "rec_trips",
                   INDICATOR_UNITS = "number") |>
-    dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_TYPE, INDICATOR_NAME, INDICATOR_UNITS, SPECIEs) 
+    dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_TYPE, INDICATOR_NAME, INDICATOR_UNITS, SPECIES) 
   
   return(output)
   
