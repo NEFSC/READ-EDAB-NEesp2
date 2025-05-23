@@ -74,14 +74,16 @@ create_total_rec_catch <- function(data,
     total_rec_catch <- data 
   }
 
-  output <- tibble::tibble() |>
-    dplyr::mutate(YEAR = total_rec_catch$YEAR,
-                  DATA_VALUE = total_rec_catch$TOTAL_CATCH_A_B1_B2,
-                  CATEGORY = "Recreational",
-                  INDICATOR_TYPE = "Socioeconomic",
-                  INDICATOR_NAME = "total_recreational_catch_n",
-                  INDICATOR_UNITS = "number",
-                  SPECIES = species)
+  output <- tibble::tibble(
+    YEAR = total_rec_catch$YEAR,
+    DATA_VALUE = total_rec_catch$TOTAL_CATCH_A_B1_B2,
+    CATEGORY = "Recreational",
+    INDICATOR_TYPE = "Socioeconomic",
+    INDICATOR_NAME = "total_recreational_catch_n",
+    INDICATOR_UNITS = "number",
+    SPECIES = species
+  )
+  
 
 }
 
