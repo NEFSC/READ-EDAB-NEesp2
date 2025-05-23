@@ -33,9 +33,14 @@ read_rec_catch <- function(species, dir) {
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "_")
   
-  file <- list.files(dir = dir,
+  file <- list.files(path = dir,
                        pattern = new_species,
                        full.names = TRUE)
+  
+  # add error message if unexpected species entered
+  if (length(file) == 0) {
+    stop("No file found for species: ", species)
+  }
   
   # read in the data
   rec_catch <- read.csv(file,
