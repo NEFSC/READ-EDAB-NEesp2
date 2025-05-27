@@ -33,9 +33,14 @@ read_rec_catch <- function(species, dir) {
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "_")
   
-  file <- list.files(dir = dir,
+  file <- list.files(path = dir,
                        pattern = new_species,
                        full.names = TRUE)
+  
+  # add error message if unexpected species entered
+  if (length(file) == 0) {
+    stop("No file found for species: ", species)
+  }
   
   # read in the data
   rec_catch <- read.csv(file,
@@ -69,14 +74,16 @@ create_total_rec_catch <- function(data,
     total_rec_catch <- data 
   }
 
-  output <- tibble::tibble() |>
-    dplyr::mutate(YEAR = total_rec_catch$YEAR,
-                  DATA_VALUE = total_rec_catch$TOTAL_CATCH_A_B1_B2,
-                  CATEGORY = "Recreational",
-                  INDICATOR_TYPE = "Socioeconomic",
-                  INDICATOR_NAME = "total_recreational_catch_n",
-                  INDICATOR_UNITS = "number",
-                  SPECIES = species)
+  output <- tibble::tibble(
+    YEAR = total_rec_catch$YEAR,
+    DATA_VALUE = total_rec_catch$TOTAL_CATCH_A_B1_B2,
+    CATEGORY = "Recreational",
+    INDICATOR_TYPE = "Socioeconomic",
+    INDICATOR_NAME = "total_recreational_catch_n",
+    INDICATOR_UNITS = "number",
+    SPECIES = species
+  )
+  
 
 }
 
@@ -168,7 +175,7 @@ create_rec_trips <- function(dir,
                   INDICATOR_TYPE = "Socioeconomic",
                   INDICATOR_NAME = "rec_trips",
                   INDICATOR_UNITS = "number") |>
-    dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_TYPE, INDICATOR_NAME, INDICATOR_UNITS, SPECIEs) 
+    dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_TYPE, INDICATOR_NAME, INDICATOR_UNITS, SPECIES) 
   
   return(output)
   
@@ -241,26 +248,29 @@ create_prop_sp_trips <- function(total_trips,
                                             'NORTH CAROLINA'),
                                  groupby_state = FALSE,
                                  return = TRUE){
-  total_trips <- total_trips %>%
-    dplyr::filter(STATE %in% states) %>% 
+  total_trips <- total_trips  |> 
+    dplyr::filter(STATE %in% states) |> 
     groupby_state(groupby = groupby_state) |>
-    dplyr::summarise(total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)) %>% 
+    dplyr::summarise(total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)) |> 
     dplyr::mutate(YEAR = as.numeric(YEAR))
   
-  sp <- species_trips %>% 
+  sp <- species_trips |> 
+    dplyr::filter(STATE %in% states) |> 
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(as.numeric(DATA_VALUE), na.rm = TRUE))
   
   prop_sp_trips <- dplyr::full_join(total_trips,
                                     sp,
-                                    by = c("YEAR")) %>%
-    dplyr::mutate(DATA_VALUE = DATA_VALUE/total_trips,
-                  INDICATOR_NAME = "proportion_sp_trips",
-                  INDICATOR_UNITS = "%") %>%
-    dplyr::select(-total_trips) |>
-  # comment out the following lines if wanting all states summed
-  dplyr::ungroup() #%>%
-    # dplyr::select(-Year) 
+                                    by = "YEAR")  |> 
+    dplyr::mutate(
+      DATA_VALUE = DATA_VALUE / total_trips,
+      INDICATOR_NAME = "proportion_sp_trips",
+      INDICATOR_UNITS = "%"
+    )  |> 
+    dplyr::select(-total_trips)  |> 
+  # comment out the following lines if wanting all states summed  
+    dplyr::ungroup()
+  # dplyr::select(-Year) 
   # dplyr::rename(STATE = State)
   
   if(return) return(prop_sp_trips)
