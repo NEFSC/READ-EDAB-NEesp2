@@ -255,6 +255,7 @@ create_prop_sp_trips <- function(total_trips,
     dplyr::mutate(YEAR = as.numeric(YEAR))
   
   sp <- species_trips |> 
+    dplyr::filter(STATE %in% states) |> 
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(as.numeric(DATA_VALUE), na.rm = TRUE))
   
