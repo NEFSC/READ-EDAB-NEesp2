@@ -45,7 +45,8 @@ plt_indicator <- function(data,
     ggplot2::theme(strip.text = ggplot2::element_text(size = 16),
                    axis.title = ggplot2::element_blank(),
                    aspect.ratio = ar,
-                   plot.background = ggplot2::element_rect(fill='transparent'))
+                   plot.background = ggplot2::element_rect(fill='transparent',
+                                                           color='transparent'))
   
   if(include_trends) {
     plt <- plt +
