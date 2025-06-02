@@ -6,14 +6,18 @@
 #' Units are in numbers of fish.
 #' 
 #' @param species the common name of the species as it appears in the MRIP data. capitalization does not matter.
+#' @param type the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
-get_mrip_catch <- function(species) {
+get_mrip_catch <- function(species, type = "all") {
   
   species <- species |> 
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
+  
+  catch_query <- dplyr::case_when(type == "all" ~ "TOTAL+CATCH+%28TYPE+A+%2B+B1+%2B+B2",
+                                  type == "landings" ~ "HARVEST+%28TYPE+A+%2B+B1")
   
   # this url would get a, b1, b2 estimates separately
     # url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pyc&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=", 
@@ -22,7 +26,9 @@ get_mrip_catch <- function(species) {
  
     url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=",
                   species,
-                  "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=TOTAL+CATCH+%28TYPE+A+%2B+B1+%2B+B2%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
+                  "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=",
+                  catch_query,
+                  "%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
     
     
   test <- httr::GET(url) |>
@@ -44,6 +50,9 @@ get_mrip_catch <- function(species) {
   return(output)
   
 }
+
+# get_mrip_catch("Atlantic cod", type = "landings")
+
 
 # bsb_test <- get_mrip_catch("BLACK SEA BASS")
 
@@ -185,23 +194,33 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
-save_catch <- function(this_species, out_folder, wait = TRUE) {
+save_catch <- function(this_species, 
+                       out_folder, 
+                       catch_type,
+                       wait = FALSE) {
   fname <- paste0(out_folder, 
-                  "/catch_",
+                  "/catch_", 
+                  catch_type, "_",
                   this_species,
                   ".Rds") |>
     stringr::str_replace_all(" ", "_")
   
-  out <- get_mrip_catch(species = this_species)
+  if(!dir.exists(out_folder)) {
+    dir.create(out_folder)
+  }
+  
+  out <- get_mrip_catch(species = this_species,
+                        type = catch_type)
   
   saveRDS(out, fname)
   
   if(wait){
-    Sys.sleep(90)
+    Sys.sleep(60)
   }
   
 }
 
-# save_catch(this_species = "black sea bass", 
-#            out_folder = here::here("data-raw/test"))
+# save_catch(this_species = "black sea bass",
+#            out_folder = here::here("data-raw"),
+#            catch_type = "landings")
 # get_mrip_catch("black sea bass")
