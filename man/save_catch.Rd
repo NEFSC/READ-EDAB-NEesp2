@@ -4,12 +4,16 @@
 \alias{save_catch}
 \title{Scrape and save MRIP catch data from MRIP Query tool}
 \usage{
-save_catch(this_species, out_folder)
+save_catch(this_species, out_folder, catch_type = "all", wait = TRUE)
 }
 \arguments{
 \item{this_species}{the common name of the species as it appears in the MRIP data. capitalization does not matter.}
 
 \item{out_folder}{where to save the data}
+
+\item{catch_type}{the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".}
+
+\item{wait}{whether to pause after saving the data. Default is TRUE.}
 }
 \value{
 Returns a list of the scraped data and metadata.

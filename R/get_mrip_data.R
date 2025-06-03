@@ -190,14 +190,15 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
 #' 
 #' @param this_species the common name of the species as it appears in the MRIP data. capitalization does not matter.
 #' @param out_folder where to save the data
+#' @param catch_type the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".
 #' @param wait whether to pause after saving the data. Default is TRUE.
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
 save_catch <- function(this_species, 
                        out_folder, 
-                       catch_type,
-                       wait = FALSE) {
+                       catch_type = "all",
+                       wait = TRUE) {
   fname <- paste0(out_folder, 
                   "/catch_", 
                   catch_type, "_",

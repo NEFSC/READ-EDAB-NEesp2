@@ -4,7 +4,7 @@
 \alias{save_trips}
 \title{Scrape and save MRIP trip data from MRIP Query tool}
 \usage{
-save_trips(this_species, this_year, this_region, out_folder)
+save_trips(this_species, this_year, this_region, out_folder, wait = TRUE)
 }
 \arguments{
 \item{this_species}{the common name of the species as it appears in the MRIP data. capitalization does not matter.}
@@ -14,6 +14,8 @@ save_trips(this_species, this_year, this_region, out_folder)
 \item{this_region}{the name of the region. Can be a state name, "North Atlantic", "Mid-Atlantic", etc. Capitalization does not matter.}
 
 \item{out_folder}{where to save the data}
+
+\item{wait}{whether to pause after saving the data. Default is TRUE.}
 }
 \value{
 Returns a list of the scraped data and metadata.

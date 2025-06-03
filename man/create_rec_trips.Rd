@@ -4,13 +4,7 @@
 \alias{create_rec_trips}
 \title{Create MRIP total recreational trips indicator}
 \usage{
-create_rec_trips(
-  files,
-  states = c("MAINE", "CONNECTICUT", "MASSACHUSETTS", "NEW HAMPSHIRE", "NEW JERSEY",
-    "NEW YORK", "RHODE ISLAND", "MARYLAND", "DELAWARE", "NORTH CAROLINA"),
-  groupby_state = FALSE,
-  return = TRUE
-)
+create_rec_trips(files, remove_non_standard = TRUE)
 }
 \arguments{
 \item{files}{A list of the full file names of annual directed trip data (.csv format). Must download for each year in MRIP query tool.}

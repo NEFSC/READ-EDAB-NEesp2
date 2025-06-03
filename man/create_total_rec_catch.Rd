@@ -4,28 +4,19 @@
 \alias{create_total_rec_catch}
 \title{Create MRIP total recreational catch indicator}
 \usage{
-create_total_rec_catch(
-  data,
-  states = c("MAINE", "CONNECTICUT", "MASSACHUSETTS", "NEW HAMPSHIRE", "NEW JERSEY",
-    "NEW YORK", "RHODE ISLAND", "MARYLAND", "DELAWARE", "NORTH CAROLINA"),
-  groupby_state = FALSE,
-  return = TRUE
-)
+create_total_rec_catch(data, species, remove_non_standard = TRUE)
 }
 \arguments{
-\item{data}{The mrip data (R object \code{mrip_catch}), already subset to species of interest only from downloaded csv file}
+\item{data}{The mrip data}
 
-\item{states}{States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'}
+\item{species}{The species common name}
 
-\item{groupby_state}{Whether to group results by state}
+\item{remove_non_standard}{Boolean, if TRUE will remove non-standard data ("Does Total Catch (A+B1+B2) Meet MRIP Standard" = NO)}
 }
 \value{
-Saves the R data object \code{total_rec_catch}
+a tibble
 }
 \description{
 This function creates the total recreational catch indicator
-For new data queries, use MRIP Query Tool (https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries)
-Query 'Time Series' under 'Catch Data'.
-Choose years of interest, summarize by Annual, Calendar Year, Atlantic coast by state, species of interest, all modes and areas, Total Catch
-Download csv as output
+Input data is MRIP catch (A, B1, B2 catch combined)
 }
