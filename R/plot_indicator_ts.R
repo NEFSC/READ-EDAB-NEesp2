@@ -38,7 +38,7 @@ plt_indicator <- function(data,
     linetype = "dotted"
     ) +
     ggplot2::geom_point() +
-    ggplot2::geom_path() +
+    ggplot2::geom_line() +
     ggplot2::scale_y_continuous(labels = scales::comma) +
     # ecodata::theme_ts() +
     ggplot2::theme_classic(base_size = 16) +
