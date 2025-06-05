@@ -12,7 +12,7 @@
 
 get_mrip_catch <- function(species, type = "all") {
   
-  species <- species |> 
+  new_species <- species |> 
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
   
@@ -25,7 +25,7 @@ get_mrip_catch <- function(species, type = "all") {
     #               "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=ALL+CATCH+TYPES+%28TYPE+A%2C+B1%2C+and+B2%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
  
     url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=",
-                  species,
+                  new_species,
                   "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=",
                   catch_query,
                   "%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
@@ -44,7 +44,8 @@ get_mrip_catch <- function(species, type = "all") {
   tbl2 <- rvest::html_table(data_tbl)
   meta2 <- rvest::html_text(meta_tbl)
   
-  output <- list(data = tbl2,
+  output <- list(data = tbl2 |>
+                   dplyr::mutate(SPECIES = species |> stringr::str_to_upper()),
                  metadata = meta2)
   
   return(output)

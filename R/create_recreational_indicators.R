@@ -27,21 +27,25 @@ groupby_state  <- function(data, groupby) {
 #' @return a tibble
 #' @export
 
-read_rec_catch <- function(species, dir) {
+read_rec_catch <- function(species, dir, type = "all") {
   
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "_")
   
-  file <- list.files(dir = dir,
-                       pattern = new_species,
+  files <- list.files(path = dir,
                        full.names = TRUE)
   
+  this_file <- files[which(stringr::str_detect(stringr::str_to_upper(files),
+                                    pattern = paste0(stringr::str_to_upper(type), 
+                                                     "_",
+                                                     stringr::str_to_upper(species)) |>
+                                      stringr::str_replace_all(" ", "_")))]
+  
   # read in the data
-  rec_catch <- read.csv(file,
-                        skip = 46,
-                        na.strings = ".") |>
-    janitor::clean_names(case = "all_caps") 
+  rec_catch <- readRDS(this_file) |>
+    purrr::map(~janitor::clean_names(.x[1],
+                                     case = "all_caps")) 
   
   return(rec_catch)
 
@@ -54,31 +58,40 @@ read_rec_catch <- function(species, dir) {
 #' 
 #' @param data The mrip data 
 #' @param species The species common name
+#' @param var_name The variable name to use in the indicator name. Default is "catch".
 #' @param remove_non_standard Boolean, if TRUE will remove non-standard data ("Does Total Catch (A+B1+B2) Meet MRIP Standard" = NO)
 #' @importFrom magrittr %>%
 #' @return a tibble
 #' @export
 
 create_total_rec_catch <- function(data,
-                                   species,
+                                   # species,
+                                   var_name = "catch",
                                    remove_non_standard = TRUE){
+
+  total_rec_catch <- data |>
+    janitor::clean_names(case = "all_caps") |>
+    dplyr::rename_with(~"data_value",
+                  .cols = dplyr::matches("^TOTAL_.{1,15}$")) |>
+    dplyr::rename_with(~"keep",
+                  .cols = dplyr::starts_with("DOES"))
+  
   if(remove_non_standard) {
-    total_rec_catch <- data |>
-      dplyr::filter(DOES_TOTAL_CATCH_A_B1_B2_MEET_MRIP_STANDARD != "NO")
-  } else {
-    total_rec_catch <- data 
+    total_rec_catch <- total_rec_catch |>
+      dplyr::filter(keep != "NO")
   }
 
-  output <- tibble::tibble() |>
-    dplyr::mutate(YEAR = total_rec_catch$YEAR,
-                  DATA_VALUE = total_rec_catch$TOTAL_CATCH_A_B1_B2,
+  output <- tibble::tibble(YEAR = total_rec_catch$YEAR,
+                  DATA_VALUE = total_rec_catch$data_value |> stringr::str_remove_all(","),
                   CATEGORY = "Recreational",
                   INDICATOR_TYPE = "Socioeconomic",
-                  INDICATOR_NAME = "total_recreational_catch_n",
+                  INDICATOR_NAME = paste0("total_recreational_", var_name, "_n"),
                   INDICATOR_UNITS = "number",
-                  SPECIES = species)
+                  # bring in species with data pull
+                  SPECIES = total_rec_catch$SPECIES)
 
 }
+# create_total_rec_catch(dat2$DATA, species = "atlantic cod")
 
 # create_total_rec_catch <- function(data, 
 #                                    states = c('MAINE',
