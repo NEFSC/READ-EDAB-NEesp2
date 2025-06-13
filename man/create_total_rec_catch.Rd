@@ -4,14 +4,16 @@
 \alias{create_total_rec_catch}
 \title{Create MRIP total recreational catch indicator}
 \usage{
-create_total_rec_catch(data, species, remove_non_standard = TRUE)
+create_total_rec_catch(data, var_name = "catch", remove_non_standard = TRUE)
 }
 \arguments{
 \item{data}{The mrip data}
 
-\item{species}{The species common name}
+\item{var_name}{The variable name to use in the indicator name. Default is "catch".}
 
 \item{remove_non_standard}{Boolean, if TRUE will remove non-standard data ("Does Total Catch (A+B1+B2) Meet MRIP Standard" = NO)}
+
+\item{species}{The species common name}
 }
 \value{
 a tibble

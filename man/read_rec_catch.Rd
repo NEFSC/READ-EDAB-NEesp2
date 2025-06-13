@@ -4,7 +4,7 @@
 \alias{read_rec_catch}
 \title{Read in MRIP recreational catch data}
 \usage{
-read_rec_catch(species, dir)
+read_rec_catch(species, dir, type = "all")
 }
 \arguments{
 \item{dir}{the directory where MRIP catch files are saved}
