@@ -4,14 +4,18 @@
 \alias{get_mrip_catch}
 \title{Scrape MRIP catch data from MRIP Query tool}
 \usage{
-get_mrip_catch(species)
+get_mrip_catch(species, type = "all")
 }
 \arguments{
 \item{species}{the common name of the species as it appears in the MRIP data. capitalization does not matter.}
+
+\item{type}{the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".}
 }
 \value{
 Returns a list of the scraped data and metadata.
 }
 \description{
-This function scrapes MRIP catch data from the MRIP Query tool
+This function scrapes MRIP catch data from the MRIP Query tool.
+It scrapes the data for all catch (A, B1, B2), all areas, and all modes combined over the entire North and Mid-Atlantic.
+Units are in numbers of fish.
 }
