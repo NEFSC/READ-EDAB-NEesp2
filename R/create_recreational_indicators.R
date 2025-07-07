@@ -263,26 +263,29 @@ create_prop_sp_trips <- function(total_trips,
                                             'NORTH CAROLINA'),
                                  groupby_state = FALSE,
                                  return = TRUE){
-  total_trips <- total_trips %>%
-    dplyr::filter(STATE %in% states) %>% 
+  total_trips <- total_trips  |> 
+    dplyr::filter(STATE %in% states) |> 
     groupby_state(groupby = groupby_state) |>
-    dplyr::summarise(total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)) %>% 
+    dplyr::summarise(total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)) |> 
     dplyr::mutate(YEAR = as.numeric(YEAR))
   
-  sp <- species_trips %>% 
+  sp <- species_trips |> 
+    dplyr::filter(STATE %in% states) |> 
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(as.numeric(DATA_VALUE), na.rm = TRUE))
   
   prop_sp_trips <- dplyr::full_join(total_trips,
                                     sp,
-                                    by = c("YEAR")) %>%
-    dplyr::mutate(DATA_VALUE = DATA_VALUE/total_trips,
-                  INDICATOR_NAME = "proportion_sp_trips",
-                  INDICATOR_UNITS = "%") %>%
-    dplyr::select(-total_trips) |>
-  # comment out the following lines if wanting all states summed
-  dplyr::ungroup() #%>%
-    # dplyr::select(-Year) 
+                                    by = "YEAR")  |> 
+    dplyr::mutate(
+      DATA_VALUE = DATA_VALUE / total_trips,
+      INDICATOR_NAME = "proportion_sp_trips",
+      INDICATOR_UNITS = "%"
+    )  |> 
+    dplyr::select(-total_trips)  |> 
+  # comment out the following lines if wanting all states summed  
+    dplyr::ungroup()
+  # dplyr::select(-Year) 
   # dplyr::rename(STATE = State)
   
   if(return) return(prop_sp_trips)
