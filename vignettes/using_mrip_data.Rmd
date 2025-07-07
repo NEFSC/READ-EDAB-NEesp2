@@ -21,7 +21,6 @@ Queries for recreational trips, catch, and landings can be performed using the f
 This vignette shows example data pulls and plots used for Black Sea Bass:
  - Total Recreational Catch
  - Total Recreational Trips
- - Recreational Effort (proportion of trips targeting black sea bass)
  - Total Recreational Landings
  
 ## Run MRIP functions and plot time series
@@ -30,10 +29,14 @@ This vignette shows example data pulls and plots used for Black Sea Bass:
 
 ```{r}
 bsb_catch <- get_mrip_catch(species = "BLACK SEA BASS", type = "all")
-catch <- bsb_catch$data
+catch <- bsb_catch$data |>
+  dplyr::rename(YEAR = Year,
+                DATA_VALUE = `Total Catch (A+B1+B2)`) |>
+  dplyr::mutate(INDICATOR_NAME = 'Recreational Catch') 
+
+catch$DATA_VALUE <- as.numeric(gsub(",","",catch$DATA_VALUE))
 
 head(catch)
-
 plt_indicator(catch)
 ```
 
@@ -41,10 +44,14 @@ plt_indicator(catch)
 
 ```{r}
 bsb_landings <- get_mrip_catch(species = "BLACK SEA BASS", type = "landings")
-landings <- bsb_landings$data
+landings <- bsb_landings$data |>
+  dplyr::rename(YEAR = Year,
+                DATA_VALUE = `Total Harvest (A+B1)`) |>
+  dplyr::mutate(INDICATOR_NAME = 'Recreational Landings')
+
+landings$DATA_VALUE <- as.numeric(gsub(",","",landings$DATA_VALUE))
 
 head(landings)
-
 plt_indicator(landings)
 ```
 
@@ -56,8 +63,50 @@ Additionally, each region must be queried separately (i.e. Mid-Atlantic and Nort
 The following queries Black Sea Bass trips for the North Atlantic and Mid-Atlantic from 2020-2024.
 
 ```{r}
-rec_trips <- create_rec_trips(files = files)
+trips_2020 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2020')
+trips_2021 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2021')
+trips_2022 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2022')
+trips_2023 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2023')
+trips_2024 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2024')
 
-plt_indicator(rec_trips)
+trips2_2020 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2020')
+trips2_2021 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2021')
+trips2_2022 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2022')
+trips2_2023 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2023')
+trips2_2024 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2024')
+
+n_trips <- rbind(trips_2020$data,
+               trips_2021$data,
+               trips_2022$data,
+               trips_2023$data,
+               trips_2024$data)
+
+mid_trips <- rbind(
+               trips2_2020$data,
+               trips2_2021$data,
+               trips2_2022$data,
+               trips2_2023$data,
+               trips2_2024$data)
+
+n_trips <- n_trips |>
+  dplyr::rename(YEAR = Year,
+                DATA_VALUE = `Directed Trips`) |>
+  dplyr::mutate(INDICATOR_NAME = 'Recreational Trips')
+
+n_trips$DATA_VALUE <- as.numeric(gsub(",","",n_trips$DATA_VALUE))
+
+head(n_trips)
+plt_indicator(n_trips)
+
+mid_trips <- mid_trips |>
+  dplyr::rename(YEAR = Year,
+                DATA_VALUE = `Directed Trips`) |>
+  dplyr::mutate(INDICATOR_NAME = 'Recreational Trips')
+
+mid_trips$DATA_VALUE <- as.numeric(gsub(",","",mid_trips$DATA_VALUE))
+
+head(mid_trips)
+plt_indicator(mid_trips)
+
 ```
 
