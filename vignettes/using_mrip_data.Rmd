@@ -16,38 +16,9 @@ devtools::load_all()
 
 Data pulls from NOAA Fisheries' Marine Recreational Information Program (MRIP) can be done through the MRIP Query Tool (https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries). 
  
-At this time, queries must be saved as a csv and loaded into R. The raw data includes lines of metadata and description and does not format nicely. The following lines of code remove the extra information and modifies the remaining data into columns while reading in each csv file. The files used in this vignette are found in the 'data-raw' folder in this package. 
+Queries for recreational trips, catch, and landings can be performed using the functions 'get_mrip_catch' and 'get_mrip_trips' located in 'R/get_mrip_data.R' in this package.
 
-Catch, landings, and effort data can be read in as one file with multiple years. Directed trips must be downloaded for each year of interest. 
-
-```{r}
-# catch data
-mrip_catch <- read.csv(here::here('data-raw/mrip_BLACK_SEA_BASS_catch_series.csv'),
-                                  skip = 46, # of rows you want to ignore
-                                  na.strings = ".") |>
-  janitor::clean_names(case = "all_caps")
-
-# landings data
-mrip_landing <- read.csv(here::here('data-raw/mrip_BLACK_SEA_BASS_harvest.csv'),
-                         skip = 46, # of rows you want to ignore
-                         na.strings = ".") |>
-  janitor::clean_names(case = "all_caps")
-
-# effort data 
-mrip_effort <- read.csv(here::here('data-raw/mrip_effort_series.csv'),
-                        skip = 44, # of rows you want to ignore
-                        na.strings = ".") |>
-  janitor::clean_names(case = "all_caps")
-
-# trips files
-path = (here::here('data-raw/mrip_directed_trips'))
-
-files <- list.files(path = path, 
-                    pattern = utils::glob2rx('mrip*.csv'),
-                    full.names = TRUE)
-```
-
-This vignette shows example data pulls and plots used for the 2025 black sea bass ESP report card:
+This vignette shows example data pulls and plots used for Black Sea Bass:
  - Total Recreational Catch
  - Total Recreational Trips
  - Recreational Effort (proportion of trips targeting black sea bass)
@@ -55,62 +26,38 @@ This vignette shows example data pulls and plots used for the 2025 black sea bas
  
 ## Run MRIP functions and plot time series
 
-The code for functions referenced here can be found in 'create_recreational_indicators.R' and 'plot_indicator_ts.R'.
-
 ### Black Sea Bass Recreational Catch
 
-Query 'Time Series' under 'Catch Data'.
-
-Choose years of interest, summarize by Annual, Calendar Year, Atlantic coast by state, Black Sea Bass, all modes and areas, Total Catch
-
-Download csv as output
-
 ```{r}
-total_rec_catch <- create_total_rec_catch(mrip_catch)
+bsb_catch <- get_mrip_catch(species = "BLACK SEA BASS", type = "all")
+catch <- bsb_catch$data
 
-plt_indicator(total_rec_catch)
+head(catch)
+
+plt_indicator(catch)
 ```
 
 ### Black Sea Bass Recreational Landings
 
-Query 'Time Series' under 'Catch Data'.
-
-Choose years of interest, summarize by Annual, Calendar Year, Atlantic Coast by State, Black Sea Bass, all modes and areas, Harvest (A + B1), choose # of fish/weight (lbs), mean length and weight
-
-Download csv as output
 ```{r}
-total_rec_landings <- create_total_rec_landings(mrip_landing)
+bsb_landings <- get_mrip_catch(species = "BLACK SEA BASS", type = "landings")
+landings <- bsb_landings$data
 
-plt_indicator(total_rec_landings)
+head(landings)
+
+plt_indicator(landings)
 ```
 
 ### Black Sea Bass Total Recreational Trips
 
-Query 'Directed Trip' under 'Effort Data'.
+Recreational trip queries must be done by year (single query for each year). The earliest possible year is 1981. 
+Additionally, each region must be queried separately (i.e. Mid-Atlantic and North Atlantic, or by state).
 
-Choose year of interest, summarize by Annual, Calendar Year, Atlantic coast by state, Black Sea Bass, all modes and areas, Primary Target
- 
-Download csv as output
+The following queries Black Sea Bass trips for the North Atlantic and Mid-Atlantic from 2020-2024.
 
 ```{r}
 rec_trips <- create_rec_trips(files = files)
 
 plt_indicator(rec_trips)
-```
-
-### Black Sea Bass Recreational Effort
-
-Note: must run 'create_rec_trips' prior to obtain 'rec_trips' dataset.
-
-Query 'Time Series' under 'Effort Data'.
-
-Choose years of interest, summarize by Annual, Calendar Year, Atlantic Coast by State, all modes and areas
-
-Download csv as output
-```{r}
-prop_sp_trips <- create_prop_sp_trips(total_trips = mrip_effort, 
-                                      species_trips = rec_trips)
-
-plt_indicator(prop_sp_trips)
 ```
 
