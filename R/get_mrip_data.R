@@ -20,17 +20,16 @@ get_mrip_catch <- function(species, type = "all") {
                                   type == "landings" ~ "HARVEST+%28TYPE+A+%2B+B1")
   
   # this url would get a, b1, b2 estimates separately
-    # url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pyc&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=", 
-    #               species, 
-    #               "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=ALL+CATCH+TYPES+%28TYPE+A%2C+B1%2C+and+B2%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
- 
-    url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=",
-                  new_species,
-                  "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=",
-                  catch_query,
-                  "%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
-    
-    
+  # url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pyc&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=", 
+  #               species, 
+  #               "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=ALL+CATCH+TYPES+%28TYPE+A%2C+B1%2C+and+B2%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
+  
+  url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=",
+                new_species,
+                "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=",
+                catch_query,
+                "%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
+
   test <- httr::GET(url) |>
     httr::content()
   
@@ -53,8 +52,6 @@ get_mrip_catch <- function(species, type = "all") {
 }
 
 # get_mrip_catch("Atlantic cod", type = "landings")
-
-
 # bsb_test <- get_mrip_catch("BLACK SEA BASS")
 
 #' Scrape MRIP trip data from MRIP Query tool
@@ -67,10 +64,10 @@ get_mrip_catch <- function(species, type = "all") {
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
-
 # species <- "Chub mackerel"
 # region <- "north atlantic"
 # year <- 1995
+
 get_mrip_trips <- function(species,
                            region,
                            year) {
@@ -82,40 +79,40 @@ get_mrip_trips <- function(species,
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "+")
   
-url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_directed_trip&qyearfrom=",
-              year,
-              "&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=",
-              new_region,
-              "&qspecies=",
-              new_species,
-              "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qsp_opt=PRIMARY&qsp_opt=SECONDARY&qsp_opt=CAUGHT&qsp_opt=HARVESTED&qsp_opt=RELEASED&qoutput_type=TABLE&qsource=PRODUCTION")
-
-
-test <- httr::GET(url) |>
-  httr::content()
-
-tbl <- test |>
-  xml2::xml_child(2) |>
-  xml2::xml_child(2)
-
-meta_tbl <- xml2::xml_child(tbl, 2) |>
-  try()
-
-if(class(meta_tbl) == "try-error") {
-  meta_tbl <- test |>
+  url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_directed_trip&qyearfrom=",
+                year,
+                "&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=",
+                new_region,
+                "&qspecies=",
+                new_species,
+                "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qsp_opt=PRIMARY&qsp_opt=SECONDARY&qsp_opt=CAUGHT&qsp_opt=HARVESTED&qsp_opt=RELEASED&qoutput_type=TABLE&qsource=PRODUCTION")
+  
+  
+  test <- httr::GET(url) |>
+    httr::content()
+  
+  tbl <- test |>
     xml2::xml_child(2) |>
-    xml2::xml_child(3) |>
-    xml2::xml_child(1) |>
-    rvest::html_table()
+    xml2::xml_child(2)
   
-  output <- list(data = "no data",
-                 metadata = meta_tbl)
-} else {
+  meta_tbl <- xml2::xml_child(tbl, 2) |>
+    try()
   
-  data_tbl <- tbl |>
-    xml2::xml_child(4) |>
-    xml2::xml_child(1) |>
-    xml2::xml_child(1) 
+  if(class(meta_tbl) == "try-error") {
+    meta_tbl <- test |>
+      xml2::xml_child(2) |>
+      xml2::xml_child(3) |>
+      xml2::xml_child(1) |>
+      rvest::html_table()
+    
+    output <- list(data = "no data",
+                   metadata = meta_tbl)
+  } else {
+    
+    data_tbl <- tbl |>
+      xml2::xml_child(4) |>
+      xml2::xml_child(1) |>
+      xml2::xml_child(1) 
     
     tbl2 <- rvest::html_table(data_tbl) |>
       dplyr::mutate(Species = species,
@@ -124,9 +121,8 @@ if(class(meta_tbl) == "try-error") {
     
     output <- list(data = tbl2,
                    metadata = meta2)
-}
-
-return(output)
+  }  
+  return(output)
 }
 
 #' Scrape and save MRIP trip data from MRIP Query tool
@@ -153,7 +149,7 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
   }
   
   fname_base <- paste0(species_dir,
-                  paste("/trips", this_species, this_region, this_year, sep = "_")) |>
+                       paste("/trips", this_species, this_region, this_year, sep = "_")) |>
     stringr::str_replace_all(" ", "_")
   
   out <- get_mrip_trips(species = this_species,

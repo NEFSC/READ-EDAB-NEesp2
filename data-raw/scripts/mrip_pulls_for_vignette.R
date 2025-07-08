@@ -1,33 +1,5 @@
----
-title: "Using MRIP Data for Recreational Indicators"
-author: "Stephanie Owen"
-vignette: >
-  %\VignetteIndexEntry{Using MRIP Data for Recreational Indicators}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
+#catch
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-devtools::load_all()
-```
-
-## Obtaining Raw MRIP Data
-
-Data pulls from NOAA Fisheries' Marine Recreational Information Program (MRIP) can be done through the MRIP Query Tool (https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries). 
- 
-Queries for recreational trips, catch, and landings can be performed using the functions 'get_mrip_catch' and 'get_mrip_trips' located in 'R/get_mrip_data.R' in this package.
-
-This vignette shows example data pulls and plots used for Black Sea Bass:
- - Total Recreational Catch
- - Total Recreational Trips
- - Total Recreational Landings
- 
-## Run MRIP functions and plot time series
-
-### Black Sea Bass Recreational Catch
-
-```{r}
 bsb_catch <- get_mrip_catch(species = "BLACK SEA BASS", type = "all")
 catch <- bsb_catch$data |>
   dplyr::rename(YEAR = Year,
@@ -36,13 +8,10 @@ catch <- bsb_catch$data |>
 
 catch$DATA_VALUE <- as.numeric(gsub(",","",catch$DATA_VALUE))
 
-head(catch)
 plt_indicator(catch)
-```
 
-### Black Sea Bass Recreational Landings
+#landings
 
-```{r}
 bsb_landings <- get_mrip_catch(species = "BLACK SEA BASS", type = "landings")
 landings <- bsb_landings$data |>
   dplyr::rename(YEAR = Year,
@@ -53,16 +22,9 @@ landings$DATA_VALUE <- as.numeric(gsub(",","",landings$DATA_VALUE))
 
 head(landings)
 plt_indicator(landings)
-```
 
-### Black Sea Bass Total Recreational Trips
+#trips
 
-Recreational trip queries must be done by year (single query for each year). The earliest possible year is 1981. 
-Additionally, each region must be queried separately (i.e. Mid-Atlantic and North Atlantic, or by state).
-
-The following queries Black Sea Bass trips for the North Atlantic and Mid-Atlantic from 2020-2024.
-
-```{r}
 trips_2020 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2020')
 trips_2021 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2021')
 trips_2022 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2022')
@@ -107,6 +69,3 @@ mid_trips$DATA_VALUE <- as.numeric(gsub(",","",mid_trips$DATA_VALUE))
 
 head(mid_trips)
 plt_indicator(mid_trips)
-
-```
-
