@@ -29,8 +29,7 @@ get_mrip_catch <- function(species, type = "all") {
                 "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=",
                 catch_query,
                 "%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
-  
-  
+
   test <- httr::GET(url) |>
     httr::content()
   
@@ -52,6 +51,9 @@ get_mrip_catch <- function(species, type = "all") {
   
 }
 
+# get_mrip_catch("Atlantic cod", type = "landings")
+# bsb_test <- get_mrip_catch("BLACK SEA BASS")
+
 #' Scrape MRIP trip data from MRIP Query tool
 #' 
 #' This function scrapes MRIP trip data from the MRIP Query tool
@@ -61,6 +63,10 @@ get_mrip_catch <- function(species, type = "all") {
 #' @param year the year of data to query. Must be a single value. The earliest year possible is 1981.
 #' @return Returns a list of the scraped data and metadata.
 #' @export
+
+# species <- "Chub mackerel"
+# region <- "north atlantic"
+# year <- 1995
 
 get_mrip_trips <- function(species,
                            region,
@@ -115,8 +121,7 @@ get_mrip_trips <- function(species,
     
     output <- list(data = tbl2,
                    metadata = meta2)
-  }
-  
+  }  
   return(output)
 }
 

@@ -18,53 +18,133 @@ groupby_state  <- function(data, groupby) {
   return(data)
 }
 
+#' Read in MRIP recreational catch data
+#'
+#' This function read in MRIP catch data
+#' 
+#' @param spceies the species common name
+#' @param dir the directory where MRIP catch files are saved
+#' @return a tibble
+#' @export
 
+read_rec_catch <- function(species, dir, type = "all") {
+  
+  new_species <- species |>
+    stringr::str_to_upper() |>
+    stringr::str_replace_all(" ", "_")
+  
+  files <- list.files(path = dir,
+                       full.names = TRUE)
+  
+  this_file <- files[which(stringr::str_detect(stringr::str_to_upper(files),
+                                    pattern = paste0(stringr::str_to_upper(type), 
+                                                     "_",
+                                                     stringr::str_to_upper(species)) |>
+                                      stringr::str_replace_all(" ", "_")))]
+  
+  # read in the data
+  rec_catch <- readRDS(this_file) |>
+    purrr::map(~janitor::clean_names(.x[1],
+                                     case = "all_caps")) 
+  
+  return(rec_catch)
+
+}
 
 #' Create MRIP total recreational catch indicator
 #'
 #' This function creates the total recreational catch indicator
-#' For new data queries, use MRIP Query Tool (https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries)
-#' Query 'Time Series' under 'Catch Data'.
-#' Choose years of interest, summarize by Annual, Calendar Year, Atlantic coast by state, species of interest, all modes and areas, Total Catch
-#' Download csv as output
+#' Input data is MRIP catch (A, B1, B2 catch combined)
 #' 
-#' @param data The mrip data (R object `mrip_catch`), already subset to species of interest only from downloaded csv file
-#' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
-#' @param groupby_state Whether to group results by state
+#' @param data The mrip data 
+#' @param species The species common name
+#' @param var_name The variable name to use in the indicator name. Default is "catch".
+#' @param remove_non_standard Boolean, if TRUE will remove non-standard data ("Does Total Catch (A+B1+B2) Meet MRIP Standard" = NO)
 #' @importFrom magrittr %>%
-#' @return Saves the R data object `total_rec_catch`
+#' @return a tibble
 #' @export
 
-create_total_rec_catch <- function(data, 
-                                   states = c('MAINE',
-                                              'CONNECTICUT',
-                                              'MASSACHUSETTS',
-                                              'NEW HAMPSHIRE',
-                                              'NEW JERSEY',
-                                              'NEW YORK',
-                                              'RHODE ISLAND',
-                                              'MARYLAND',
-                                              'DELAWARE',
-                                              'NORTH CAROLINA'),
-                                   groupby_state = FALSE,
-                                   return = TRUE){
-  total_rec_catch <- data %>%
-    dplyr::rename(tot_cat = TOTAL_CATCH_A_B1_B2) %>%
-    dplyr::filter(STATE %in% states) |>
-    groupby_state(groupby = groupby_state) |>
-    dplyr::summarise(DATA_VALUE = sum(tot_cat, na.rm = TRUE)) %>%
-    dplyr::mutate(CATEGORY = "Recreational",
-                  INDICATOR_TYPE = "Socioeconomic",
-                  INDICATOR_NAME = "total_recreational_catch_n",
-                  INDICATOR_UNITS = "lbs") %>%
-    # dplyr::rename(YEAR = Year,
-    #               STATE = State) %>% #remove STATE = State if wanting all states summed
-    dplyr::ungroup()## %>%
-    # dplyr::mutate(YEAR = as.numeric(YEAR))
-  
-  if(return) return(total_rec_catch)
-}
+create_total_rec_catch <- function(data,
+                                   # species,
+                                   var_name = "catch",
+                                   remove_non_standard = TRUE){
 
+  total_rec_catch <- data |>
+    janitor::clean_names(case = "all_caps") |>
+    dplyr::rename_with(~"data_value",
+                  .cols = dplyr::matches("^TOTAL_.{1,15}$")) |>
+    dplyr::rename_with(~"keep",
+                  .cols = dplyr::starts_with("DOES"))
+  
+  if(remove_non_standard) {
+    total_rec_catch <- total_rec_catch |>
+      dplyr::filter(keep != "NO")
+  }
+
+  output <- tibble::tibble(YEAR = total_rec_catch$YEAR,
+                  DATA_VALUE = total_rec_catch$data_value |> stringr::str_remove_all(","),
+                  CATEGORY = "Recreational",
+                  INDICATOR_TYPE = "Socioeconomic",
+                  INDICATOR_NAME = paste0("total_recreational_", var_name, "_n"),
+                  INDICATOR_UNITS = "number",
+                  # bring in species with data pull
+                  SPECIES = total_rec_catch$SPECIES)
+
+}
+# create_total_rec_catch(dat2$DATA, species = "atlantic cod")
+
+# create_total_rec_catch <- function(data, 
+#                                    states = c('MAINE',
+#                                               'CONNECTICUT',
+#                                               'MASSACHUSETTS',
+#                                               'NEW HAMPSHIRE',
+#                                               'NEW JERSEY',
+#                                               'NEW YORK',
+#                                               'RHODE ISLAND',
+#                                               'MARYLAND',
+#                                               'DELAWARE',
+#                                               'NORTH CAROLINA'),
+#                                    groupby_state = FALSE,
+#                                    return = TRUE){
+#   total_rec_catch <- data %>%
+#     dplyr::rename(tot_cat = TOTAL_CATCH_A_B1_B2) %>%
+#     dplyr::filter(STATE %in% states) |>
+#     groupby_state(groupby = groupby_state) |>
+#     dplyr::summarise(DATA_VALUE = sum(tot_cat, na.rm = TRUE)) %>%
+#     dplyr::mutate(CATEGORY = "Recreational",
+#                   INDICATOR_TYPE = "Socioeconomic",
+#                   INDICATOR_NAME = "total_recreational_catch_n",
+#                   INDICATOR_UNITS = "lbs") %>%
+#     # dplyr::rename(YEAR = Year,
+#     #               STATE = State) %>% #remove STATE = State if wanting all states summed
+#     dplyr::ungroup()## %>%
+#     # dplyr::mutate(YEAR = as.numeric(YEAR))
+#   
+#   if(return) return(total_rec_catch)
+# }
+
+
+#' Get MRIP trips file list
+#'
+#' This function returns a list of MRIP trip files
+#' @param dir A directory that has subfolders with species-level data
+#' @param species the species of interest
+#' @return A vector of files
+#' @export
+
+get_trip_files <- function(dir, species) {
+  new_dir <- list.dirs(dir, 
+                       full.names = TRUE)
+  this_dir <- new_dir[which(stringr::str_detect(stringr::str_to_upper(new_dir),
+                                                pattern = stringr::str_to_upper(species) |>
+                                                  stringr::str_replace_all(" ", "_")))]
+  
+  files <- list.files(this_dir, 
+                      pattern = "[0-9].Rds",
+                      full.names = TRUE)
+  
+  return(files)
+}
 
 #' Create MRIP total recreational trips indicator
 #'
@@ -80,42 +160,78 @@ create_total_rec_catch <- function(data,
 #' @export
 # `%>%` <- magrittr::`%>%`
 
-create_rec_trips <- function(files, 
-                             states = c('MAINE',
-                                        'CONNECTICUT',
-                                        'MASSACHUSETTS',
-                                        'NEW HAMPSHIRE',
-                                        'NEW JERSEY',
-                                        'NEW YORK',
-                                        'RHODE ISLAND',
-                                        'MARYLAND',
-                                        'DELAWARE',
-                                        'NORTH CAROLINA'),
-                             groupby_state = FALSE,
-                             return = TRUE) {
-  rec_directed_trips <- c()
-  for (i in files) {
-    this_dat <- read.csv(i,
-                         skip = 44,# was 24 is now 44
-                         na.strings = "."
-    )
-    # message(unique(this_dat$Year)) 
-    rec_directed_trips <- rbind(rec_directed_trips, this_dat)
+
+create_rec_trips <- function(files,
+                             remove_non_standard = TRUE) {
+    # rec_directed_trips <- c()
+  # for (i in files) {
+  #   this_dat <- readRDS(i)
+  #   rec_directed_trips <- rbind(rec_directed_trips, this_dat)
+  # } # TODO: convert this to purrr::reduce
+  rec_trips <- files |>
+    purrr::map(readRDS) |>
+    purrr::map(purrr::pluck("data")) |>
+    purrr::map(~.x |>
+                 janitor::clean_names(case = "all_caps") |>
+                 dplyr::mutate(DIRECTED_TRIPS = stringr::str_remove_all(DIRECTED_TRIPS, ",") |>
+                               as.numeric()) |>
+                 dplyr::select(YEAR, DIRECTED_TRIPS, REGION, SPECIES, DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD)) |>
+    purrr::reduce(dplyr::bind_rows) 
+
+  if(remove_non_standard) {
+    rec_trips <- rec_trips |>
+      dplyr::filter(DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD != "No")
   }
-  
-  rec_trips <- rec_directed_trips %>%
-    janitor::clean_names(case = "all_caps") %>%
-    dplyr::filter(STATE %in% states) %>%
-    groupby_state(groupby = groupby_state) |>
-    dplyr::summarise(DATA_VALUE = sum(DIRECTED_TRIPS, na.rm = TRUE)) %>%
+    
+  output <- rec_trips |>
+    dplyr::group_by(YEAR, SPECIES) |>
+    dplyr::summarise(DATA_VALUE = sum(DIRECTED_TRIPS, na.rm = TRUE)) |>
     dplyr::mutate(CATEGORY = "Recreational",
                   INDICATOR_TYPE = "Socioeconomic",
                   INDICATOR_NAME = "rec_trips",
-                  INDICATOR_UNITS = "n")
+                  INDICATOR_UNITS = "number") |>
+    dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_TYPE, INDICATOR_NAME, INDICATOR_UNITS, SPECIES) 
   
-  if(return) return(rec_trips)
+  return(output)
   
 }
+
+# create_rec_trips <- function(files, 
+#                              states = c('MAINE',
+#                                         'CONNECTICUT',
+#                                         'MASSACHUSETTS',
+#                                         'NEW HAMPSHIRE',
+#                                         'NEW JERSEY',
+#                                         'NEW YORK',
+#                                         'RHODE ISLAND',
+#                                         'MARYLAND',
+#                                         'DELAWARE',
+#                                         'NORTH CAROLINA'),
+#                              groupby_state = FALSE,
+#                              return = TRUE) {
+#   rec_directed_trips <- c()
+#   for (i in files) {
+#     this_dat <- read.csv(i,
+#                          skip = 44,# was 24 is now 44
+#                          na.strings = "."
+#     )
+#     # message(unique(this_dat$Year)) 
+#     rec_directed_trips <- rbind(rec_directed_trips, this_dat)
+#   }
+#   
+#   rec_trips <- rec_directed_trips %>%
+#     janitor::clean_names(case = "all_caps") %>%
+#     dplyr::filter(STATE %in% states) %>%
+#     groupby_state(groupby = groupby_state) |>
+#     dplyr::summarise(DATA_VALUE = sum(DIRECTED_TRIPS, na.rm = TRUE)) %>%
+#     dplyr::mutate(CATEGORY = "Recreational",
+#                   INDICATOR_TYPE = "Socioeconomic",
+#                   INDICATOR_NAME = "rec_trips",
+#                   INDICATOR_UNITS = "n")
+#   
+#   if(return) return(rec_trips)
+#   
+# }
 
 #' Create MRIP species recreational effort indicator
 #'
@@ -147,26 +263,29 @@ create_prop_sp_trips <- function(total_trips,
                                             'NORTH CAROLINA'),
                                  groupby_state = FALSE,
                                  return = TRUE){
-  total_trips <- total_trips %>%
-    dplyr::filter(STATE %in% states) %>% 
+  total_trips <- total_trips  |> 
+    dplyr::filter(STATE %in% states) |> 
     groupby_state(groupby = groupby_state) |>
-    dplyr::summarise(total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)) %>% 
+    dplyr::summarise(total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)) |> 
     dplyr::mutate(YEAR = as.numeric(YEAR))
   
-  sp <- species_trips %>% 
+  sp <- species_trips |> 
+    dplyr::filter(STATE %in% states) |> 
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(as.numeric(DATA_VALUE), na.rm = TRUE))
   
   prop_sp_trips <- dplyr::full_join(total_trips,
                                     sp,
-                                    by = c("YEAR")) %>%
-    dplyr::mutate(DATA_VALUE = DATA_VALUE/total_trips,
-                  INDICATOR_NAME = "proportion_sp_trips",
-                  INDICATOR_UNITS = "%") %>%
-    dplyr::select(-total_trips) |>
-  # comment out the following lines if wanting all states summed
-  dplyr::ungroup() #%>%
-    # dplyr::select(-Year) 
+                                    by = "YEAR")  |> 
+    dplyr::mutate(
+      DATA_VALUE = DATA_VALUE / total_trips,
+      INDICATOR_NAME = "proportion_sp_trips",
+      INDICATOR_UNITS = "%"
+    )  |> 
+    dplyr::select(-total_trips)  |> 
+  # comment out the following lines if wanting all states summed  
+    dplyr::ungroup()
+  # dplyr::select(-Year) 
   # dplyr::rename(STATE = State)
   
   if(return) return(prop_sp_trips)
@@ -202,7 +321,7 @@ create_total_rec_landings <- function(data,
                                       groupby_state = FALSE,
                                       return = TRUE){
   total_rec_landings <- data %>%
-    dplyr::rename(lbs_ab1 = HARVEST_A_B1_TOTAL_WEIGHT_LB) %>%
+   dplyr::rename(lbs_ab1 = HARVEST_A_B1_TOTAL_WEIGHT_LB) %>%
     dplyr::filter(STATE %in% states) %>%
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(lbs_ab1, na.rm = TRUE)) %>%

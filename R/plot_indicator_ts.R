@@ -38,14 +38,15 @@ plt_indicator <- function(data,
     linetype = "dotted"
     ) +
     ggplot2::geom_point() +
-    ggplot2::geom_path() +
+    ggplot2::geom_line() +
     ggplot2::scale_y_continuous(labels = scales::comma) +
     # ecodata::theme_ts() +
     ggplot2::theme_classic(base_size = 16) +
     ggplot2::theme(strip.text = ggplot2::element_text(size = 16),
                    axis.title = ggplot2::element_blank(),
                    aspect.ratio = ar,
-                   plot.background = ggplot2::element_rect(fill='transparent'))
+                   plot.background = ggplot2::element_rect(fill='transparent',
+                                                           color='transparent'))
   
   if(include_trends) {
     plt <- plt +

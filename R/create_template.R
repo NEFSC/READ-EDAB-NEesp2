@@ -1,6 +1,6 @@
 #' Create an ESP template
 #'
-#' This function creates an ESP template at the specified path. DEPRECATED -- PLAN TO REMOVE
+#' This function creates an ESP two-pager template at the specified path.
 #' @param path Where to create the template. Defaults to the present working directory.
 #' @export
 
