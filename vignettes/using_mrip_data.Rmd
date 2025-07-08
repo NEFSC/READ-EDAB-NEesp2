@@ -1,6 +1,6 @@
 ---
 title: "Using MRIP Data for Recreational Indicators"
-author: "Stephanie Owen"
+author: "Stephanie Owen & Abigail Tyrell"
 vignette: >
   %\VignetteIndexEntry{Using MRIP Data for Recreational Indicators}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,6 +10,9 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all()
+if (!rlang::is_installed("ecodata") & dir.exists(here::here("../ecodata"))) {
+  devtools::load_all(here::here("../ecodata"))
+}
 ```
 
 ## Obtaining Raw MRIP Data
@@ -30,11 +33,13 @@ This vignette shows example data pulls and plots used for Black Sea Bass:
 ```{r}
 bsb_catch <- get_mrip_catch(species = "BLACK SEA BASS", type = "all")
 catch <- bsb_catch$data |>
-  dplyr::rename(YEAR = Year,
-                DATA_VALUE = `Total Catch (A+B1+B2)`) |>
-  dplyr::mutate(INDICATOR_NAME = 'Recreational Catch') 
+  dplyr::rename(
+    YEAR = Year,
+    DATA_VALUE = `Total Catch (A+B1+B2)`
+  ) |>
+  dplyr::mutate(INDICATOR_NAME = "Recreational Catch")
 
-catch$DATA_VALUE <- as.numeric(gsub(",","",catch$DATA_VALUE))
+catch$DATA_VALUE <- as.numeric(gsub(",", "", catch$DATA_VALUE))
 
 head(catch)
 plt_indicator(catch)
@@ -45,11 +50,13 @@ plt_indicator(catch)
 ```{r}
 bsb_landings <- get_mrip_catch(species = "BLACK SEA BASS", type = "landings")
 landings <- bsb_landings$data |>
-  dplyr::rename(YEAR = Year,
-                DATA_VALUE = `Total Harvest (A+B1)`) |>
-  dplyr::mutate(INDICATOR_NAME = 'Recreational Landings')
+  dplyr::rename(
+    YEAR = Year,
+    DATA_VALUE = `Total Harvest (A+B1)`
+  ) |>
+  dplyr::mutate(INDICATOR_NAME = "Recreational Landings")
 
-landings$DATA_VALUE <- as.numeric(gsub(",","",landings$DATA_VALUE))
+landings$DATA_VALUE <- as.numeric(gsub(",", "", landings$DATA_VALUE))
 
 head(landings)
 plt_indicator(landings)
@@ -60,53 +67,139 @@ plt_indicator(landings)
 Recreational trip queries must be done by year (single query for each year). The earliest possible year is 1981. 
 Additionally, each region must be queried separately (i.e. Mid-Atlantic and North Atlantic, or by state).
 
-The following queries Black Sea Bass trips for the North Atlantic and Mid-Atlantic from 2020-2024.
+Here is a sample query for Black Sea Bass trips in the North Atlantic in 2020.
+```{r, eval = FALSE}
+trips_2020 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = "2020")
+```
+
+```{r, include = FALSE}
+trips_2020 <- readRDS(system.file("mrip_data/trips_Black_sea_bass_north_atlantic_2020.rds", package = "NEesp2"))
+```
 
 ```{r}
-trips_2020 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2020')
-trips_2021 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2021')
-trips_2022 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2022')
-trips_2023 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2023')
-trips_2024 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = '2024')
+trips_2020
+```
 
-trips2_2020 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2020')
-trips2_2021 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2021')
-trips2_2022 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2022')
-trips2_2023 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2023')
-trips2_2024 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = '2024')
+To build a time series, multiple queries need to be run. Trips could be manually downloaded and combined, as shown below. The following queries Black Sea Bass trips for the North Atlantic and Mid-Atlantic from 2020-2024.
+```{r, eval = FALSE}
+trips_2020 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = "2020")
+trips_2021 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = "2021")
+trips_2022 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = "2022")
+trips_2023 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = "2023")
+trips_2024 <- get_mrip_trips(species = "BLACK SEA BASS", region = "North Atlantic", year = "2024")
 
-n_trips <- rbind(trips_2020$data,
-               trips_2021$data,
-               trips_2022$data,
-               trips_2023$data,
-               trips_2024$data)
+trips2_2020 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = "2020")
+trips2_2021 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = "2021")
+trips2_2022 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = "2022")
+trips2_2023 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = "2023")
+trips2_2024 <- get_mrip_trips(species = "BLACK SEA BASS", region = "Mid-Atlantic", year = "2024")
+```
+
+```{r, include = FALSE}
+purrr::map(
+  2020:2024,
+  ~ {
+    txt <- knitr::knit_expand(
+      text = "trips_{{ year }} <<- readRDS(system.file('mrip_data/trips_Black_sea_bass_mid-atlantic_{{ year }}.rds', package = 'NEesp2'))",
+      year = .x
+    )
+    parse(text = txt) |>
+      eval()
+  }
+)
+
+purrr::map(
+  2020:2024,
+  ~ {
+    txt <- knitr::knit_expand(
+      text = "trips2_{{ year }} <<- readRDS(system.file('mrip_data/trips_Black_sea_bass_north_atlantic_{{ year }}.rds', package = 'NEesp2'))",
+      year = .x
+    )
+    parse(text = txt) |>
+      eval()
+  }
+)
+```
+
+
+```{r}
+n_trips <- rbind(
+  trips_2020$data,
+  trips_2021$data,
+  trips_2022$data,
+  trips_2023$data,
+  trips_2024$data
+)
 
 mid_trips <- rbind(
-               trips2_2020$data,
-               trips2_2021$data,
-               trips2_2022$data,
-               trips2_2023$data,
-               trips2_2024$data)
+  trips2_2020$data,
+  trips2_2021$data,
+  trips2_2022$data,
+  trips2_2023$data,
+  trips2_2024$data
+)
 
 n_trips <- n_trips |>
-  dplyr::rename(YEAR = Year,
-                DATA_VALUE = `Directed Trips`) |>
-  dplyr::mutate(INDICATOR_NAME = 'Recreational Trips')
+  dplyr::rename(
+    YEAR = Year,
+    DATA_VALUE = `Directed Trips`
+  ) |>
+  dplyr::mutate(INDICATOR_NAME = "Recreational Trips")
 
-n_trips$DATA_VALUE <- as.numeric(gsub(",","",n_trips$DATA_VALUE))
+n_trips$DATA_VALUE <- as.numeric(gsub(",", "", n_trips$DATA_VALUE))
 
 head(n_trips)
+```
+
+To make the data download more reproducible and efficient, there is a `save_trips` function that can be iterated on with `purrr::map()`. This function executes the MRIP query and saves the .Rds with the MRIP data download and query information in the specified folder. Data can then be read in and used in analyses. For example, the following code will download and save the same data that is shown in the `trips_2020` object above.
+
+```{r, eval = FALSE}
+save_trips(
+  this_species = "BLACK SEA BASS",
+  this_year = 2020,
+  this_region = "North Atlantic",
+  out_folder = here::here()
+)
+```
+
+To iterate with `purrr::map()`:
+```{r, eval = FALSE}
+# create parameter grid
+params <- expand.grid(
+  region = c("north atlantic", "mid-atlantic"),
+  year = c(2020:2024),
+  species = "Black sea bass"
+)
+
+# iterate
+purrr::map(
+  purrr::list_transpose(list(
+    region = params$region,
+    year = params$year,
+    species = params$species
+  )),
+  ~ try(NEesp2::save_trips(
+    this_species = .x$species,
+    this_year = .x$year,
+    this_region = .x$region,
+    out_folder = here::here()
+  ))
+)
+```
+
+Please note that iterating over a large number of species and years may fail. Since data is saved as it is queried, progress will be saved and can be resumed by adjusting `params` running the function again.
+
+After the MRIP trip data has been saved, it can be easily turned into a data frame using the `create_rec_trips` function. This function takes a single argument, which is the list of files to be combined. Note that this function will automatically combine the data from multiple regions, so if you would like to create region-specific, you must run the function over two separate lists of files.
+
+```{r}
+n_trips <- create_rec_trips(
+  files = list.files(system.file("mrip_data", package = "NEesp2"),
+    recursive = TRUE,
+    full.names = TRUE
+  )
+)
+
+n_trips
 plt_indicator(n_trips)
-
-mid_trips <- mid_trips |>
-  dplyr::rename(YEAR = Year,
-                DATA_VALUE = `Directed Trips`) |>
-  dplyr::mutate(INDICATOR_NAME = 'Recreational Trips')
-
-mid_trips$DATA_VALUE <- as.numeric(gsub(",","",mid_trips$DATA_VALUE))
-
-head(mid_trips)
-plt_indicator(mid_trips)
-
 ```
 
