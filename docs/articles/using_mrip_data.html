@@ -169,7 +169,9 @@ data can be used directly for analyses, with minimal data wrangling. The
 data can be formatted for use in ESPs with the function
 <code><a href="../reference/create_total_rec_catch.html">create_total_rec_catch()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">esp_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">bsb_catch</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">esp_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">bsb_catch</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  var_name <span class="op">=</span> <span class="st">"catch"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">esp_catch</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -249,7 +251,9 @@ data can be formatted for use in ESPs with the function
 </tbody>
 </table>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">esp_landings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">bsb_landings</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">esp_landings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">bsb_landings</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  var_name <span class="op">=</span> <span class="st">"landings"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">esp_landings</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -258,7 +262,7 @@ data can be formatted for use in ESPs with the function
 <col width="10%">
 <col width="12%">
 <col width="14%">
-<col width="26%">
+<col width="28%">
 <col width="15%">
 <col width="14%">
 </colgroup>
@@ -277,7 +281,7 @@ data can be formatted for use in ESPs with the function
 <td align="right">2387527</td>
 <td align="left">Recreational</td>
 <td align="left">Socioeconomic</td>
-<td align="left">total_recreational_catch_n</td>
+<td align="left">total_recreational_landings_n</td>
 <td align="left">number</td>
 <td align="left">BLACK SEA BASS</td>
 </tr>
@@ -286,7 +290,7 @@ data can be formatted for use in ESPs with the function
 <td align="right">10696079</td>
 <td align="left">Recreational</td>
 <td align="left">Socioeconomic</td>
-<td align="left">total_recreational_catch_n</td>
+<td align="left">total_recreational_landings_n</td>
 <td align="left">number</td>
 <td align="left">BLACK SEA BASS</td>
 </tr>
@@ -295,7 +299,7 @@ data can be formatted for use in ESPs with the function
 <td align="right">5075429</td>
 <td align="left">Recreational</td>
 <td align="left">Socioeconomic</td>
-<td align="left">total_recreational_catch_n</td>
+<td align="left">total_recreational_landings_n</td>
 <td align="left">number</td>
 <td align="left">BLACK SEA BASS</td>
 </tr>
@@ -304,7 +308,7 @@ data can be formatted for use in ESPs with the function
 <td align="right">2447169</td>
 <td align="left">Recreational</td>
 <td align="left">Socioeconomic</td>
-<td align="left">total_recreational_catch_n</td>
+<td align="left">total_recreational_landings_n</td>
 <td align="left">number</td>
 <td align="left">BLACK SEA BASS</td>
 </tr>
@@ -313,7 +317,7 @@ data can be formatted for use in ESPs with the function
 <td align="right">4491941</td>
 <td align="left">Recreational</td>
 <td align="left">Socioeconomic</td>
-<td align="left">total_recreational_catch_n</td>
+<td align="left">total_recreational_landings_n</td>
 <td align="left">number</td>
 <td align="left">BLACK SEA BASS</td>
 </tr>
@@ -322,7 +326,7 @@ data can be formatted for use in ESPs with the function
 <td align="right">19254567</td>
 <td align="left">Recreational</td>
 <td align="left">Socioeconomic</td>
-<td align="left">total_recreational_catch_n</td>
+<td align="left">total_recreational_landings_n</td>
 <td align="left">number</td>
 <td align="left">BLACK SEA BASS</td>
 </tr>
@@ -472,18 +476,9 @@ from 2020-2024.</p>
 <span>  <span class="va">trips2_2024</span><span class="op">$</span><span class="va">data</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">n_trips</span> <span class="op">&lt;-</span> <span class="va">n_trips</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
-<span>    YEAR <span class="op">=</span> <span class="va">Year</span>,</span>
-<span>    DATA_VALUE <span class="op">=</span> <span class="va">`Directed Trips`</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>INDICATOR_NAME <span class="op">=</span> <span class="st">"Recreational Trips"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">n_trips</span><span class="op">$</span><span class="va">DATA_VALUE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">","</span>, <span class="st">""</span>, <span class="va">n_trips</span><span class="op">$</span><span class="va">DATA_VALUE</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">n_trips</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 14</span></span></span>
-<span><span class="co">##   `Estimate Status`  YEAR `Fishing Year`                 Estimation Methodolog…¹</span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 13</span></span></span>
+<span><span class="co">##   `Estimate Status`  Year `Fishing Year`                 Estimation Methodolog…¹</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">1</span> FINAL              <span style="text-decoration: underline;">2</span>020 Calendar Year (Jan 1 - Dec 31) MRIP (2020 - 2020)     </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">2</span> FINAL              <span style="text-decoration: underline;">2</span>021 Calendar Year (Jan 1 - Dec 31) MRIP (2021 - 2021)     </span></span>
@@ -491,12 +486,12 @@ from 2020-2024.</p>
 <span><span class="co">## <span style="color: #BCBCBC;">4</span> FINAL              <span style="text-decoration: underline;">2</span>023 Calendar Year (Jan 1 - Dec 31) MRIP (2023 - 2023)     </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span> FINAL              <span style="text-decoration: underline;">2</span>024 Calendar Year (Jan 1 - Dec 31) MRIP (2024 - 2024)     </span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ abbreviated name: ¹​`Estimation Methodology`</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 10 more variables: `Cumulative Through` &lt;chr&gt;, PSE &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 9 more variables: `Cumulative Through` &lt;chr&gt;, PSE &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   `Does Directed Trips Meet MRIP Standard` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Is Directed Trips Significantly Different From 0` &lt;chr&gt;, DATA_VALUE &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Directed Trips Lower 95% Confidence Limit` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Is Directed Trips Significantly Different From 0` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Directed Trips` &lt;chr&gt;, `Directed Trips Lower 95% Confidence Limit` &lt;chr&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   `Directed Trips Upper 95% Confidence Limit` &lt;chr&gt;, Species &lt;fct&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   Region &lt;fct&gt;, INDICATOR_NAME &lt;chr&gt;</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #949494;">#   Region &lt;fct&gt;</span></span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="save-data-1">Save data<a class="anchor" aria-label="anchor" href="#save-data-1"></a>
@@ -507,20 +502,24 @@ from 2020-2024.</p>
 saves the .Rds with the MRIP data download and query information in the
 specified folder. Data can then be read in and used in analyses. For
 example, the following code will download and save the same data that is
-shown in the <code>trips_2020</code> object above.</p>
+shown in the <code>trips_2020</code> object above. The file name is
+automatically created and is returned by the function.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/save_trips.html">save_trips</a></span><span class="op">(</span></span>
 <span>  this_species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>,</span>
 <span>  this_year <span class="op">=</span> <span class="fl">2020</span>,</span>
 <span>  this_region <span class="op">=</span> <span class="st">"North Atlantic"</span>,</span>
-<span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"inst/mrip_data"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## MRIP query successful: BLACK SEA BASS North Atlantic 2020</span></span></code></pre>
+<pre><code><span><span class="co">## Data saved at: C:/Users/abigail.tyrell/Documents/code/READ-EDAB-NEesp2/inst/mrip_data/BLACK_SEA_BASS_trips/trips_BLACK_SEA_BASS_North_Atlantic_2020.Rds</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "C:/Users/abigail.tyrell/Documents/code/READ-EDAB-NEesp2/inst/mrip_data/BLACK_SEA_BASS_trips/trips_BLACK_SEA_BASS_North_Atlantic_2020.Rds"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="automate-data-pulls-with-save_trips">Automate data pulls with <code>save_trips()</code><a class="anchor" aria-label="anchor" href="#automate-data-pulls-with-save_trips"></a>
 </h3>
 <p>To iterate with <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code>:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create parameter grid</span></span>
 <span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span></span>
 <span>  region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"north atlantic"</span>, <span class="st">"mid-atlantic"</span><span class="op">)</span>,</span>
@@ -554,34 +553,93 @@ again.</p>
 a data frame using the <code>create_rec_trips</code> function. This
 function takes a single argument, which is the list of files to be
 combined. Note that this function will automatically combine the data
-from multiple regions, so if you would like to create region-specific,
-you must run the function over two separate lists of files.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">n_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_rec_trips.html">create_rec_trips</a></span><span class="op">(</span></span>
+from multiple regions, so if you would like to create region-specific
+indicators, you must run the function over two separate lists of
+files.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">esp_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_rec_trips.html">create_rec_trips</a></span><span class="op">(</span></span>
 <span>  files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"mrip_data"</span>, package <span class="op">=</span> <span class="st">"NEesp2"</span><span class="op">)</span>,</span>
-<span>    pattern <span class="op">=</span> <span class="st">"trips_*"</span>,</span>
+<span>    pattern <span class="op">=</span> <span class="st">"trips_Black_sea_bass*"</span>,</span>
 <span>    recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    full.names <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">n_trips</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 7</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># Groups:   YEAR [5]</span></span></span>
-<span><span class="co">##    YEAR DATA_VALUE CATEGORY     INDICATOR_TYPE INDICATOR_NAME INDICATOR_UNITS</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">2</span>020    6<span style="text-decoration: underline;">750</span>639 Recreational Socioeconomic  rec_trips      number         </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">2</span>021    6<span style="text-decoration: underline;">840</span>012 Recreational Socioeconomic  rec_trips      number         </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">2</span>022    7<span style="text-decoration: underline;">528</span>515 Recreational Socioeconomic  rec_trips      number         </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">2</span>023    6<span style="text-decoration: underline;">915</span>482 Recreational Socioeconomic  rec_trips      number         </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">2</span>024    5<span style="text-decoration: underline;">947</span>798 Recreational Socioeconomic  rec_trips      number         </span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: SPECIES &lt;fct&gt;</span></span></span></code></pre>
+<span><span class="va">esp_trips</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="5%">
+<col width="12%">
+<col width="14%">
+<col width="16%">
+<col width="16%">
+<col width="17%">
+<col width="16%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">YEAR</th>
+<th align="right">DATA_VALUE</th>
+<th align="left">CATEGORY</th>
+<th align="left">INDICATOR_TYPE</th>
+<th align="left">INDICATOR_NAME</th>
+<th align="left">INDICATOR_UNITS</th>
+<th align="left">SPECIES</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">2020</td>
+<td align="right">6750639</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+<tr class="even">
+<td align="right">2021</td>
+<td align="right">6840012</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+<tr class="odd">
+<td align="right">2022</td>
+<td align="right">7528515</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+<tr class="even">
+<td align="right">2023</td>
+<td align="right">6915482</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+<tr class="odd">
+<td align="right">2024</td>
+<td align="right">5947798</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="plot-data-1">Plot data<a class="anchor" aria-label="anchor" href="#plot-data-1"></a>
 </h3>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">n_trips</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">esp_trips</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## N &lt; 30</span></span></code></pre>
 <p><img src="using_mrip_data_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>

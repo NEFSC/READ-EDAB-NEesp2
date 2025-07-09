@@ -45,11 +45,15 @@ head(bsb_landings)
 
 The function returns a list with the data and query metadata. These data can be used directly for analyses, with minimal data wrangling. The data can be formatted for use in ESPs with the function `create_total_rec_catch()`.
 ```{r}
-esp_catch <- create_total_rec_catch(bsb_catch$data)
+esp_catch <- create_total_rec_catch(bsb_catch$data,
+  var_name = "catch"
+)
 head(esp_catch) |>
   knitr::kable()
 
-esp_landings <- create_total_rec_catch(bsb_landings$data)
+esp_landings <- create_total_rec_catch(bsb_landings$data,
+  var_name = "landings"
+)
 head(esp_landings) |>
   knitr::kable()
 ```
@@ -198,28 +202,19 @@ mid_trips <- rbind(
   trips2_2024$data
 )
 
-n_trips <- n_trips |>
-  dplyr::rename(
-    YEAR = Year,
-    DATA_VALUE = `Directed Trips`
-  ) |>
-  dplyr::mutate(INDICATOR_NAME = "Recreational Trips")
-
-n_trips$DATA_VALUE <- as.numeric(gsub(",", "", n_trips$DATA_VALUE))
-
 head(n_trips)
 ```
 
 ### Save data
 
-To make the data download more reproducible and efficient, there is a `save_trips()` function that can be iterated on with `purrr::map()`. This function executes the MRIP query and saves the .Rds with the MRIP data download and query information in the specified folder. Data can then be read in and used in analyses. For example, the following code will download and save the same data that is shown in the `trips_2020` object above.
+To make the data download more reproducible and efficient, there is a `save_trips()` function that can be iterated on with `purrr::map()`. This function executes the MRIP query and saves the .Rds with the MRIP data download and query information in the specified folder. Data can then be read in and used in analyses. For example, the following code will download and save the same data that is shown in the `trips_2020` object above. The file name is automatically created and is returned by the function.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 save_trips(
   this_species = "BLACK SEA BASS",
   this_year = 2020,
   this_region = "North Atlantic",
-  out_folder = here::here()
+  out_folder = here::here("inst/mrip_data")
 )
 ```
 
@@ -254,22 +249,23 @@ Please note that iterating over a large number of species and years may fail. Si
 
 ### Wrangle data
 
-After the MRIP trip data has been saved, it can be easily turned into a data frame using the `create_rec_trips` function. This function takes a single argument, which is the list of files to be combined. Note that this function will automatically combine the data from multiple regions, so if you would like to create region-specific, you must run the function over two separate lists of files.
+After the MRIP trip data has been saved, it can be easily turned into a data frame using the `create_rec_trips` function. This function takes a single argument, which is the list of files to be combined. Note that this function will automatically combine the data from multiple regions, so if you would like to create region-specific indicators, you must run the function over two separate lists of files.
 
 ```{r}
-n_trips <- create_rec_trips(
+esp_trips <- create_rec_trips(
   files = list.files(system.file("mrip_data", package = "NEesp2"),
-    pattern = "trips_*",
+    pattern = "trips_Black_sea_bass*",
     recursive = TRUE,
     full.names = TRUE
   )
 )
 
-n_trips
+esp_trips |>
+  knitr::kable()
 ```
 
 ### Plot data
 ```{r}
-plt_indicator(n_trips)
+plt_indicator(esp_trips)
 ```
 
