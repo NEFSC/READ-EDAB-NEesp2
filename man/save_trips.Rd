@@ -18,7 +18,7 @@ save_trips(this_species, this_year, this_region, out_folder, wait = TRUE)
 \item{wait}{whether to pause after saving the data. Default is TRUE.}
 }
 \value{
-Returns a list of the scraped data and metadata.
+Saves an Rds file
 }
 \description{
 This function scrapes MRIP trip data from the MRIP Query tool and saves it as an Rds.

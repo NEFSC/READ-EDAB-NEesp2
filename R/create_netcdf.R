@@ -8,9 +8,32 @@
 #' @export
 
 esp_csv_to_nc <- function(
-  data,
-  fname
-) {
+    data,
+    fname) {
+  data <- data |>
+    dplyr::rename(creator_name = CONTACT) |> # rename for metadata requirements
+    dplyr::mutate(
+      long_name = INDICATOR_NAME,
+      title = paste(INTENDED_ESP_NAME, "ESP"),
+      Conventions = "CF-1.11, COARDS, ACDD-1.3",
+      Metadata_Conventions = "Unidata Dataset Discovery v1.0",
+      creator_email = "nefsc.esp.leads@noaa.gov",
+      creator_type = "person",
+      acknowledgements = "The data are sponsored by NOAA and may be freely distributed",
+      institution = "DOC | NOAA | National Marine Fisheries Service | Fisheries Northeast Fisheries Science Center",
+      program = "Ecosystem Dynamics and Assessment Branch",
+      publisher_type = "institution",
+      publisher_name = "Northeast Fisheries Science Center",
+      publisher_url = "https://www.fisheries.noaa.gov/about/northeast-fisheries-science-center",
+      publisher_email = "nefsc.erddap@noaa.gov",
+      contributor_name = "Ecosystem Dynamics and Assessment Branch",
+      contributor_type = "group",
+      contributor_url = "https://www.fisheries.noaa.gov/new-england-mid-atlantic/ecosystems/northeast-ecosystem-dynamics-and-assessment-our-research",
+      contributor_institution = "DOC | NOAA Fisheries | Northeast Fisheries Science Center",
+      naming_authority = "gov.noaa.nefsc",
+      license = "The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.  Neither the data, contributor, NEFSC, NOAA, nor the United States Government, nor any of their employees or contractors, makes any warranty, expressed or implied, including warranties of marketability and fitness for a particular purpose, or assumes any legal liability for the accuracy, completeness, or usefulness of this information."
+    )
+
   var.index <- data |>
     dplyr::select(INDICATOR_NAME, UNITS) |>
     dplyr::distinct()
@@ -118,10 +141,9 @@ esp_csv_to_nc <- function(
 
 ## input data = long format indicator time series of all variables
 
-# data <- AKesp::get_esp_data("Black Sea Bass") |>
-#   dplyr::filter(INDICATOR_NAME != "BSB_Winter_Bottom_Temperature_North")
+# data <- AKesp::get_esp_data("Black Sea Bass")
 #
-# esp_csv_to_nc(data = data, fname = here::here("data-raw", "bsb_example3.nc"))
+# esp_csv_to_nc(data = data, fname = here::here("data-raw", paste0(Sys.Date(), "_bsb_example.nc")))
 
 # Check the contents of the NetCDF file
 
