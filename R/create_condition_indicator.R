@@ -14,15 +14,22 @@
 
 species_condition <- function(data, 
                                LWparams = NEesp2::LWparams, 
-                               species.codes = NEesp2::species.codes) {
+                               species.codes = NEesp2::species.codes,
+                              by_EPU = TRUE) {
 
-  survey.data <- data %>% 
-    dplyr::left_join(NEesp2::strata_epu_key)
+  if(by_EPU) {
+    survey.data <- data %>% 
+      dplyr::left_join(NEesp2::strata_epu_key)
+  } else {
+    survey.data <- data |>
+      dplyr::mutate(EPU = "UNIT")
+  }
+
   
   #Change sex = NA to sex = 0
   fall <- survey.data %>% 
     dplyr::filter(SEASON == 'FALL') %>% 
-    dplyr::mutate(sex = dplyr::if_else(is.na(SEX), '0', SEX))
+    dplyr::mutate(sex = dplyr::if_else(is.na(SEX), '0', as.character(SEX)))
   
   # filter LWparams to fall only, add in male/female if data is "combined"
   LWfall <- LWparams %>% 

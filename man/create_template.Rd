@@ -10,5 +10,5 @@ create_template(path = getwd(), over = FALSE)
 \item{path}{Where to create the template. Defaults to the present working directory.}
 }
 \description{
-This function creates an ESP template at the specified path. DEPRECATED -- PLAN TO REMOVE
+This function creates an ESP two-pager template at the specified path.
 }

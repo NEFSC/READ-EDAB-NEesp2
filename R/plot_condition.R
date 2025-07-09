@@ -47,7 +47,7 @@ plot_condition <- function(data,
     ggplot2::xlim(c(1989, 2024)) +
     ggplot2::theme_classic(base_size = 16) +
     ggplot2::theme(strip.text = ggplot2::element_text(size = 16),
-                   axis.title = ggplot2::element_blank(),
+                   axis.title.x = ggplot2::element_blank(),
                    aspect.ratio = 0.4,
                    legend.direction = "vertical",
                    legend.box = "horizontal") +

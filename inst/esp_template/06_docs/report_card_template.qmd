@@ -1,5 +1,5 @@
 ---
-title: "Black Sea Bass (\\protect\\textit{Centropristis striata})\\protect\\newline Ecosystem & Socioeconomic Profile Report Card"
+title: "Black Sea Bass (\\protect\\textit{Centropristis striata}) \\linebreak Ecosystem & Socioeconomic Profile Report Card"
 format: 
   pdf:
     margin-left: "0.5in"
@@ -17,7 +17,7 @@ params:
   img1: !expr here::here("inst/esp_template/05_images/noaa_logo.png")
   img2: !expr here::here("inst/esp_template/05_images/noaa_logo.png")
   img3: !expr here::here("inst/esp_template/05_images/noaa_logo.png")
-  tbl_file: !expr here::here("inst/esp_template/06_docs/table_template.xlsx")
+  tbl_file: !expr here::here("inst/esp_template/06_docs/table_template.csv")
   img_dir: !expr here::here("inst/esp_template/05_images")
   terminal_year: 2024
   risk_url: https://static1.squarespace.com/static/511cdc7fe4b00307a2628ac6/t/6747560a3cf66936045e5547/1732728332670/05_EAFM+Risk+Assessment.pdf
