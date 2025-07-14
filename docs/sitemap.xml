@@ -1,6 +1,5 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/404.html</loc></url>
-<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/LICENSE-text.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/accessing-survdat-data.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/esp-links.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/general-workflow.html</loc></url>
@@ -14,7 +13,9 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/why-esp.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/authors.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/index.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/LICENSE-text.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/news/index.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/add_fig_paths.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/character_to_factor.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/common_names_survdat.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/correlation_data.html</loc></url>
@@ -40,7 +41,10 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/data_summary.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/data_summary_5yr.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/diet.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/esp_csv_to_nc.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/find_files.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/format_from_template.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/format_indicator.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/format_numbers.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/format_tbl_data.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/generate_len_plot.html</loc></url>
@@ -54,6 +58,9 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/get_len_data2.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/get_len_data_risk.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/get_len_data_tbl.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/get_mrip_catch.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/get_mrip_trips.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/get_trip_files.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/get_var_data.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/grapes-greater-than-grapes.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/groupby_state.html</loc></url>
@@ -83,10 +90,13 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/plot_variable.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/plt_indicator.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/pseudoR2.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/read_rec_catch.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/rec_data_prep.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/render_indicator.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/rpt_card_table.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/save_catch.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/save_data.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/save_trips.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/species_condition.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/species_condition_orig.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/species_range.html</loc></url>

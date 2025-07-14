@@ -147,11 +147,13 @@ get_mrip_trips <- function(species,
 #' @param this_year the year of data to query. Must be a single value. The earliest year possible is 1981.
 #' @param out_folder where to save the data
 #' @param wait whether to pause after saving the data. Default is TRUE.
-#' @return Saves an Rds file
+#' @param return_fmane whether to return the file name of the saved data. Default is TRUE.
+#' @return Saves an Rds file. Returns the file name.
 #' @export
 
 save_trips <- function(this_species, this_year, this_region, out_folder,
-                       wait = TRUE) {
+                       wait = TRUE,
+                       return_fname = TRUE) {
   species_dir <- paste0(
     out_folder,
     paste0("/", this_species, "_trips")
@@ -196,9 +198,14 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
   }
 
   saveRDS(out, fname)
+  message(paste("Data saved at:", fname))
 
   if (wait) {
     Sys.sleep(60)
+  }
+
+  if (return_fname) {
+    return(fname)
   }
 }
 
@@ -211,6 +218,7 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
 #' @param out_folder where to save the data
 #' @param catch_type the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".
 #' @param wait whether to pause after saving the data. Default is TRUE.
+#' @param return_fmane whether to return the file name of the saved data. Default is TRUE.
 #' @return Saves list of the scraped data and metadata. Returns the file name.
 #' @export
 
