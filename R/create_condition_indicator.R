@@ -21,17 +21,19 @@ species_condition <- function(data,
                               by_sex = FALSE,
                               length_break = NULL,
                               output = "soe") {
-  if(by_sex |
-     !is.null(length_break)) {
+  if (by_sex |
+    !is.null(length_break)) {
+    if (output != "full") {
+      message("You asked to group results by sex and/or length ; data will not be formatted for SOE or ESP output.")
+    }
     output <- "full"
-    message("You asked to group results by sex and/or length ; data will not be formatted for SOE or ESP output.")
   }
-  
+
   # add 0 to length_break if needed
-  if (! 0 %in% length_break & !is.null(length_break)) {
+  if (!0 %in% length_break & !is.null(length_break)) {
     length_break <- c(0, length_break)
   }
-  
+
   if (by_EPU) {
     survey.data <- data %>%
       dplyr::left_join(NEesp2::strata_epu_key)
@@ -99,7 +101,7 @@ species_condition <- function(data,
 
   ###########################################
   ### Calculate species condition ###
-  
+
   condcalc <- dplyr::mutate(mergeLW,
     predwt = (exp(lna)) * LENGTH^b,
     RelCond = INDWT / predwt
@@ -121,18 +123,18 @@ species_condition <- function(data,
   if (by_sex) {
     grouping_vars <- c(grouping_vars, "sexMF")
   }
-  
-  if(!is.null(length_break)) {
+
+  if (!is.null(length_break)) {
     cond.epu <- cond.epu |>
       dplyr::mutate(
-      length_group = cut(LENGTH, breaks = length_break, include.lowest = TRUE)
-    ) 
+        length_group = cut(LENGTH, breaks = length_break, include.lowest = TRUE)
+      )
     grouping_vars <- c(grouping_vars, "length_group")
   }
-  
+
   grouped_condition <- cond.epu |>
     dplyr::group_by(!!!rlang::syms(grouping_vars))
-  
+
   condition <- grouped_condition %>%
     dplyr::summarize(
       MeanCond = mean(RelCond),
@@ -164,13 +166,13 @@ species_condition <- function(data,
       dplyr::rename(
         Var = Species,
         Time = YEAR,
-        Value = MeanCond) |>
+        Value = MeanCond
+      ) |>
       dplyr::mutate(Units = "MeanCond")
   } else if (output == "esp") {
     condition <- condition |>
       dplyr::select(Species, EPU, YEAR, MeanCond, INDICATOR_NAME) |>
-      dplyr::rename(DATA_VALUE = MeanCond) 
+      dplyr::rename(DATA_VALUE = MeanCond)
   }
   return(condition)
- 
 }

@@ -8,7 +8,10 @@ species_condition(
   data,
   LWparams = NEesp2::LWparams,
   species.codes = NEesp2::species.codes,
-  by_EPU = TRUE
+  by_EPU = TRUE,
+  by_sex = FALSE,
+  length_break = NULL,
+  output = "soe"
 )
 }
 \arguments{
@@ -19,6 +22,12 @@ species_condition(
 \item{species.codes}{data table. Species codes (SVSPP) and common names from NEesp2::species.codes}
 
 \item{by_EPU}{logical. If TRUE, calculates condition by EPUs specified in the input data, if FALSE, calculates condition for all data combined.}
+
+\item{by_sex}{logical. If TRUE, calculates condition by sex. If FALSE, calculates condition across sexes.}
+
+\item{length_break}{numeric vector. If not NULL, will calculate condition by length breaks specified in the vector. User must specify minimum and maximum lengths in this parameter, e.g., c(0, 20, 70). If NULL, will not calculate by length groupings.}
+
+\item{output}{character. If "soe", returns a data frame of species condition for the State of the Ecosystem report. If "esp", returns a data frame for ESPs. If "full", returns a data frame of all calculated values. \emph{Setting by_sex = TRUE or length_break to any value will always return a full dataframe}}
 }
 \value{
 Returns a data frame of species condition
