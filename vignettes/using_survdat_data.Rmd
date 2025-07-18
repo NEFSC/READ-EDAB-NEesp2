@@ -23,7 +23,10 @@ For more information on accessing {survdat} data, see vignette "Accessing Bottom
 Uses 'species_condition' and 'plot_condition' functions in R/create_condition_indicator.R and R/plot_condition.R
 
 ```{r}
-condition <- species_condition(data = NEesp2::survdat_subset, LWparams = LWparams, species.codes = species.codes) 
+condition <- species_condition(data = NEesp2::survdat_subset, 
+                               LWparams = LWparams, 
+                               species.codes = species.codes, 
+                               output = "esp") 
 bsb_condition <- condition %>%
   subset(Species == 'Black sea bass')
 head(bsb_condition)
