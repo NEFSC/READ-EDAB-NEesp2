@@ -1,6 +1,6 @@
 #' Plot Condition 
 #'
-#' @param data A data frame of species condition from 'species_condition' function
+#' @param data A data frame of species condition from `species_condition(..., output = "soe")`
 #' @param var species of interest to plot
 #' @return A ggplot
 #' 
@@ -13,8 +13,7 @@ plot_condition <- function(data,
     dplyr::select(YEAR,
                   Species,
                   EPU,
-                  DATA_VALUE,
-                  nCond) |>
+                  DATA_VALUE) |>
     dplyr::group_by(Species) |>
     dplyr::mutate(scaleCond = scale(DATA_VALUE,scale =T,center=T))
   

@@ -7,6 +7,9 @@
 #' @param LWparams data table. L-W parameters. Default is from Wigley et al. 2003 from NEesp2::LWparams. Alternative parameters could be used, as long as they were formatted the same as the Wigley parameters.
 #' @param species.codes data table. Species codes (SVSPP) and common names from NEesp2::species.codes
 #' @param by_EPU logical. If TRUE, calculates condition by EPUs specified in the input data, if FALSE, calculates condition for all data combined.
+#' @param by_sex logical. If TRUE, calculates condition by sex. If FALSE, calculates condition across sexes.
+#' @param length_break numeric vector. If not NULL, will calculate condition by length breaks specified in the vector. User must specify minimum and maximum lengths in this parameter, e.g., c(0, 20, 70). If NULL, will not calculate by length groupings.
+#' @param output character. If "soe", returns a data frame of species condition for the State of the Ecosystem report. If "esp", returns a data frame for ESPs. If "full", returns a data frame of all calculated values. *Setting by_sex = TRUE or length_break to any value will always return a full dataframe*
 #' @importFrom magrittr %>%
 #' @return Returns a data frame of species condition
 #' @export
@@ -14,7 +17,23 @@
 species_condition <- function(data,
                               LWparams = NEesp2::LWparams,
                               species.codes = NEesp2::species.codes,
-                              by_EPU = TRUE) {
+                              by_EPU = TRUE,
+                              by_sex = FALSE,
+                              length_break = NULL,
+                              output = "soe") {
+  if (by_sex |
+    !is.null(length_break)) {
+    if (output != "full") {
+      message("You asked to group results by sex and/or length ; data will not be formatted for SOE or ESP output.")
+    }
+    output <- "full"
+  }
+
+  # add 0 to length_break if needed
+  if (!0 %in% length_break & !is.null(length_break)) {
+    length_break <- c(0, length_break)
+  }
+
   if (by_EPU) {
     survey.data <- data %>%
       dplyr::left_join(NEesp2::strata_epu_key)
@@ -22,7 +41,6 @@ species_condition <- function(data,
     survey.data <- data |>
       dplyr::mutate(EPU = "UNIT")
   }
-
 
   # Change sex = NA to sex = 0
   fall <- survey.data %>%
@@ -99,26 +117,62 @@ species_condition <- function(data,
 
   cond.epu <- dplyr::left_join(condcalc, species.codes, by = c("SVSPP"))
 
-  # Summarize annually by EPU
-  condition <- cond.epu %>%
-    dplyr::group_by(Species, EPU, YEAR) %>%
+  # Summarize annually -- parameterized groupings
+  grouping_vars <- c("Species", "YEAR", "EPU")
+
+  if (by_sex) {
+    grouping_vars <- c(grouping_vars, "sexMF")
+  }
+
+  if (!is.null(length_break)) {
+    cond.epu <- cond.epu |>
+      dplyr::mutate(
+        length_group = cut(LENGTH, breaks = length_break, include.lowest = TRUE)
+      )
+    grouping_vars <- c(grouping_vars, "length_group")
+  }
+
+  grouped_condition <- cond.epu |>
+    dplyr::group_by(!!!rlang::syms(grouping_vars))
+
+  condition <- grouped_condition %>%
     dplyr::summarize(
       MeanCond = mean(RelCond),
       nCond = dplyr::n()
     ) |>
     dplyr::ungroup() |>
-    dplyr::filter(nCond >= 3) %>%
-    dplyr::add_count(Species, EPU) %>%
-    dplyr::filter(n >= 20) %>%
-    dplyr::select(Species, EPU, YEAR, MeanCond, nCond) %>%
-    dplyr::group_by(Species, EPU) |>
+    dplyr::filter(nCond >= 3) |>
+    # select columns
+    dplyr::select(dplyr::all_of(c(grouping_vars, "MeanCond", "nCond"))) |>
+    # group again, without YEAR
+    dplyr::group_by(!!!rlang::syms(grouping_vars[-which(grouping_vars == "YEAR")])) |>
+    # filter to only species with 20+ years of data
+    dplyr::mutate(n = dplyr::n()) |>
+    dplyr::filter(n >= 20) |>
+    dplyr::select(-n) |>
+    # calculate sd and variance across years
     dplyr::mutate(
       sd = sd(MeanCond, na.rm = TRUE),
       variance = var(MeanCond, na.rm = TRUE),
       INDICATOR_NAME = "mean condition"
     ) %>%
-    dplyr::rename(DATA_VALUE = MeanCond) %>%
+    # dplyr::rename(DATA_VALUE = MeanCond) %>%
     dplyr::ungroup()
 
+  # format for different outputs
+  if (output == "soe") {
+    condition <- condition |>
+      dplyr::select(YEAR, Species, EPU, MeanCond) |>
+      dplyr::rename(
+        Var = Species,
+        Time = YEAR,
+        Value = MeanCond
+      ) |>
+      dplyr::mutate(Units = "MeanCond")
+  } else if (output == "esp") {
+    condition <- condition |>
+      dplyr::select(Species, EPU, YEAR, MeanCond, INDICATOR_NAME) |>
+      dplyr::rename(DATA_VALUE = MeanCond)
+  }
   return(condition)
 }
