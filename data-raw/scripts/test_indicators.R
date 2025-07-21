@@ -52,18 +52,32 @@ pkgdown::build_site()
 #This works 7/8/25
 filepath2 <- ncdf4::nc_open(here::here('data-raw/glorys_bottomT.nc')) 
 
-bt <- create_spatial_indicator(indicator_name = "bottomT", 
+#bt <- create_spatial_indicator(indicator_name = "bottomT", 
+ #                              units = "degC",
+  #                             data.in = c(here::here('data-raw','glorys_bottomT.nc')),
+   #                            file.time = 'annual',
+    #                           output.files = c(here::here('data-raw','GLORYS_monthly_bottomT.nc')),
+     #                          shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
+      #                         var.name = 'bottomT',
+       #                        area.names = c('01030', '01040', '01070', '01080', '01110', '01120', 
+        #                                      '01140', '01150', '01670', '01680', '01710', '01720', 
+         #                                     '01750', '01760'),
+          #                     statistic = 'mean',
+           #                    agg.time = 'months',
+            #                   tz = NA,
+             #                  touches = TRUE,
+              #                 write.out = F)
+
+bt_daily <- create_spatial_indicator(indicator_name = "bottomT", 
                                units = "degC",
                                data.in = c(here::here('data-raw','glorys_bottomT.nc')),
-                               file.time = 'months',
+                               file.time = 'annual',
                                output.files = c(here::here('data-raw','GLORYS_monthly_bottomT.nc')),
-                               shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
+                               shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
                                var.name = 'bottomT',
-                               area.names = c('01030', '01040', '01070', '01080', '01110', '01120', 
-                                              '01140', '01150', '01670', '01680', '01710', '01720', 
-                                              '01750', '01760'),
+                               area.names = c('MAB','GB'),
                                statistic = 'mean',
-                               agg.time = 'annual',
+                               agg.time = 'days',
                                tz = NA,
                                touches = TRUE,
                                write.out = F)
@@ -76,11 +90,9 @@ pp <- create_spatial_indicator(indicator_name = "primary_production_mean",
                 data.in = c(here::here('data-raw','pp_occci_199798.nc')),
                 file.time = 'annual',
                 output.files = c(here::here('data-raw','OCCCI_PRIM_PROD.nc')),
-                shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
+                shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
                 var.name = 'primary productivity',
-                area.names = c('01030', '01040', '01070', '01080', '01110', '01120', 
-                               '01140', '01150', '01670', '01680', '01710', '01720', 
-                               '01750', '01760'),
+                area.names = c('MAB','GB'),
                 statistic = 'mean',
                 agg.time = 'days',
                 tz = NA,
@@ -95,23 +107,21 @@ sal <- create_spatial_indicator(indicator_name = 'bottomS',
                                 data.in = c(here::here('data-raw','glorys_bottomS.nc')),
                                 output.files = c(here::here('data-raw','GLORYS_daily_bottomS.nc')),
                                 file.time = 'annual',
-                                shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
+                                shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
                                 var.name = 'bottomS',
-                                area.names = c('01030', '01040', '01070', '01080', '01110', '01120', 
-                                               '01140', '01150', '01670', '01680', '01710', '01720', 
-                                               '01750', '01760'),
+                                area.names = c('MAB','GB'),
                                 statistic = 'mean',
-                                agg.time = 'months',
+                                agg.time = 'days',
                                 tz = NA,
                                 touches = TRUE,
                                 write.out = F)
 
-#doesn't work, need to download other chl file - joe has one?
-filepath4 <- ncdf4::nc_open(here::here('data-raw/chl_2015.nc')) 
+#this works 7/9/25
+filepath4 <- ncdf4::nc_open(here::here('data-raw/occci_test2.nc')) 
 
 chl <- create_spatial_indicator(indicator_name = 'chlor_a',
                                 units = 'milligram m-3',
-                                data.in = c(here::here('data-raw','chl_2015.nc')),
+                                data.in = c(here::here('data-raw','occci_test2.nc')),
                                 output.files = c(here::here('data-raw','occci_chl.nc')),
                                 file.time = 'annual',
                                 shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
@@ -120,26 +130,26 @@ chl <- create_spatial_indicator(indicator_name = 'chlor_a',
                                                '01140', '01150', '01670', '01680', '01710', '01720', 
                                                '01750', '01760'),
                                 statistic = 'mean',
-                                agg.time = 'months',
+                                agg.time = 'days',
                                 tz = NA,
                                 touches = TRUE,
                                 write.out = F)
 
-#doesn't work, need input file with matching coords
-filepath3 <- ncdf4::nc_open(here::here('data-raw/sst_1989.nc')) 
+#doesn't work, need to find file with annual/monthly values
+filepath3 <- ncdf4::nc_open(here::here('data-raw/sst_test.nc')) 
 
-chl <- create_spatial_indicator(indicator_name = 'sst',
+sst <- create_spatial_indicator(indicator_name = 'sst',
                                 units = 'degC',
-                                data.in = c(here::here('data-raw','sst_1989.nc')),
+                                data.in = sst_corrected,
                                 output.files = c(here::here('data-raw','sst.nc')),
                                 file.time = 'annual',
-                                shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
+                                shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
                                 var.name = 'bottomS',
-                                area.names = c('01030', '01040', '01070', '01080', '01110', '01120', 
-                                               '01140', '01150', '01670', '01680', '01710', '01720', 
-                                               '01750', '01760'),
+                                area.names = c('MAB','GB'),
                                 statistic = 'mean',
-                                agg.time = 'months',
+                                agg.time = 'days',
                                 tz = NA,
                                 touches = TRUE,
                                 write.out = F)
+
+sst_corrected <- convert_longitude(data = here::here('data-raw/sst_14_24.nc'))
