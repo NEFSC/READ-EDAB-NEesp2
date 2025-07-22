@@ -277,6 +277,7 @@ save_catch <- function(this_species,
     out_folder,
     "/catch_",
     catch_type, "_",
+    this_region, "_",
     this_species,
     ".Rds"
   ) |>
@@ -288,7 +289,8 @@ save_catch <- function(this_species,
   
   out <- get_mrip_catch(
     species = this_species,
-    type = catch_type
+    type = catch_type,
+    region = this_region,
   )
   
   saveRDS(out, fname)
