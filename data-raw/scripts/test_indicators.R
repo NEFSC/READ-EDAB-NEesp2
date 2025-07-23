@@ -10,7 +10,7 @@ gsi <- create_gsi(ecodata::gsi)
 wcr <- create_wcr(ecodata::wcr)
 
 ###BOTTOM TRAWL
-channel <- dbutils::connect_to_database("NEFSC_USERS","SOWEN")
+channel <- dbutils::connect_to_database(server="NEFSC_pw_oraprod", uid="SOWEN")
 data <- survdat::get_survdat_data(channel, getBio = T, getLengths = T)
 species <- survdat::get_species(channel)
 species <- species$data
@@ -42,9 +42,15 @@ returnPrepData = F
 range <- species_range(data = data, species)
 
 ###CONDITION
-condition <- species_condition_orig(data=data$survdat, LWparams = LWparams, species.codes = species.codes)
 
-condition <- species_condition(data = data$survdat, LWparams, species.codes)
+ecodata_condition <- ecodata::condition
+condition <- species_condition(data = data$survdat,
+                               LWparams = NEesp2::LWparams,
+                               species.codes = NEesp2::species.codes,
+                               by_EPU = TRUE,
+                               by_sex = FALSE,
+                               length_break = NULL,
+                               output = "soe")
 pkgdown::build_site()
 
 ###SPATIAL
