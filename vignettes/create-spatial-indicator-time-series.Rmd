@@ -1,0 +1,110 @@
+---
+title: "Creating Spatial Indicator Time Series with EDAB_Utilities"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using EDAB Utilities Functions for NE ESPs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  eval = FALSE
+)
+
+library(magrittr)
+```
+
+## Creating Spatial Indicators 
+
+The function NEesp::create_spatial_indicator generates a spatially-aggregated time series from a netCDF file. The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area and outputs as a data frame. 
+
+This function has been tested with GLORYS bottom temperature and salinity data and OCCCI chlorophyll and mean primary production data. All test input files can be found in 'data-raw' in this package. 
+
+### GLORYS Bottom Temperature
+
+Setting file.time = annual and agg.time = days returns a daily value for a netCDF on a daily time step. 
+```{r}
+glorys_bt <- create_spatial_indicator(indicator_name = "bottomT", 
+                               units = "degC",
+                               data.in = c(here::here('data-raw','glorys_bottomT.nc')),
+                               file.time = 'annual',
+                               output.files = c(here::here('data-raw','GLORYS_monthly_bottomT.nc')),
+                               shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                               var.name = 'bottomT',
+                               area.names = c('MAB','GB'),
+                               statistic = 'mean',
+                               agg.time = 'days',
+                               tz = NA,
+                               touches = TRUE,
+                               write.out = F)
+
+head(glorys_bt)
+```
+
+### GLORYS Bottom Salinity
+
+Setting file.time = annual and agg.time = days returns a daily value for a netCDF on a daily time step.
+```{r}
+glorys_sal <- create_spatial_indicator(indicator_name = 'bottomS',
+                                units = '1e-3',
+                                data.in = c(here::here('data-raw','glorys_bottomS.nc')),
+                                output.files = c(here::here('data-raw','GLORYS_daily_bottomS.nc')),
+                                file.time = 'annual',
+                                shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                                var.name = 'bottomS',
+                                area.names = c('MAB','GB'),
+                                statistic = 'mean',
+                                agg.time = 'days',
+                                tz = NA,
+                                touches = TRUE,
+                                write.out = F)
+
+head(glorys_sal)
+```
+
+### OCCCI Chlorophyll-a
+
+Setting file.time = annual and agg.time = days returns a monthly value for a netCDF on a monthly time step. 
+```{r}
+occci_chl <- create_spatial_indicator(indicator_name = 'chlor_a',
+                                units = 'milligram m-3',
+                                data.in = c(here::here('data-raw','occci_test2.nc')),
+                                output.files = c(here::here('data-raw','occci_chl.nc')),
+                                file.time = 'annual',
+                                shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                                var.name = 'bottomS',
+                                area.names = c('MAB','GB'),
+                                statistic = 'mean',
+                                agg.time = 'days',
+                                tz = NA,
+                                touches = TRUE,
+                                write.out = F)
+
+head(occci_chl)
+```
+
+### OCCCI Primary Production
+
+Setting file.time = annual and agg.time = days returns a monthly value for a netCDF on a monthly time step.
+```{r}
+occci_primprod <- create_spatial_indicator(indicator_name = "primary_production_mean",
+                units = 'gCarbon/m^2/day',
+                data.in = c(here::here('data-raw','pp_occci_199798.nc')),
+                file.time = 'annual',
+                output.files = c(here::here('data-raw','OCCCI_PRIM_PROD.nc')),
+                shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                var.name = 'primary productivity',
+                area.names = c('MAB','GB'),
+                statistic = 'mean',
+                agg.time = 'days',
+                tz = NA,
+                touches = TRUE,
+                write.out = F)
+
+head(occci_primprod)
+```
+

@@ -136,15 +136,15 @@ chl <- create_spatial_indicator(indicator_name = 'chlor_a',
                                 write.out = F)
 
 #doesn't work, need to find file with annual/monthly values
-filepath3 <- ncdf4::nc_open(here::here('data-raw/sst_test.nc')) 
+filepath3 <- ncdf4::nc_open(here::here('data-raw/sst_monthly.nc')) 
 
 sst <- create_spatial_indicator(indicator_name = 'sst',
                                 units = 'degC',
-                                data.in = sst_corrected,
+                                data.in = sst_converted,
                                 output.files = c(here::here('data-raw','sst.nc')),
                                 file.time = 'annual',
                                 shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
-                                var.name = 'bottomS',
+                                var.name = 'sst',
                                 area.names = c('MAB','GB'),
                                 statistic = 'mean',
                                 agg.time = 'days',
@@ -152,4 +152,36 @@ sst <- create_spatial_indicator(indicator_name = 'sst',
                                 touches = TRUE,
                                 write.out = F)
 
-sst_corrected <- convert_longitude(data = here::here('data-raw/sst_14_24.nc'))
+sst_converted <- EDABUtilities::convert_longitude(data = here::here('data-raw/sst_2010.nc'))
+
+sst_weekly <- EDABUtilities::convert_longitude(data = here::here('data-raw/sst_weekly.nc'))
+
+sst_weekly <- create_spatial_indicator(indicator_name = 'sst',
+                                units = 'degC',
+                                data.in = sst_weekly,
+                                output.files = c(here::here('data-raw','sst.nc')),
+                                file.time = 'annual',
+                                shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                                var.name = 'sst',
+                                area.names = c('MAB','GB'),
+                                statistic = 'mean',
+                                agg.time = 'days',
+                                tz = NA,
+                                touches = TRUE,
+                                write.out = F)
+
+sst_test <- EDABUtilities::convert_longitude(data = here::here('data-raw/icec.day.mean.2020.nc'))
+
+sst <- create_spatial_indicator(indicator_name = 'sst',
+                                       units = 'degC',
+                                       data.in = sst_test,
+                                       output.files = c(here::here('data-raw','sst.nc')),
+                                       file.time = 'annual',
+                                       shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                                       var.name = 'sst',
+                                       area.names = c('MAB','GB'),
+                                       statistic = 'mean',
+                                       agg.time = 'days',
+                                       tz = NA,
+                                       touches = TRUE,
+                                       write.out = F)
