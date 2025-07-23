@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   warning = FALSE,
-  eval = FALSE
+  eval = TRUE
 )
 
 # pak::pak("NEFSC/READ_EDAB_Utilities@dev")
@@ -49,8 +49,6 @@ terra::plot(crop_bottomS[[1]])
 
 ```
 
-
-<<<<<<< HEAD
 =======
 ### Make 2d summary time series: mean monthly bottom temperature in golden tilefish BTS strata 
 
@@ -108,7 +106,7 @@ ggplot2::ggplot(daily_bS[[1]],ggplot2::aes(x = time, y= value))+
   ggplot2::facet_wrap(~area)
 ```
 
->>>>>>> 5d5d7654fa1dc95fe4d3c2e4605adc87452fa312
+
 ### Make 2d gridded time series: calculate number of days (nd) above a bottom temperature threshold (14C) in the golden tilefish BTS strata
 
 Provides a data frame of degree-day family statistics
