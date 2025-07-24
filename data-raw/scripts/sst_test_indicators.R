@@ -29,28 +29,28 @@ sst_monthly <- EDABUtilities::make_2d_summary_ts(data.in = sst_monthly_converted
                                                  write.out = F)
 
 #weekly file from ERDDAP(https://comet.nefsc.noaa.gov/erddap/griddap/noaa_psl_62b6_f192_98f7.html)
-sst_weekly_converted <- EDABUtilities::convert_longitude(data = here::here('data-raw/sst_weekly.nc'))
+#sst_weekly_converted <- EDABUtilities::convert_longitude(data = here::here('data-raw/sst_weekly.nc'))
 
-sst_weekly <- NEesp2::create_spatial_indicator(indicator_name = 'sst',
-                                       units = 'degC',
-                                       data.in = sst_weekly_converted,
-                                       output.files = c(here::here('data-raw','sst_weekly_test.nc')),
-                                       file.time = 'annual',
-                                       shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
-                                       var.name = 'sst',
-                                       area.names = c('MAB','GB'),
-                                       statistic = 'mean',
-                                       agg.time = 'days',
-                                       tz = NA,
-                                       touches = TRUE,
-                                       write.out = F)
+#sst_weekly <- NEesp2::create_spatial_indicator(indicator_name = 'sst',
+ #                                      units = 'degC',
+  #                                     data.in = sst_weekly_converted,
+   #                                    output.files = c(here::here('data-raw','sst_weekly_test.nc')),
+    #                                   file.time = 'annual',
+     #                                  shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+      #                                 var.name = 'sst',
+       #                                area.names = c('MAB','GB'),
+        #                               statistic = 'mean',
+         #                              agg.time = 'days',
+          #                             tz = NA,
+           #                            touches = TRUE,
+            #                           write.out = F)
 
-#monthly file from PSL (https://downloads.psl.noaa.gov/Datasets/noaa.oisst.v2.highres/)
-sst_test <- EDABUtilities::convert_longitude(data = here::here('data-raw/icec.day.mean.2020.nc'))
+#daily file from PSL (https://downloads.psl.noaa.gov/Datasets/noaa.oisst.v2.highres/)
+sst_daily_converted <- EDABUtilities::convert_longitude(data = here::here('data-raw/sst.day.mean.2024.nc'))
 
-sst_test <- NEesp2::create_spatial_indicator(indicator_name = 'sst',
+sst_daily <- NEesp2::create_spatial_indicator(indicator_name = 'sst',
                                 units = 'degC',
-                                data.in = sst_test,
+                                data.in = sst_daily_converted,
                                 output.files = c(here::here('data-raw','sst_test.nc')),
                                 file.time = 'annual',
                                 shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
@@ -61,6 +61,23 @@ sst_test <- NEesp2::create_spatial_indicator(indicator_name = 'sst',
                                 tz = NA,
                                 touches = TRUE,
                                 write.out = F)
+
+#monthly ltm file from PSL
+sst_ltm_converted <- EDABUtilities::convert_longitude(data = here::here('data-raw/sst.mon.ltm.1991-2020.nc'))
+
+sst_ltm <- NEesp2::create_spatial_indicator(indicator_name = 'sst',
+                                              units = 'degC',
+                                              data.in = sst_ltm_converted,
+                                              output.files = c(here::here('data-raw','sst_test.nc')),
+                                              file.time = 'annual',
+                                              shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                                              var.name = 'sst',
+                                              area.names = c('MAB','GB'),
+                                              statistic = 'mean',
+                                              agg.time = 'days',
+                                              tz = NA,
+                                              touches = TRUE,
+                                              write.out = F)
 
 ##This one works
 #daily file from ACSPO (https://comet.nefsc.noaa.gov/erddap/griddap/noaa_coastwatch_acspo_v2_nrt.html)
