@@ -269,6 +269,7 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
 #' @export
 
 save_catch <- function(this_species,
+                       this_region,
                        out_folder,
                        catch_type = "all",
                        wait = TRUE,

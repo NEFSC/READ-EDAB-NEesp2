@@ -8,6 +8,33 @@ species_list <- c("smooth hammerhead", "scalloped hammerhead shark", "great hamm
                   "silky shark", "blacktip shark", "oceanic whitetip shark",
                   "spinner shark", "blue shark", "lemon shark", "finetooth shark")
 
+region_list <- c('north atlantic','mid-atlantic')
+
+max_length <- max(length(species_list), length(region_list))
+
+species_recycled <- rep(species_list, length.out = max_length)
+region_recycled <- rep(region_list, length.out = max_length)
+
+purrr::map2(
+  species_recycled,
+  region_recycled,
+  ~ {
+    save_data <- save_catch(
+      this_species = .x,
+      this_region = .y,
+      out_folder = here::here(),
+      catch_type = "all"
+    )
+    
+    data <- readRDS(save_data)
+    
+    esp_catch <- create_total_rec_catch(data$data)
+    
+    write.csv(esp_catch, here::here(paste0("esp_catch_", .x, ".csv")))
+  }
+)
+
+
 ## Runs MRIP pull for all species in 'species_list', saves Rds files and csv for each species
 purrr::map(
   species_list,
