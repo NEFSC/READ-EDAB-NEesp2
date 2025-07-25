@@ -6,10 +6,17 @@
 #'
 #' @param species the common name of the species as it appears in the MRIP data. capitalization does not matter.
 #' @param type the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".
+#' @param data_type the type of data to query. Can be any or all of c("numbers of fish", "weight of fish (pounds)", "weight of fish (kilograms)", "mean length", "mean weight"). Default is "numbers of fish".
+#' @param years a vector of the first and last years to query. Default is c(1981, 2024). The earliest year possible is 1981.
+#' @param region the name of the region; must be an option listed in the MRIP query tool. Can be a state name, "North Atlantic", "Mid-Atlantic", etc. Capitalization does not matter. Default is "north and mid atlantic".
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
-get_mrip_catch <- function(species, type = "all") {
+get_mrip_catch <- function(species,
+                           type = "all",
+                           data_type = "numbers of fish",
+                           years = c(1981, 2024),
+                           region = "north and mid-atlantic") {
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
@@ -19,17 +26,38 @@ get_mrip_catch <- function(species, type = "all") {
     type == "landings" ~ "HARVEST+%28TYPE+A+%2B+B1"
   )
 
+  data_type_url <- paste(
+    data_type |>
+      stringr::str_to_upper() |>
+      stringr::str_replace_all(" ", "+"),
+    collapse = "&qdata_type="
+  )
+
+  region_url <- region |>
+    # make sure dash is included
+    stringr::str_replace("mid atlantic", "mid-atlantic") |>
+    stringr::str_to_upper() |>
+    stringr::str_replace_all(" ", "+")
+
   # this url would get a, b1, b2 estimates separately
   # url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pyc&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=",
   #               species,
   #               "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=ALL+CATCH+TYPES+%28TYPE+A%2C+B1%2C+and+B2%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
 
   url <- paste0(
-    "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=",
+    "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=",
+    years[1],
+    "&qyearto=",
+    years[2],
+    "&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=",
+    region_url,
+    "&qspecies=",
     new_species,
     "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=",
     catch_query,
-    "%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION"
+    "%29&qdata_type=",
+    data_type_url,
+    "&qoutput_type=TABLE&qsource=PRODUCTION"
   )
 
   test <- httr::GET(url) |>
@@ -39,17 +67,34 @@ get_mrip_catch <- function(species, type = "all") {
     xml2::xml_child(2) |>
     xml2::xml_child(1)
 
-  meta_tbl <- xml2::xml_child(tbl, 2)
-  data_tbl <- xml2::xml_child(tbl, 4)
+  meta_tbl <- xml2::xml_child(tbl, 2) |>
+    try()
 
-  tbl2 <- rvest::html_table(data_tbl)
-  meta2 <- rvest::html_text(meta_tbl)
+  if (class(meta_tbl) == "try-error") {
+    meta_tbl <- test |>
+      xml2::xml_child(2) |>
+      xml2::xml_child(2) |>
+      # xml2::xml_child(1) |>
+      rvest::html_text()
 
-  output <- list(
-    data = tbl2 |>
-      dplyr::mutate(SPECIES = species |> stringr::str_to_upper()),
-    metadata = meta2
-  )
+    output <- list(
+      data = "no data",
+      metadata = meta_tbl,
+      url = url
+    )
+  } else {
+    data_tbl <- xml2::xml_child(tbl, 4)
+
+    tbl2 <- rvest::html_table(data_tbl)
+    meta2 <- rvest::html_text(meta_tbl)
+
+    output <- list(
+      data = tbl2 |>
+        dplyr::mutate(SPECIES = species |> stringr::str_to_upper()),
+      metadata = meta2,
+      url = url
+    )
+  }
 
   return(output)
 }
@@ -131,7 +176,8 @@ get_mrip_trips <- function(species,
 
     output <- list(
       data = tbl2,
-      metadata = meta2
+      metadata = meta2,
+      url = url
     )
   }
   return(output)

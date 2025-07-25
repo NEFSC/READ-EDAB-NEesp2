@@ -64,6 +64,7 @@ read_rec_catch <- function(species, dir, type = "all") {
 #' @param data The mrip data
 #' @param species The species common name
 #' @param var_name The variable name to use in the indicator name. Default is "catch".
+#' @param var_units The variable units to use in the indicator name. Default is "n".
 #' @param remove_non_standard Boolean, if TRUE will remove non-standard data ("Does Total Catch (A+B1+B2) Meet MRIP Standard" = NO)
 #' @importFrom magrittr %>%
 #' @return a tibble
@@ -74,6 +75,7 @@ read_rec_catch <- function(species, dir, type = "all") {
 create_total_rec_catch <- function(data,
                                    # species,
                                    var_name = "catch",
+                                   var_units = "n",
                                    remove_non_standard = TRUE) {
   total_rec_catch <- data |>
     janitor::clean_names(case = "all_caps") |>
@@ -87,6 +89,10 @@ create_total_rec_catch <- function(data,
   if (remove_non_standard) {
     total_rec_catch <- total_rec_catch |>
       dplyr::filter(keep != "NO")
+    message("Removing data that does not meet MRIP standards. If you want to keep this data, set `remove_non_standard = FALSE`.")
+    if (nrow(total_rec_catch) == 0) {
+      message("No data met MRIP standards; returning an empty tibble")
+    }
   }
 
   output <- tibble::tibble(
@@ -94,11 +100,13 @@ create_total_rec_catch <- function(data,
     DATA_VALUE = total_rec_catch$data_value |> stringr::str_remove_all(",") |> as.numeric(),
     CATEGORY = "Recreational",
     INDICATOR_TYPE = "Socioeconomic",
-    INDICATOR_NAME = paste0("total_recreational_", var_name, "_n"),
-    INDICATOR_UNITS = "number",
+    INDICATOR_NAME = paste0("total_recreational_", var_name, "_", var_units),
+    INDICATOR_UNITS = var_units,
     # bring in species with data pull
     SPECIES = total_rec_catch$SPECIES
   )
+
+  return(output)
 }
 # create_total_rec_catch(dat2$DATA, species = "atlantic cod")
 
