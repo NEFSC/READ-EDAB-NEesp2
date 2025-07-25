@@ -269,6 +269,7 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
 #' @export
 
 save_catch <- function(this_species,
+                       this_region,
                        out_folder,
                        catch_type = "all",
                        wait = TRUE,
@@ -278,6 +279,7 @@ save_catch <- function(this_species,
     "/catch_",
     catch_type, "_",
     this_species,
+    this_region,
     ".Rds"
   ) |>
     stringr::str_replace_all(" ", "_")
@@ -288,6 +290,7 @@ save_catch <- function(this_species,
 
   out <- get_mrip_catch(
     species = this_species,
+    region = this_region,
     type = catch_type
   )
 

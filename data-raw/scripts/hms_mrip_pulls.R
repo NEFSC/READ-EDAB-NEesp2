@@ -10,7 +10,7 @@ species_list <- c("smooth hammerhead", "scalloped hammerhead shark", "great hamm
 
 region_list <- c('north atlantic','mid-atlantic')
 
-max_length <- max(length(species_list), length(region_list))
+max_length <- max(length(species_list), length(region_list))*2
 
 species_recycled <- rep(species_list, length.out = max_length)
 region_recycled <- rep(region_list, length.out = max_length)
@@ -37,7 +37,7 @@ purrr::map2(
 
 ## Runs MRIP pull for all species in 'species_list', saves Rds files and csv for each species
 purrr::map(
-  species_list,
+  test_species_list,
   ~ {
     save_data <- save_catch(
       this_species = .x,
