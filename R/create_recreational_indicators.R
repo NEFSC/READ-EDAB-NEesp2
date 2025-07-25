@@ -13,7 +13,7 @@ groupby_state <- function(data, groupby) {
     data <- data |>
       dplyr::group_by(.data$YEAR)
   }
-  
+
   return(data)
 }
 
@@ -32,27 +32,27 @@ read_rec_catch <- function(species, dir, type = "all") {
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "_")
-  
+
   files <- list.files(
     path = dir,
     full.names = TRUE
   )
-  
+
   this_file <- files[which(stringr::str_detect(stringr::str_to_upper(files),
-                                               pattern = paste0(
-                                                 stringr::str_to_upper(type),
-                                                 "_",
-                                                 stringr::str_to_upper(species)
-                                               ) |>
-                                                 stringr::str_replace_all(" ", "_")
+    pattern = paste0(
+      stringr::str_to_upper(type),
+      "_",
+      stringr::str_to_upper(species)
+    ) |>
+      stringr::str_replace_all(" ", "_")
   ))]
-  
+
   # read in the data
   rec_catch <- readRDS(this_file) |>
     purrr::map(~ janitor::clean_names(.x[1],
-                                      case = "all_caps"
+      case = "all_caps"
     ))
-  
+
   return(rec_catch)
 }
 
@@ -80,12 +80,12 @@ create_total_rec_catch <- function(data,
   total_rec_catch <- data |>
     janitor::clean_names(case = "all_caps") |>
     dplyr::rename_with(~"data_value",
-                       .cols = dplyr::matches("^TOTAL_.{1,15}$")
+      .cols = dplyr::matches("^TOTAL_.{1,15}$")
     ) |>
     dplyr::rename_with(~"keep",
-                       .cols = dplyr::starts_with("DOES")
+      .cols = dplyr::starts_with("DOES")
     )
-  
+
   if (remove_non_standard) {
     total_rec_catch <- total_rec_catch |>
       dplyr::filter(keep != "NO")
@@ -94,7 +94,7 @@ create_total_rec_catch <- function(data,
       message("No data met MRIP standards; returning an empty tibble")
     }
   }
-  
+
   output <- tibble::tibble(
     YEAR = total_rec_catch$YEAR,
     DATA_VALUE = total_rec_catch$data_value |> stringr::str_remove_all(",") |> as.numeric(),
@@ -105,7 +105,7 @@ create_total_rec_catch <- function(data,
     # bring in species with data pull
     SPECIES = total_rec_catch$SPECIES
   )
-  
+
   return(output)
 }
 # create_total_rec_catch(dat2$DATA, species = "atlantic cod")
@@ -151,18 +151,18 @@ create_total_rec_catch <- function(data,
 
 get_trip_files <- function(dir, species) {
   new_dir <- list.dirs(dir,
-                       full.names = TRUE
+    full.names = TRUE
   )
   this_dir <- new_dir[which(stringr::str_detect(stringr::str_to_upper(new_dir),
-                                                pattern = stringr::str_to_upper(species) |>
-                                                  stringr::str_replace_all(" ", "_")
+    pattern = stringr::str_to_upper(species) |>
+      stringr::str_replace_all(" ", "_")
   ))]
-  
+
   files <- list.files(this_dir,
-                      pattern = "[0-9].Rds",
-                      full.names = TRUE
+    pattern = "[0-9].Rds",
+    full.names = TRUE
   )
-  
+
   return(files)
 }
 
@@ -192,17 +192,17 @@ create_rec_trips <- function(files,
     purrr::map(readRDS) |>
     purrr::map(purrr::pluck("data")) |>
     purrr::map(~ .x |>
-                 janitor::clean_names(case = "all_caps") |>
-                 dplyr::mutate(DIRECTED_TRIPS = stringr::str_remove_all(DIRECTED_TRIPS, ",") |>
-                                 as.numeric()) |>
-                 dplyr::select(YEAR, DIRECTED_TRIPS, REGION, SPECIES, DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD)) |>
+      janitor::clean_names(case = "all_caps") |>
+      dplyr::mutate(DIRECTED_TRIPS = stringr::str_remove_all(DIRECTED_TRIPS, ",") |>
+        as.numeric()) |>
+      dplyr::select(YEAR, DIRECTED_TRIPS, REGION, SPECIES, DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD)) |>
     purrr::reduce(dplyr::bind_rows)
-  
+
   if (remove_non_standard) {
     rec_trips <- rec_trips |>
       dplyr::filter(DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD != "No")
   }
-  
+
   output <- rec_trips |>
     dplyr::group_by(YEAR, SPECIES) |>
     dplyr::summarise(DATA_VALUE = sum(DIRECTED_TRIPS, na.rm = TRUE)) |>
@@ -213,7 +213,7 @@ create_rec_trips <- function(files,
       INDICATOR_UNITS = "number"
     ) |>
     dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_TYPE, INDICATOR_NAME, INDICATOR_UNITS, SPECIES)
-  
+
   return(output)
 }
 
@@ -291,15 +291,15 @@ create_prop_sp_trips <- function(total_trips,
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)) |>
     dplyr::mutate(YEAR = as.numeric(YEAR))
-  
+
   sp <- species_trips |>
     dplyr::filter(STATE %in% states) |>
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(as.numeric(DATA_VALUE), na.rm = TRUE))
-  
+
   prop_sp_trips <- dplyr::full_join(total_trips,
-                                    sp,
-                                    by = "YEAR"
+    sp,
+    by = "YEAR"
   ) |>
     dplyr::mutate(
       DATA_VALUE = DATA_VALUE / total_trips,
@@ -311,7 +311,7 @@ create_prop_sp_trips <- function(total_trips,
     dplyr::ungroup()
   # dplyr::select(-Year)
   # dplyr::rename(STATE = State)
-  
+
   if (return) {
     return(prop_sp_trips)
   }
@@ -365,7 +365,7 @@ create_total_rec_landings <- function(data,
     #               STATE = State) %>% #remove STATE = State here if want all states summed
     dplyr::ungroup() %>%
     dplyr::mutate(YEAR = as.numeric(YEAR))
-  
+
   if (return) {
     return(total_rec_landings)
   }

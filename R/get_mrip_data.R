@@ -20,30 +20,30 @@ get_mrip_catch <- function(species,
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
-  
+
   catch_query <- dplyr::case_when(
     type == "all" ~ "TOTAL+CATCH+%28TYPE+A+%2B+B1+%2B+B2",
     type == "landings" ~ "HARVEST+%28TYPE+A+%2B+B1"
   )
-  
+
   data_type_url <- paste(
     data_type |>
       stringr::str_to_upper() |>
       stringr::str_replace_all(" ", "+"),
     collapse = "&qdata_type="
   )
-  
+
   region_url <- region |>
     # make sure dash is included
     stringr::str_replace("mid atlantic", "mid-atlantic") |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "+")
-  
+
   # this url would get a, b1, b2 estimates separately
   # url <- paste0("https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=1981&qyearto=2024&qsummary=cumulative_pyc&qwave=1&fshyr=annual&qstate=NORTH+AND+MID-ATLANTIC&qspecies=",
   #               species,
   #               "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=ALL+CATCH+TYPES+%28TYPE+A%2C+B1%2C+and+B2%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
-  
+
   url <- paste0(
     "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=",
     years[1],
@@ -59,24 +59,24 @@ get_mrip_catch <- function(species,
     data_type_url,
     "&qoutput_type=TABLE&qsource=PRODUCTION"
   )
-  
+
   test <- httr::GET(url) |>
     httr::content()
-  
+
   tbl <- test |>
     xml2::xml_child(2) |>
     xml2::xml_child(1)
-  
+
   meta_tbl <- xml2::xml_child(tbl, 2) |>
     try()
-  
+
   if (class(meta_tbl) == "try-error") {
     meta_tbl <- test |>
       xml2::xml_child(2) |>
       xml2::xml_child(2) |>
       # xml2::xml_child(1) |>
       rvest::html_text()
-    
+
     output <- list(
       data = "no data",
       metadata = meta_tbl,
@@ -84,10 +84,10 @@ get_mrip_catch <- function(species,
     )
   } else {
     data_tbl <- xml2::xml_child(tbl, 4)
-    
+
     tbl2 <- rvest::html_table(data_tbl)
     meta2 <- rvest::html_text(meta_tbl)
-    
+
     output <- list(
       data = tbl2 |>
         dplyr::mutate(SPECIES = species |> stringr::str_to_upper()),
@@ -95,7 +95,7 @@ get_mrip_catch <- function(species,
       url = url
     )
   }
-  
+
   return(output)
 }
 
@@ -124,11 +124,11 @@ get_mrip_trips <- function(species,
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
-  
+
   new_region <- region |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "+")
-  
+
   url <- paste0(
     "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_directed_trip&qyearfrom=",
     year,
@@ -138,25 +138,25 @@ get_mrip_trips <- function(species,
     new_species,
     "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qsp_opt=PRIMARY&qsp_opt=SECONDARY&qsp_opt=CAUGHT&qsp_opt=HARVESTED&qsp_opt=RELEASED&qoutput_type=TABLE&qsource=PRODUCTION"
   )
-  
-  
+
+
   test <- httr::GET(url) |>
     httr::content()
-  
+
   tbl <- test |>
     xml2::xml_child(2) |>
     xml2::xml_child(2)
-  
+
   meta_tbl <- xml2::xml_child(tbl, 2) |>
     try()
-  
+
   if (class(meta_tbl) == "try-error") {
     meta_tbl <- test |>
       xml2::xml_child(2) |>
       xml2::xml_child(3) |>
       xml2::xml_child(1) |>
       rvest::html_table()
-    
+
     output <- list(
       data = "no data",
       metadata = meta_tbl
@@ -166,14 +166,14 @@ get_mrip_trips <- function(species,
       xml2::xml_child(4) |>
       xml2::xml_child(1) |>
       xml2::xml_child(1)
-    
+
     tbl2 <- rvest::html_table(data_tbl) |>
       dplyr::mutate(
         Species = species,
         Region = region
       )
     meta2 <- rvest::html_text(meta_tbl)
-    
+
     output <- list(
       data = tbl2,
       metadata = meta2,
@@ -205,24 +205,24 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
     paste0("/", this_species, "_trips")
   ) |>
     stringr::str_replace_all(" ", "_")
-  
+
   if (!dir.exists(species_dir)) {
     dir.create(species_dir)
   }
-  
+
   fname_base <- paste0(
     species_dir,
     paste("/trips", this_species, this_region, this_year, sep = "_")
   ) |>
     stringr::str_replace_all(" ", "_")
-  
+
   out <- get_mrip_trips(
     species = this_species,
     year = this_year,
     region = this_region
   ) |>
     try()
-  
+
   if (class(out) == "try-error") {
     message(paste("Error in MRIP query:", this_species, this_region, this_year))
     fname <- paste0(
@@ -242,14 +242,14 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
       ".Rds"
     )
   }
-  
+
   saveRDS(out, fname)
   message(paste("Data saved at:", fname))
-  
+
   if (wait) {
     Sys.sleep(60)
   }
-  
+
   if (return_fname) {
     return(fname)
   }
@@ -269,7 +269,6 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
 #' @export
 
 save_catch <- function(this_species,
-                       this_region,
                        out_folder,
                        catch_type = "all",
                        wait = TRUE,
@@ -278,25 +277,23 @@ save_catch <- function(this_species,
     out_folder,
     "/catch_",
     catch_type, "_",
-    this_region, "_",
     this_species,
     ".Rds"
   ) |>
     stringr::str_replace_all(" ", "_")
-  
+
   if (!dir.exists(out_folder)) {
     dir.create(out_folder)
   }
-  
+
   out <- get_mrip_catch(
     species = this_species,
-    type = catch_type,
-    region = this_region,
+    type = catch_type
   )
-  
+
   saveRDS(out, fname)
   message(paste("Data saved at:", fname))
-  
+
   if (wait) {
     Sys.sleep(60)
   }
