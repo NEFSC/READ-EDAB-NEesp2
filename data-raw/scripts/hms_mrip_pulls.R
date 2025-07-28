@@ -1,16 +1,27 @@
-###############################################
 
-species_list <- c("smooth hammerhead", "scalloped hammerhead shark", "great hammerhead",
+#### NORTH ATLANTIC ####
+#removed from north atlantic: great hammerhead, basking shark, atlantic sharpnose shark, bull shark, silky shark
+                              #oceanic whitetip, blacknose shark, lemon shark, finetooth shark
+
+species_list <- c("smooth hammerhead", "scalloped hammerhead shark",
+                  "great hammerhead",
                   "atlantic angel shark", "nurse shark", "sand tiger", "white shark",
-                  "basking shark", "porbeagle", "thresher shark", "bigeye thresher",
-                  "shortfin mako", "tiger shark", "atlantic sharpnose shark",
-                  "dusky shark", "bull shark", "sandbar shark", "blacknose shark",
-                  "silky shark", "blacktip shark", "oceanic whitetip shark",
-                  "spinner shark", "blue shark", "lemon shark", "finetooth shark")
+                 "basking shark", 
+                 "porbeagle", "thresher shark", "bigeye thresher",
+                  "shortfin mako", "tiger shark", 
+                 "atlantic sharpnose shark",
+                  "dusky shark", "bull shark", 
+                  "sandbar shark", "blacknose shark",
+                "silky shark", 
+                  "blacktip shark", 
+                  "oceanic whitetip shark",
+                  "spinner shark", "blue shark",
+  "lemon shark", 
+  "finetooth shark")
 
-region_list <- c('north atlantic','mid-atlantic')
+region_list <- c('north atlantic')
 
-max_length <- max(length(species_list), length(region_list))*2
+max_length <- max(length(species_list), length(region_list))
 
 species_recycled <- rep(species_list, length.out = max_length)
 region_recycled <- rep(region_list, length.out = max_length)
@@ -30,11 +41,74 @@ purrr::map2(
     
     esp_catch <- create_total_rec_catch(data$data)
     
-    write.csv(esp_catch, here::here(paste0("esp_catch_", .x, ".csv")))
+    write.csv(esp_catch, here::here(paste0("north_atlantic_", .x, ".csv")))
   }
 )
 
+## Read in csv files 
+na_files <- list.files(path = here::here('data-raw/hms_mrip/north_atlantic'), pattern = "*.csv", full.names = TRUE)
+na_files
+na_mrip <- na_files |> 
+  purrr::map(~ read.csv(.x))
 
+na_mrip_combined <- purrr::map_df(na_mrip, .f = identity)
+
+###############################################
+#### MID ATLANTIC ####
+
+#removed: bigeye thresher
+species_list <- c(#"smooth hammerhead", "scalloped hammerhead shark",
+                  #"great hammerhead",
+                  #"atlantic angel shark", "nurse shark", "sand tiger", "white shark",
+                  #"basking shark", 
+                  #"porbeagle", "thresher shark", "bigeye thresher",
+                  "shortfin mako", "tiger shark", 
+                  "atlantic sharpnose shark",
+                  "dusky shark", "bull shark", 
+                  "sandbar shark", "blacknose shark",
+                  "silky shark", 
+                  "blacktip shark", 
+                  "oceanic whitetip shark",
+                  "spinner shark", "blue shark",
+                  "lemon shark", 
+                  "finetooth shark")
+
+region_list <- c('mid-atlantic')
+
+max_length <- max(length(species_list), length(region_list))
+
+species_recycled <- rep(species_list, length.out = max_length)
+region_recycled <- rep(region_list, length.out = max_length)
+
+purrr::map2(
+  species_recycled,
+  region_recycled,
+  ~ {
+    save_data <- save_catch(
+      this_species = .x,
+      this_region = .y,
+      out_folder = here::here(),
+      catch_type = "all"
+    )
+    
+    data <- readRDS(save_data)
+    
+    esp_catch <- create_total_rec_catch(data$data)
+    
+    write.csv(esp_catch, here::here(paste0("mid_atlantic_", .x, ".csv")))
+  }
+)
+
+## Read in csv files
+mid_files <- list.files(path = here::here('data-raw/hms_mrip/mid_atlantic'), pattern = "*.csv", full.names = TRUE)
+mid_files
+mid_mrip <- mid_files |> 
+  purrr::map(~ read.csv(.x))
+
+mid_mrip_combined <- purrr::map_df(mid_mrip, .f = identity)
+
+###############################################
+##### THIS RUNS FOR COMBINED NORTH AND MID-ATLANTIC#####
 ## Runs MRIP pull for all species in 'species_list', saves Rds files and csv for each species
 purrr::map(
   test_species_list,
@@ -54,7 +128,7 @@ purrr::map(
 )
 
 ## Read in csv files 
-hms_files <- list.files(path = here::here('data-raw/hms_mrip'), pattern = "*.csv", full.names = TRUE)
+hms_files <- list.files(path = here::here('data-raw/hms_mrip/'), pattern = "*.csv", full.names = TRUE)
 hms_files
 hms_mrip <- hms_files |> 
   purrr::map(~ read.csv(.x))
