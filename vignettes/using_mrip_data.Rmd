@@ -99,7 +99,7 @@ save_data <- save_catch(
 data <- readRDS(save_data)
 
 esp_catch <- create_total_mrip(bsb_catch$data,
-                               var_name = "all")
+                               var_name = "catch")
 ```
 
 This workflow can also be easily iterated over multiple species with `purrr::map()`.
@@ -117,7 +117,8 @@ purrr::map(
 
     data <- readRDS(save_data)
 
-    esp_catch <- create_total_mrip(data$data)
+    esp_catch <- create_total_mrip(data$data,
+                                   var_name = "catch")
 
     write.csv(esp_catch, here::here(paste0("esp_catch_", .x, ".csv")))
   }
