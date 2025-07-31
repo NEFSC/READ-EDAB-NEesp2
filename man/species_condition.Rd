@@ -7,7 +7,8 @@
 species_condition(
   data,
   LWparams = NEesp2::LWparams,
-  species.codes = NEesp2::species.codes
+  species.codes = NEesp2::species.codes,
+  by_EPU = TRUE
 )
 }
 \arguments{
