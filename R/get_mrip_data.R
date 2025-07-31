@@ -16,7 +16,7 @@ get_mrip_catch <- function(species,
                            type = "all",
                            data_type = "numbers of fish",
                            years = c(1981, 2024),
-                           region = "mid-atlantic") {
+                           region = "north atlantic") {
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")

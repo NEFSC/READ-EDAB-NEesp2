@@ -4,20 +4,11 @@
                               #oceanic whitetip, blacknose shark, lemon shark, finetooth shark
 
 species_list <- c("smooth hammerhead", "scalloped hammerhead shark",
-                  "great hammerhead",
                   "atlantic angel shark", "nurse shark", "sand tiger", "white shark",
-                 "basking shark", 
-                 "porbeagle", "thresher shark", "bigeye thresher",
-                  "shortfin mako", "tiger shark", 
-                 "atlantic sharpnose shark",
-                  "dusky shark", "bull shark", 
-                  "sandbar shark", "blacknose shark",
-                "silky shark", 
-                  "blacktip shark", 
-                  "oceanic whitetip shark",
-                  "spinner shark", "blue shark",
-  "lemon shark", 
-  "finetooth shark")
+                  "porbeagle", "thresher shark", "bigeye thresher",
+                  "shortfin mako", "tiger shark", "dusky shark", 
+                  "sandbar shark", "blacktip shark", 
+                  "spinner shark", "blue shark")
 
 region_list <- c('north atlantic')
 
@@ -33,15 +24,15 @@ purrr::map2(
     save_data <- save_catch(
       this_species = .x,
       this_region = .y,
-      out_folder = here::here(),
+      out_folder = here::here('data-raw/hms_mrip/north_atlantic/'),
       catch_type = "all"
     )
     
     data <- readRDS(save_data)
     
-    esp_catch <- create_total_rec_catch(data$data)
+    esp_catch <- create_total_rec_catch(data$data, remove_non_standard = FALSE)
     
-    write.csv(esp_catch, here::here(paste0("north_atlantic_", .x, ".csv")))
+    write.csv(esp_catch, here::here(paste0("data-raw/hms_mrip/north_atlantic/north_atlantic_", .x, ".csv")))
   }
 )
 
@@ -51,27 +42,27 @@ na_files
 na_mrip <- na_files |> 
   purrr::map(~ read.csv(.x))
 
-na_mrip_combined <- purrr::map_df(na_mrip, .f = identity)
+na_mrip_combined <- purrr::map_df(na_mrip, .f = identity) |>
+  subset(select = -c(1,4:5)) |>
+  dplyr::rename(Time = YEAR,
+                Var = INDICATOR_NAME,
+                Value = DATA_VALUE,
+                Units = INDICATOR_UNITS,
+                Species = SPECIES)
+
+write.csv(na_mrip_combined, here::here('data-raw/north_atlantic_hms_mrip.csv'))
 
 ###############################################
 #### MID ATLANTIC ####
 
 #removed: bigeye thresher
-species_list <- c(#"smooth hammerhead", "scalloped hammerhead shark",
-                  #"great hammerhead",
-                  #"atlantic angel shark", "nurse shark", "sand tiger", "white shark",
-                  #"basking shark", 
-                  #"porbeagle", "thresher shark", "bigeye thresher",
-                  "shortfin mako", "tiger shark", 
-                  "atlantic sharpnose shark",
-                  "dusky shark", "bull shark", 
-                  "sandbar shark", "blacknose shark",
-                  "silky shark", 
-                  "blacktip shark", 
-                  "oceanic whitetip shark",
-                  "spinner shark", "blue shark",
-                  "lemon shark", 
-                  "finetooth shark")
+species_list <- c("smooth hammerhead", "scalloped hammerhead shark", "great hammerhead",
+                  "atlantic angel shark", "nurse shark", "sand tiger", "white shark",
+                  "basking shark", "porbeagle", "thresher shark", 
+                  "shortfin mako", "tiger shark", "atlantic sharpnose shark",
+                  "dusky shark", "bull shark", "sandbar shark", "blacknose shark",
+                  "silky shark", "blacktip shark", "oceanic whitetip shark",
+                  "spinner shark", "blue shark", "lemon shark", "finetooth shark")
 
 region_list <- c('mid-atlantic')
 
@@ -87,15 +78,15 @@ purrr::map2(
     save_data <- save_catch(
       this_species = .x,
       this_region = .y,
-      out_folder = here::here(),
+      out_folder = here::here('data-raw/hms_mrip/north_atlantic/'),
       catch_type = "all"
     )
     
     data <- readRDS(save_data)
     
-    esp_catch <- create_total_rec_catch(data$data)
+    esp_catch <- create_total_rec_catch(data$data, remove_non_standard = FALSE)
     
-    write.csv(esp_catch, here::here(paste0("mid_atlantic_", .x, ".csv")))
+    write.csv(esp_catch, here::here(paste0("data-raw/hms_mrip/mid_atlantic/mid_atlantic_", .x, ".csv")))
   }
 )
 
@@ -105,7 +96,15 @@ mid_files
 mid_mrip <- mid_files |> 
   purrr::map(~ read.csv(.x))
 
-mid_mrip_combined <- purrr::map_df(mid_mrip, .f = identity)
+mid_mrip_combined <- purrr::map_df(mid_mrip, .f = identity) |>
+  subset(select = -c(1,4:5)) |>
+  dplyr::rename(Time = YEAR,
+                Var = INDICATOR_NAME,
+                Value = DATA_VALUE,
+                Units = INDICATOR_UNITS,
+                Species = SPECIES)
+
+write.csv(mid_mrip_combined, here::here('data-raw/mid_atlantic_hms_mrip.csv'))
 
 ###############################################
 ##### THIS RUNS FOR COMBINED NORTH AND MID-ATLANTIC#####
