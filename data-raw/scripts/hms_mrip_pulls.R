@@ -56,6 +56,7 @@ write.csv(na_mrip_combined, here::here('data-raw/north_atlantic_hms_mrip.csv'))
 #### MID ATLANTIC ####
 
 #removed: bigeye thresher
+
 species_list <- c("smooth hammerhead", "scalloped hammerhead shark", "great hammerhead",
                   "atlantic angel shark", "nurse shark", "sand tiger", "white shark",
                   "basking shark", "porbeagle", "thresher shark", 
@@ -78,13 +79,13 @@ purrr::map2(
     save_data <- save_catch(
       this_species = .x,
       this_region = .y,
-      out_folder = here::here('data-raw/hms_mrip/north_atlantic/'),
+      out_folder = here::here('data-raw/hms_mrip/mid_atlantic/'),
       catch_type = "all"
     )
     
     data <- readRDS(save_data)
     
-    esp_catch <- create_total_rec_catch(data$data, remove_non_standard = FALSE)
+    esp_catch <- create_total_mrip(data$data, remove_non_standard = FALSE)
     
     write.csv(esp_catch, here::here(paste0("data-raw/hms_mrip/mid_atlantic/mid_atlantic_", .x, ".csv")))
   }
