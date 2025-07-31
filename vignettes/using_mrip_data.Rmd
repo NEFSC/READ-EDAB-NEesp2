@@ -43,15 +43,15 @@ head(bsb_landings)
 
 ### Wrangle data
 
-The function returns a list with the data and query metadata. These data can be used directly for analyses, with minimal data wrangling. The data can be formatted for use in ESPs with the function `create_total_rec_catch()`.
+The function returns a list with the data and query metadata. These data can be used directly for analyses, with minimal data wrangling. The data can be formatted for use in ESPs with the function `create_total_mrip()`.
 ```{r}
-esp_catch <- create_total_rec_catch(bsb_catch$data,
+esp_catch <- create_total_mrip(bsb_catch$data,
   var_name = "catch"
 )
 head(esp_catch) |>
   knitr::kable()
 
-esp_landings <- create_total_rec_catch(bsb_landings$data,
+esp_landings <- create_total_mrip(bsb_landings$data,
   var_name = "landings"
 )
 head(esp_landings) |>
@@ -87,7 +87,7 @@ plt_indicator(esp_landings)
 
 ### Suggested workflow
 
-We suggest using `save_catch()` to save the data, reading in the .Rds, and formatting using `create_total_rec_catch()` to format the data for use in ESPs. This allows for easy access to the data and metadata, and ensures that the data is in a consistent format for analysis. 
+We suggest using `save_catch()` to save the data, reading in the .Rds, and formatting using `create_total_mrip()` to format the data for use in ESPs. This allows for easy access to the data and metadata, and ensures that the data is in a consistent format for analysis. 
 
 ```{r, eval = FALSE}
 save_data <- save_catch(
@@ -98,7 +98,8 @@ save_data <- save_catch(
 
 data <- readRDS(save_data)
 
-esp_catch <- create_total_rec_catch(bsb_catch$data)
+esp_catch <- create_total_mrip(bsb_catch$data,
+                               var_name = "catch")
 ```
 
 This workflow can also be easily iterated over multiple species with `purrr::map()`.
@@ -116,7 +117,8 @@ purrr::map(
 
     data <- readRDS(save_data)
 
-    esp_catch <- create_total_rec_catch(data$data)
+    esp_catch <- create_total_mrip(data$data,
+                                   var_name = "catch")
 
     write.csv(esp_catch, here::here(paste0("esp_catch_", .x, ".csv")))
   }
@@ -249,10 +251,10 @@ Please note that iterating over a large number of species and years may fail. Si
 
 ### Wrangle data
 
-After the MRIP trip data has been saved, it can be easily turned into a data frame using the `create_rec_trips` function. This function takes a single argument, which is the list of files to be combined. Note that this function will automatically combine the data from multiple regions, so if you would like to create region-specific indicators, you must run the function over two separate lists of files.
+After the MRIP trip data has been saved, it can be easily turned into a data frame using the `create_mrip_trips` function. This function takes a single argument, which is the list of files to be combined. Note that this function will automatically combine the data from multiple regions, so if you would like to create region-specific indicators, you must run the function over two separate lists of files.
 
 ```{r}
-esp_trips <- create_rec_trips(
+esp_trips <- create_mrip_trips(
   files = list.files(system.file("mrip_data", package = "NEesp2"),
     pattern = "trips_Black_sea_bass*",
     recursive = TRUE,
