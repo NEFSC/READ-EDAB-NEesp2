@@ -16,7 +16,7 @@ get_mrip_catch <- function(species,
                            type = "all",
                            data_type = "numbers of fish",
                            years = c(1981, 2024),
-                           region = "north atlantic") {
+                           region = "north and mid-atlantic") {
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
@@ -269,7 +269,6 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
 #' @export
 
 save_catch <- function(this_species,
-                       this_region,
                        out_folder,
                        catch_type = "all",
                        wait = TRUE,
@@ -279,7 +278,6 @@ save_catch <- function(this_species,
     "/catch_",
     catch_type, "_",
     this_species,
-    this_region,
     ".Rds"
   ) |>
     stringr::str_replace_all(" ", "_")
@@ -290,7 +288,6 @@ save_catch <- function(this_species,
 
   out <- get_mrip_catch(
     species = this_species,
-    region = this_region,
     type = catch_type
   )
 

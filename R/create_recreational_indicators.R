@@ -76,7 +76,7 @@ create_total_rec_catch <- function(data,
                                    # species,
                                    var_name = "catch",
                                    var_units = "n",
-                                   remove_non_standard = FALSE) {
+                                   remove_non_standard = TRUE) {
   total_rec_catch <- data |>
     janitor::clean_names(case = "all_caps") |>
     dplyr::rename_with(~"data_value",
