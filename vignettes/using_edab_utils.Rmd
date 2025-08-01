@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   warning = FALSE,
-  eval = FALSE
+  eval = TRUE
 )
 
 # pak::pak("NEFSC/READ_EDAB_Utilities@dev")
@@ -49,15 +49,13 @@ terra::plot(crop_bottomS[[1]])
 
 ```
 
-
-<<<<<<< HEAD
-=======
 ### Make 2d summary time series: mean monthly bottom temperature in golden tilefish BTS strata 
 
 Provides summary statistics of 2d gridded data as time series by area.
 
 ```{r}
 monthly_bt <- EDABUtilities::make_2d_summary_ts(data.in = c(here::here('data-raw','glorys_bottomT.nc')),
+                            file.time = 'annual',
                             output.files = c(here::here('data-raw','GLORYS_monthly_bottomT.nc')),
                             shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
                             var.name = 'bottomT',
@@ -68,8 +66,7 @@ monthly_bt <- EDABUtilities::make_2d_summary_ts(data.in = c(here::here('data-raw
                             agg.time = 'days',
                             tz = NA,
                             touches = TRUE,
-                            write.out = F,
-                            file.time = "monthly")
+                            write.out = F)
 
 ggplot2::ggplot(monthly_bt[[1]],ggplot2::aes(x = time, y= value))+
   ggplot2::geom_line(lwd = 1)+ 
@@ -97,7 +94,7 @@ daily_bS <- EDABUtilities::make_2d_summary_ts(data.in = c(here::here('data-raw',
                    tz = NA,
                    touches = TRUE,
                    write.out = F,
-                   file.time = "daily")
+                   file.time = "annual")
 
 ggplot2::ggplot(daily_bS[[1]],ggplot2::aes(x = time, y= value))+
   ggplot2::geom_line(lwd = 1)+ 
@@ -108,7 +105,7 @@ ggplot2::ggplot(daily_bS[[1]],ggplot2::aes(x = time, y= value))+
   ggplot2::facet_wrap(~area)
 ```
 
->>>>>>> 5d5d7654fa1dc95fe4d3c2e4605adc87452fa312
+
 ### Make 2d gridded time series: calculate number of days (nd) above a bottom temperature threshold (14C) in the golden tilefish BTS strata
 
 Provides a data frame of degree-day family statistics
