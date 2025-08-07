@@ -1,4 +1,3 @@
-
 #' Create MRIP total recreational catch indicator
 #'
 #' This function creates the total recreational catch indicator
@@ -13,24 +12,27 @@
 #' @return a tibble
 #' @export
 
-create_total_mrip <- function(data,
-                                   # species,
-                                   var_name = "catch",
-                                   var_units = "n",
-                                   remove_non_standard = TRUE) {
+create_total_mrip <- function(
+  data,
+  # species,
+  var_name = "catch",
+  var_units = "n",
+  remove_non_standard = TRUE
+) {
   total_rec_catch <- data |>
     janitor::clean_names(case = "all_caps") |>
-    dplyr::rename_with(~"data_value",
+    dplyr::rename_with(
+      ~"data_value",
       .cols = dplyr::matches("^TOTAL_.{1,15}$")
     ) |>
-    dplyr::rename_with(~"keep",
-      .cols = dplyr::starts_with("DOES")
-    )
+    dplyr::rename_with(~"keep", .cols = dplyr::starts_with("DOES"))
 
   if (remove_non_standard) {
     total_rec_catch <- total_rec_catch |>
       dplyr::filter(keep != "NO")
-    message("Removing data that does not meet MRIP standards. If you want to keep this data, set `remove_non_standard = FALSE`.")
+    message(
+      "Removing data that does not meet MRIP standards. If you want to keep this data, set `remove_non_standard = FALSE`."
+    )
     if (nrow(total_rec_catch) == 0) {
       message("No data met MRIP standards; returning an empty tibble")
     }
@@ -38,13 +40,16 @@ create_total_mrip <- function(data,
 
   output <- tibble::tibble(
     YEAR = total_rec_catch$YEAR,
-    DATA_VALUE = total_rec_catch$data_value |> stringr::str_remove_all(",") |> as.numeric(),
+    DATA_VALUE = total_rec_catch$data_value |>
+      stringr::str_remove_all(",") |>
+      as.numeric(),
     CATEGORY = "Recreational",
     INDICATOR_TYPE = "Socioeconomic",
     INDICATOR_NAME = paste0("total_recreational_", var_name, "_", var_units),
     INDICATOR_UNITS = var_units,
     # bring in species with data pull
-    SPECIES = total_rec_catch$SPECIES
+    SPECIES = total_rec_catch$SPECIES,
+    REGION = total_rec_catch$REGION
   )
 
   return(output)
@@ -67,17 +72,25 @@ create_total_mrip <- function(data,
 #' @export
 # `%>%` <- magrittr::`%>%`
 
-
-create_mrip_trips <- function(files,
-                             remove_non_standard = TRUE) {
+create_mrip_trips <- function(files, remove_non_standard = TRUE) {
   rec_trips <- files |>
     purrr::map(readRDS) |>
     purrr::map(purrr::pluck("data")) |>
-    purrr::map(~ .x |>
-      janitor::clean_names(case = "all_caps") |>
-      dplyr::mutate(DIRECTED_TRIPS = stringr::str_remove_all(DIRECTED_TRIPS, ",") |>
-        as.numeric()) |>
-      dplyr::select(YEAR, DIRECTED_TRIPS, REGION, SPECIES, DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD)) |>
+    purrr::map(
+      ~ .x |>
+        janitor::clean_names(case = "all_caps") |>
+        dplyr::mutate(
+          DIRECTED_TRIPS = stringr::str_remove_all(DIRECTED_TRIPS, ",") |>
+            as.numeric()
+        ) |>
+        dplyr::select(
+          YEAR,
+          DIRECTED_TRIPS,
+          REGION,
+          SPECIES,
+          DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD
+        )
+    ) |>
     purrr::reduce(dplyr::bind_rows)
 
   if (remove_non_standard) {
@@ -94,7 +107,15 @@ create_mrip_trips <- function(files,
       INDICATOR_NAME = "rec_trips",
       INDICATOR_UNITS = "number"
     ) |>
-    dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_TYPE, INDICATOR_NAME, INDICATOR_UNITS, SPECIES)
+    dplyr::select(
+      YEAR,
+      DATA_VALUE,
+      CATEGORY,
+      INDICATOR_TYPE,
+      INDICATOR_NAME,
+      INDICATOR_UNITS,
+      SPECIES
+    )
 
   return(output)
 }
@@ -118,26 +139,30 @@ create_mrip_trips <- function(files,
 ## TODO: needs to be updated to work with new format of output,
 ## function should be updated to reflect that the total_trips and species_trips need to contain data at the same regional level
 
-create_prop_sp_trips <- function(total_trips,
-                                 species_trips,
-                                 states = c(
-                                   "MAINE",
-                                   "CONNECTICUT",
-                                   "MASSACHUSETTS",
-                                   "NEW HAMPSHIRE",
-                                   "NEW JERSEY",
-                                   "NEW YORK",
-                                   "RHODE ISLAND",
-                                   "MARYLAND",
-                                   "DELAWARE",
-                                   "NORTH CAROLINA"
-                                 ),
-                                 groupby_state = FALSE,
-                                 return = TRUE) {
+create_prop_sp_trips <- function(
+  total_trips,
+  species_trips,
+  states = c(
+    "MAINE",
+    "CONNECTICUT",
+    "MASSACHUSETTS",
+    "NEW HAMPSHIRE",
+    "NEW JERSEY",
+    "NEW YORK",
+    "RHODE ISLAND",
+    "MARYLAND",
+    "DELAWARE",
+    "NORTH CAROLINA"
+  ),
+  groupby_state = FALSE,
+  return = TRUE
+) {
   total_trips <- total_trips |>
     dplyr::filter(STATE %in% states) |>
     groupby_state(groupby = groupby_state) |>
-    dplyr::summarise(total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)) |>
+    dplyr::summarise(
+      total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)
+    ) |>
     dplyr::mutate(YEAR = as.numeric(YEAR))
 
   sp <- species_trips |>
@@ -145,10 +170,7 @@ create_prop_sp_trips <- function(total_trips,
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(as.numeric(DATA_VALUE), na.rm = TRUE))
 
-  prop_sp_trips <- dplyr::full_join(total_trips,
-    sp,
-    by = "YEAR"
-  ) |>
+  prop_sp_trips <- dplyr::full_join(total_trips, sp, by = "YEAR") |>
     dplyr::mutate(
       DATA_VALUE = DATA_VALUE / total_trips,
       INDICATOR_NAME = "proportion_sp_trips",
@@ -164,5 +186,3 @@ create_prop_sp_trips <- function(total_trips,
     return(prop_sp_trips)
   }
 }
-
-
