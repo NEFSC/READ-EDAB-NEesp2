@@ -78,21 +78,28 @@ write.csv(
 
 new_hms <- read.csv(here::here("data-raw/hms_mrip/hms_mrip_2025-08-04.csv"))
 
-hms_key <- read.csv("https://raw.githubusercontent.com/NOAA-EDAB/ecodata/refs/heads/master/data-raw/hms-mrip/hms_sp_category.csv")
+hms_key <- read.csv(
+  "https://raw.githubusercontent.com/NOAA-EDAB/ecodata/refs/heads/master/data-raw/hms-mrip/hms_sp_category.csv"
+)
 
 rec_hms <- new_hms |>
-  dplyr::left_join(hms_key |> dplyr::select(COMMON_NAME, SP_CATEGORY),
-                   by = c("SPECIES" = "COMMON_NAME")) |>
+  dplyr::left_join(
+    hms_key |> dplyr::select(COMMON_NAME, SP_CATEGORY),
+    by = c("SPECIES" = "COMMON_NAME")
+  ) |>
   dplyr::group_by(YEAR, SP_CATEGORY, REGION) |>
   dplyr::summarise(Value = sum(DATA_VALUE)) |>
   dplyr::rename(Var = SP_CATEGORY) |>
-  dplyr::rename(Time = YEAR,
-                EPU = REGION) |>
-  dplyr::mutate(EPU = dplyr::case_when(
-    EPU == "MID-ATLANTIC" ~ "MAB",
-    EPU == "NORTH ATLANTIC" ~ "NE")) |>
+  dplyr::rename(Time = YEAR, EPU = REGION) |>
   dplyr::mutate(
-    Var = paste0(Var, "-", EPU)) |>
+    EPU = dplyr::case_when(
+      EPU == "MID-ATLANTIC" ~ "MAB",
+      EPU == "NORTH ATLANTIC" ~ "NE"
+    )
+  ) |>
+  dplyr::mutate(
+    Var = paste0(Var, "-", EPU)
+  ) |>
   dplyr::select(Time, Var, Value, EPU) |>
   dplyr::filter(!stringr::str_detect(Var, "Pelagic")) # Remove pelagics from this dataset per HMS request
 
@@ -118,3 +125,45 @@ ecodata::rec_hms |>
   )) +
   ggplot2::geom_point() +
   ggplot2::theme_bw()
+
+rec_hms |>
+  dplyr::mutate(source = "new") |>
+  dplyr::bind_rows(
+    ecodata::rec_hms |>
+      dplyr::mutate(source = "ecodata")
+  ) |>
+  # dplyr::filter(Value > 0) |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = Time,
+    y = Value,
+    color = source,
+    lty = source
+  )) +
+  ggplot2::geom_point(pch = 1) +
+  ggplot2::geom_line() +
+  ggplot2::theme_bw() +
+  ggplot2::facet_wrap(~Var, scales = "free_y", ncol = 2)
+
+
+rec_hms |>
+  dplyr::mutate(source = "new") |>
+  dplyr::bind_rows(
+    ecodata::rec_hms |>
+      dplyr::mutate(source = "ecodata")
+  ) |>
+  dplyr::filter(
+    Value > 0,
+    Var == "LargeCoastal-MAB" | Var == "SmallCoastal-MAB",
+    Time > 2010
+  ) |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = Time,
+    y = Value,
+    color = source,
+    lty = source
+  )) +
+  ggplot2::geom_point(pch = 1) +
+  ggplot2::geom_line() +
+  ggplot2::theme_bw() +
+  ggplot2::facet_wrap(~Var, scales = "free_y", ncol = 2) +
+  ggplot2::scale_x_continuous(breaks = seq(2011, 2022, by = 2))
