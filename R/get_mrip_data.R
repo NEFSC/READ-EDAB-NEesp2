@@ -298,6 +298,7 @@ save_catch <- function(
   wait = TRUE,
   return_fname = TRUE
 ) {
+
   fname <- paste0(
     out_folder,
     "/catch_",
