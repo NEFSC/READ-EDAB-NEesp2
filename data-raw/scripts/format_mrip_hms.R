@@ -1,18 +1,19 @@
 ## try to process hms similar to ecodata
 
-new_hms <- read.csv(here::here("data-raw/hms_mrip_combined.csv"))
+new_hms <- read.csv(here::here("data-raw/hms_mrip/hms_mrip_2025-08-04.csv"))
 
 hms_key <- read.csv("https://raw.githubusercontent.com/NOAA-EDAB/ecodata/refs/heads/master/data-raw/hms-mrip/hms_sp_category.csv")
 
 rec_hms <- new_hms |>
   dplyr::left_join(hms_key |> dplyr::select(COMMON_NAME, SP_CATEGORY),
-    by = c("Species" = "COMMON_NAME")
+    by = c("SPECIES" = "COMMON_NAME")
   ) |>
   # will have to update to pull mid and NE separately
   dplyr::mutate(EPU = "ALL") |>
-  dplyr::group_by(Time, SP_CATEGORY, EPU) |>
-  dplyr::summarise(Value = sum(Value)) |>
+  dplyr::group_by(YEAR, SP_CATEGORY, EPU) |>
+  dplyr::summarise(Value = sum(DATA_VALUE)) |>
   dplyr::rename(Var = SP_CATEGORY) |>
+  dplyr::rename(Time = YEAR) |>
   dplyr::mutate(
     Var = paste0(Var, "-", EPU),
     Region = EPU
@@ -20,6 +21,7 @@ rec_hms <- new_hms |>
   dplyr::select(Time, Var, Value, EPU) |>
   dplyr::filter(!stringr::str_detect(Var, "Pelagic")) # Remove pelagics from this dataset per HMS request (MRIP should not be used for pelagics)
 
+#ecodata_hms <- ecodata::rec_hms
 
 rec_hms |>
   ggplot2::ggplot(ggplot2::aes(
