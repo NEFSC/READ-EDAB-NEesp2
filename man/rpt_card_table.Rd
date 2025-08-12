@@ -4,7 +4,7 @@
 \alias{rpt_card_table}
 \title{Create a flextable with inset indicator time series plots}
 \usage{
-rpt_card_table(data)
+rpt_card_table(data, widths = c(0.9, 0.75, 3, 3))
 }
 \arguments{
 \item{data}{A data frame or tibble}

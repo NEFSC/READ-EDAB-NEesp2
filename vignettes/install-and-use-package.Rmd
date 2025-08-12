@@ -20,13 +20,13 @@ knitr::opts_chunk$set(
 
 Install the versioned package:
 ```{r}
-remotes::install_github("READ-EDAB/NEesp2", ref = "v0.1.0")
+remotes::install_github("NEFSC/READ-EDAB-NEesp2", ref = "v0.1.0")
 ```
 
-Or install the most recent development package:
+or 
+
 ```{r}
-remotes::install_github("READ-EDAB/NEesp2", ref = "main")
+pak::pak("NEFSC/READ-EDAB-NEesp2")
 ```
-
 
 

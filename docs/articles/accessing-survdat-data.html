@@ -104,7 +104,7 @@ Oracle databases. More info on {dbutils} here: <a href="https://andybeet.github.
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"andybeet/dbutils"</span><span class="op">)</span></span></code></pre></div>
 <p>To connect to Oracle databases and pull survdat data</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="st">"server name"</span>,<span class="st">"your username"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu">connect_to_database</span><span class="op">(</span><span class="st">"server name"</span>,<span class="st">"your username"</span><span class="op">)</span></span>
 <span><span class="fu">survdat</span><span class="fu">::</span><span class="fu"><a href="https://noaa-edab.github.io/survdat/reference/get_survdat_data.html" class="external-link">get_survdat_data</a></span><span class="op">(</span><span class="va">channel</span><span class="op">)</span></span></code></pre></div>
 <p>The function get_survdat_data() has parameters to include conversion
 factors (conversion.factor), species biological data (getBio), and

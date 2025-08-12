@@ -7,7 +7,7 @@
 plot_condition(data, var, return = TRUE)
 }
 \arguments{
-\item{data}{A data frame of species condition from 'species_condition' function}
+\item{data}{A data frame of species condition from \code{species_condition(..., output = "soe")}}
 
 \item{var}{species of interest to plot}
 }

@@ -7,11 +7,11 @@
 #' @export
 
 rpt_card_table <- function(data,
-                           widths) {
+                           widths = c(0.9, 0.75, 3, 3)) {
   
-  if(sum(!colnames(data) %in% c("figure", "w", "h", "indicator_units", "status_in_2024", "implications")) != 0) {
-    stop("Your input data is missing columns or has incorrect column names")
-  }
+  # if(sum(!colnames(data) %in% c("figure", "w", "h", "indicator", "status.+", "implications")) != 0) {
+  #   stop("Your input data is missing columns or has incorrect column names")
+  # }
   
   small_dat <- data |>
     dplyr::mutate(figure = NA) |>
@@ -61,10 +61,18 @@ rpt_card_table <- function(data,
 format_tbl_data <- function(file,
                             term_year,
                             dir) {
-  output <- readxl::read_excel(params$tbl_file) |>
+  if(stringr::str_detect(file, "csv$")) {
+    out <- read.csv(file)
+  } else if(stringr::str_detect(file, "xlsx$")) {
+    out <- readxl::read_excel(file)
+  } else {
+    stop("File must be a .csv or .xlsx")
+  }
+  
+  output <- out |>
     janitor::clean_names() |>
-    dplyr::mutate(figure =  paste0(params$img_dir, "/", time_series)) |>
-    dplyr::rename_with(.fn = ~paste(.x, "in", params$terminal_year, sep = "_"),
+    dplyr::mutate(figure =  paste0(dir, "/", time_series)) |>
+    dplyr::rename_with(.fn = ~paste(.x, "in", term_year, sep = "_"),
                        .cols = "status") |>
     dplyr::select(-time_series)
   

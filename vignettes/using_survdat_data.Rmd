@@ -1,6 +1,6 @@
 ---
 title: "Using {survdat} for Bottom Trawl Indicators"
-author: "Stephanie Owen"
+author: "Stephanie Owen and Abigail Tyrell"
 vignette: >
   %\VignetteIndexEntry{Using survdat for Bottom Trawl Indicators}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,27 +18,76 @@ This package contains functions for producing bottom trawl indicators from {surv
 
 For more information on accessing {survdat} data, see vignette "Accessing Bottom Trawl Survey Data".
 
-### Load subset of {survdat} data
-
-```{r}
-#NEesp2::survdat_subset
-#NEesp2::species
-```
-
 ### Species Condition - Black sea bass
+
+#### Create and plot species condition
 
 Uses 'species_condition' and 'plot_condition' functions in R/create_condition_indicator.R and R/plot_condition.R
 
 ```{r}
-condition <- species_condition(data = NEesp2::survdat_subset, LWparams = LWparams, species.codes = species.codes) 
+condition <- species_condition(
+  data = NEesp2::survdat_subset,
+  LWparams = LWparams,
+  species.codes = species.codes,
+  output = "esp"
+)
 bsb_condition <- condition %>%
-  subset(Species == 'Black sea bass')
+  subset(Species == "Black sea bass")
 head(bsb_condition)
 ```
 
 ```{r}
-plot_condition(data = bsb_condition, var = 'Black sea bass') 
+plot_condition(data = bsb_condition, var = "Black sea bass")
 ```
+
+Data are aggregated at the EPU level by default, but the data can also be assessed as a unit.
+
+```{r}
+condition <- species_condition(
+  data = NEesp2::survdat_subset,
+  LWparams = LWparams,
+  species.codes = species.codes,
+  output = "esp",
+  by_EPU = FALSE
+)
+bsb_condition <- condition %>%
+  subset(Species == "Black sea bass")
+head(bsb_condition)
+```
+
+```{r}
+plot_condition(data = bsb_condition, var = "Black sea bass")
+```
+
+#### Create species condition for the State of the Ecosystem report
+
+By setting `output = "soe"`, the `species_condition` function will format the output in the same style as `ecodata::condition`. Note that black sea bass is the only species included in the sample dataset shown below, but if additional species were present in the data, the output would be aggregated at the species level.
+
+```{r}
+condition <- species_condition(
+  data = NEesp2::survdat_subset,
+  LWparams = LWparams,
+  species.codes = species.codes,
+  output = "soe"
+)
+head(condition)
+```
+
+#### Additional condition queries
+
+`species_condition` can also assess the data by sex and by length bin. If these options are selected, the output will be a "full" dataset that contains additional data columns identifying the grouping parameters and data variance. For example:
+
+```{r}
+condition <- species_condition(
+  data = NEesp2::survdat_subset,
+  LWparams = LWparams,
+  species.codes = species.codes,
+  by_sex = TRUE,
+  length_break = c(0, 20, 65)
+)
+head(condition)
+```
+
 
 ### Species Range - Black sea bass in fall
 
@@ -47,37 +96,28 @@ Uses 'species_range' function in R/create_bottomtrawl_indicators.R
 ```{r}
 range <- species_range(data = NEesp2::survdat_subset, species = NEesp2::species)
 bsb_range <- range %>%
-  subset(species == 'BLACK SEA BASS') %>%
-  subset(SEASON == 'FALL') %>%
-  subset(indicator_name == c('range_lat','range_lon')) %>%
-  dplyr::rename(INDICATOR_NAME = indicator_name,
-                DATA_VALUE = indicator_value) 
+  subset(SPECIES == "BLACK SEA BASS") %>%
+  subset(SEASON == "FALL") %>%
+  subset(INDICATOR_NAME == c("range_lat", "range_lon"))
 head(bsb_range)
 ```
 
 ```{r}
 bsb_range %>%
-  ggplot2::ggplot(ggplot2::aes(x = YEAR,
-                               y = DATA_VALUE,
-                               color = INDICATOR_NAME,
+  ggplot2::ggplot(ggplot2::aes(
+    x = YEAR,
+    y = DATA_VALUE,
+    color = INDICATOR_NAME,
   )) +
   ggplot2::geom_point() +
-  ggplot2::geom_path() + 
+  ggplot2::geom_path() +
   ggplot2::theme_bw() +
-  ggplot2::labs(title = "Black Sea Bass Range in Fall (Lat + Lon)", 
-                x = "Year",
-                y = "Range (degrees)") +
-  ggplot2::facet_wrap('INDICATOR_NAME')
-```
-
-### Species diet table
-
-Uses 'diet' function in R/create_bottomtrawl_indicators.R
-
-```{r}
-allfh <- get(load(here::here("data-raw/allfh.RData")))
-diet <- diet(data = allfh)
-head(diet)
+  ggplot2::labs(
+    title = "Black Sea Bass Range in Fall (Lat + Lon)",
+    x = "Year",
+    y = "Range (degrees)"
+  ) +
+  ggplot2::facet_wrap("INDICATOR_NAME")
 ```
 
 ### Swept area biomass - Black sea bass in fall
@@ -107,15 +147,18 @@ head(bsb_swept_area)
 
 ```{r}
 bsb_swept_area %>%
-  ggplot2::ggplot(ggplot2::aes(x = Year,
-                               y = indicator_value,
+  ggplot2::ggplot(ggplot2::aes(
+    x = YEAR,
+    y = DATA_VALUE,
   )) +
   ggplot2::geom_point() +
-  ggplot2::geom_path() + 
+  ggplot2::geom_path() +
   ggplot2::theme_bw() +
-  ggplot2::labs(title = "Black Sea Bass Swept Area Biomass (Fall)", 
-                x = "Year",
-                y = "Swept Area Biomass") 
+  ggplot2::labs(
+    title = "Black Sea Bass Swept Area Biomass (Fall)",
+    x = "Year",
+    y = "Swept Area Biomass"
+  )
 ```
 
 
@@ -145,14 +188,17 @@ head(bsb_strat_mean)
 
 ```{r}
 bsb_strat_mean %>%
-  ggplot2::ggplot(ggplot2::aes(x = Year,
-                               y = indicator_value,
+  ggplot2::ggplot(ggplot2::aes(
+    x = YEAR,
+    y = DATA_VALUE,
   )) +
   ggplot2::geom_point() +
-  ggplot2::geom_path() + 
+  ggplot2::geom_path() +
   ggplot2::theme_bw() +
-  ggplot2::labs(title = "Black Sea Bass Stratified Mean Biomass (Fall)", 
-                x = "Year",
-                y = "Stratified Mean Biomass") 
+  ggplot2::labs(
+    title = "Black Sea Bass Stratified Mean Biomass (Fall)",
+    x = "Year",
+    y = "Stratified Mean Biomass"
+  )
 ```
 

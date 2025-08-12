@@ -12,8 +12,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   warning = FALSE,
-  eval = FALSE
+  eval = TRUE
 )
+
+# pak::pak("NEFSC/READ_EDAB_Utilities@dev")
 ```
 
 
@@ -26,9 +28,9 @@ This vignette demonstrates use of functions within the EDABUtilities package (ht
 Crops a 2D netCDF based on the extent of a shape file.
 
 ```{r}
-crop_bottomT <- EDABUtilities::crop_nc_2d(data.in = c(here::here('data','glorys_bottomT.nc')),
-                            output.files = c(here::here('data','crop_glorys_bottomT.nc')),
-                            shp.file = here::here('shapefiles','BTS_STRATA.shp'),
+crop_bottomT <- EDABUtilities::crop_nc_2d(data.in = c(here::here('data-raw','glorys_bottomT.nc')),
+                            output.files = c(here::here('data-raw','crop_glorys_bottomT.nc')),
+                            shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
                             #area.names = c('01030'),
                             var.name = 'bottomT',
                             write.out = F)
@@ -37,9 +39,9 @@ terra::plot(crop_bottomT[[1]])
 ```
 
 ```{r}
-crop_bottomS <- EDABUtilities::crop_nc_2d(data.in = c(here::here('data','glorys_bottomS.nc')),
-                            output.files = c(here::here('data','crop_glorys_bottomS.nc')),
-                            shp.file = here::here('shapefiles','BTS_STRATA.shp'),
+crop_bottomS <- EDABUtilities::crop_nc_2d(data.in = c(here::here('data-raw','glorys_bottomS.nc')),
+                            output.files = c(here::here('data-raw','crop_glorys_bottomS.nc')),
+                            shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
                             var.name = 'bottomS',
                             write.out = F)
 
@@ -47,15 +49,15 @@ terra::plot(crop_bottomS[[1]])
 
 ```
 
-
 ### Make 2d summary time series: mean monthly bottom temperature in golden tilefish BTS strata 
 
 Provides summary statistics of 2d gridded data as time series by area.
 
 ```{r}
-monthly_bt <- EDABUtilities::make_2d_summary_ts(data.in = c(here::here('data','glorys_bottomT.nc')),
-                            output.files = c(here::here('data','GLORYS_monthly_bottomT.nc')),
-                            shp.file = here::here('shapefiles','BTS_STRATA.shp'),
+monthly_bt <- EDABUtilities::make_2d_summary_ts(data.in = c(here::here('data-raw','glorys_bottomT.nc')),
+                            file.time = 'annual',
+                            output.files = c(here::here('data-raw','GLORYS_monthly_bottomT.nc')),
+                            shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
                             var.name = 'bottomT',
                             area.names = c('01030', '01040', '01070', '01080', '01110', '01120', 
                                            '01140', '01150', '01670', '01680', '01710', '01720', 
@@ -80,9 +82,9 @@ ggplot2::ggplot(monthly_bt[[1]],ggplot2::aes(x = time, y= value))+
 Provides summary statistics of 2d gridded data as time series by area.
 
 ```{r}
-daily_bS <- EDABUtilities::make_2d_summary_ts(data.in = c(here::here('data','glorys_bottomS.nc')),
-                   output.files = c(here::here('data','GLORYS_daily_bottomS.nc')),
-                   shp.file = here::here('shapefiles','BTS_STRATA.shp'),
+daily_bS <- EDABUtilities::make_2d_summary_ts(data.in = c(here::here('data-raw','glorys_bottomS.nc')),
+                   output.files = c(here::here('data-raw','GLORYS_daily_bottomS.nc')),
+                   shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
                    var.name = 'bottomS',
                    area.names = c('01030', '01040', '01070', '01080', '01110', '01120', 
                                            '01140', '01150', '01670', '01680', '01710', '01720', 
@@ -91,7 +93,8 @@ daily_bS <- EDABUtilities::make_2d_summary_ts(data.in = c(here::here('data','glo
                    agg.time = 'days',
                    tz = NA,
                    touches = TRUE,
-                   write.out = F)
+                   write.out = F,
+                   file.time = "annual")
 
 ggplot2::ggplot(daily_bS[[1]],ggplot2::aes(x = time, y= value))+
   ggplot2::geom_line(lwd = 1)+ 
@@ -102,14 +105,15 @@ ggplot2::ggplot(daily_bS[[1]],ggplot2::aes(x = time, y= value))+
   ggplot2::facet_wrap(~area)
 ```
 
+
 ### Make 2d gridded time series: calculate number of days (nd) above a bottom temperature threshold (14C) in the golden tilefish BTS strata
 
 Provides a data frame of degree-day family statistics
 
 ```{r}
-dd <- EDABUtilities::make_2d_deg_day_ts(data.in = c(here::here('data','glorys_bottomT.nc')),
-                              output.files = c(here::here('data','GLORYS_monthly_bottomT.nc')),
-                              shp.file = here::here('shapefiles','BTS_STRATA.shp'),
+dd <- EDABUtilities::make_2d_deg_day_ts(data.in = c(here::here('data-raw','glorys_bottomT.nc')),
+                              output.files = c(here::here('data-raw','GLORYS_monthly_bottomT.nc')),
+                              shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
                               var.name = 'bottomT',
                               area.names = c('01030', '01040', '01070', '01080', '01110', '01120', 
                                             '01140', '01150', '01670', '01680', '01710', '01720', 
