@@ -12,11 +12,14 @@
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
-get_mrip_catch <- function(species,
-                           type = "all",
-                           data_type = "numbers of fish",
-                           years = c(1981, 2024),
-                           region = "north and mid-atlantic") {
+get_mrip_catch <- function(
+  species,
+  type = "all",
+  data_type = "numbers of fish",
+  years = c(1981, 2024),
+  region = "north and mid-atlantic"
+) {
+  ## URL query parameters
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
@@ -44,6 +47,7 @@ get_mrip_catch <- function(species,
   #               species,
   #               "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qcatch_type=ALL+CATCH+TYPES+%28TYPE+A%2C+B1%2C+and+B2%29&qdata_type=NUMBERS+OF+FISH&qoutput_type=TABLE&qsource=PRODUCTION")
 
+  ## compile URL
   url <- paste0(
     "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=",
     years[1],
@@ -60,42 +64,46 @@ get_mrip_catch <- function(species,
     "&qoutput_type=TABLE&qsource=PRODUCTION"
   )
 
-  test <- httr::GET(url) |>
-    httr::content()
+  ## scrape HTML content from URL
+  page <- httr::GET(url) |>
+    httr::content(as = "text") |>
+    rvest::read_html()
 
-  tbl <- test |>
-    xml2::xml_child(2) |>
-    xml2::xml_child(1)
+  ## check for data and scrape
+  tables <- rvest::html_table(page)
 
-  meta_tbl <- xml2::xml_child(tbl, 2) |>
-    try()
-
-  if (class(meta_tbl) == "try-error") {
-    meta_tbl <- test |>
-      xml2::xml_child(2) |>
-      xml2::xml_child(2) |>
-      # xml2::xml_child(1) |>
-      rvest::html_text()
-
-    output <- list(
-      data = "no data",
-      metadata = meta_tbl,
-      url = url
-    )
-  } else {
-    data_tbl <- xml2::xml_child(tbl, 4)
-
-    tbl2 <- rvest::html_table(data_tbl)
-    meta2 <- rvest::html_text(meta_tbl)
-
-    output <- list(
-      data = tbl2 |>
-        dplyr::mutate(SPECIES = species |> stringr::str_to_upper(),
-                      REGION = region |> stringr::str_to_upper()),
-      metadata = meta2,
-      url = url
-    )
+  if (length(tables) < 3) {
+    stop(paste(
+      "Unexpected format on the MRIP query tool page. Please view the data in your internet browser at:",
+      url,
+      sep = "\n"
+    ))
   }
+
+  data_tbl <- rvest::html_table(page)[[3]]
+  meta_tbl <- rvest::html_table(page)[[2]][, 2:3]
+
+  if (
+    stringr::str_detect(
+      paste(meta_tbl[, 1]),
+      "No records matched your query parameters"
+    )
+  ) {
+    # Store an informative message for the data component
+    data <- "No records matched your query parameters"
+  } else {
+    # Process the data table
+    data <- data_tbl |>
+      dplyr::mutate(
+        SPECIES = stringr::str_to_upper(species),
+        REGION = stringr::str_to_upper(region)
+      )
+  }
+  output <- list(
+    data = data,
+    metadata = meta_tbl,
+    url = url
+  )
 
   return(output)
 }
@@ -119,9 +127,7 @@ get_mrip_catch <- function(species,
 
 ## TODO: add option to get trips by for-hire only
 
-get_mrip_trips <- function(species,
-                           region,
-                           year) {
+get_mrip_trips <- function(species, region, year) {
   new_species <- species |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "%20")
@@ -139,7 +145,6 @@ get_mrip_trips <- function(species,
     new_species,
     "&qmode_fx=ALL+MODES+COMBINED&qarea_x=ALL+AREAS+COMBINED&qsp_opt=PRIMARY&qsp_opt=SECONDARY&qsp_opt=CAUGHT&qsp_opt=HARVESTED&qsp_opt=RELEASED&qoutput_type=TABLE&qsource=PRODUCTION"
   )
-
 
   test <- httr::GET(url) |>
     httr::content()
@@ -198,9 +203,14 @@ get_mrip_trips <- function(species,
 #' @return Saves an Rds file. Returns the file name.
 #' @export
 
-save_trips <- function(this_species, this_year, this_region, out_folder,
-                       wait = TRUE,
-                       return_fname = TRUE) {
+save_trips <- function(
+  this_species,
+  this_year,
+  this_region,
+  out_folder,
+  wait = TRUE,
+  return_fname = TRUE
+) {
   species_dir <- paste0(
     out_folder,
     paste0("/", this_species, "_trips")
@@ -231,13 +241,23 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
       "_ERROR.Rds"
     )
   } else if (out$data[1] == "no data") {
-    message(paste("No data in MRIP query:", this_species, this_region, this_year))
+    message(paste(
+      "No data in MRIP query:",
+      this_species,
+      this_region,
+      this_year
+    ))
     fname <- paste0(
       fname_base,
       "_NODATA.Rds"
     )
   } else {
-    message(paste("MRIP query successful:", this_species, this_region, this_year))
+    message(paste(
+      "MRIP query successful:",
+      this_species,
+      this_region,
+      this_year
+    ))
     fname <- paste0(
       fname_base,
       ".Rds"
@@ -269,17 +289,23 @@ save_trips <- function(this_species, this_year, this_region, out_folder,
 #' @return Saves list of the scraped data and metadata. Returns the file name.
 #' @export
 
-save_catch <- function(this_species,
-                       this_region,
-                       out_folder,
-                       catch_type = "all",
-                       wait = TRUE,
-                       return_fname = TRUE) {
+save_catch <- function(
+  this_species,
+  this_region,
+  out_folder,
+  catch_type = "all",
+  this_data_type,
+  wait = TRUE,
+  return_fname = TRUE
+) {
+
   fname <- paste0(
     out_folder,
     "/catch_",
-    catch_type, "_",
+    catch_type,
+    "_",
     this_species,
+    "_",
     this_region,
     ".Rds"
   ) |>
@@ -291,8 +317,9 @@ save_catch <- function(this_species,
 
   out <- get_mrip_catch(
     species = this_species,
+    type = catch_type,
     region = this_region,
-    type = catch_type
+    data_type = this_data_type
   )
 
   saveRDS(out, fname)

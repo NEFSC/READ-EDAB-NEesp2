@@ -71,8 +71,8 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Using MRIP Data for Recreational Indicators</h1>
-                        <h4 data-toc-skip class="author">Stephanie
-Owen</h4>
+                        <h4 data-toc-skip class="author">Stephanie Owen
+&amp; Abigail Tyrell</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/NEFSC/READ-EDAB-NEesp2/blob/HEAD/vignettes/using_mrip_data.Rmd" class="external-link"><code>vignettes/using_mrip_data.Rmd</code></a></small>
@@ -82,110 +82,566 @@ Owen</h4>
     
     
 <div class="section level2">
-<h2 id="obtaining-raw-mrip-data">Obtaining Raw MRIP Data<a class="anchor" aria-label="anchor" href="#obtaining-raw-mrip-data"></a>
+<h2 id="obtaining-mrip-data">Obtaining MRIP Data<a class="anchor" aria-label="anchor" href="#obtaining-mrip-data"></a>
 </h2>
 <p>Data pulls from NOAA Fisheries’ Marine Recreational Information
-Program (MRIP) can be done through the MRIP Query Tool (<a href="https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries" class="external-link uri">https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries</a>).</p>
-<p>At this time, queries must be saved as a csv and loaded into R. The
-raw data includes lines of metadata and description and does not format
-nicely. The following lines of code remove the extra information and
-modifies the remaining data into columns while reading in each csv file.
-The files used in this vignette are found in the ‘data-raw’ folder in
-this package.</p>
-<p>Catch, landings, and effort data can be read in as one file with
-multiple years. Directed trips must be downloaded for each year of
-interest.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># catch data</span></span>
-<span><span class="va">mrip_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw/mrip_BLACK_SEA_BASS_catch_series.csv'</span><span class="op">)</span>,</span>
-<span>                                  skip <span class="op">=</span> <span class="fl">46</span>, <span class="co"># of rows you want to ignore</span></span>
-<span>                                  na.strings <span class="op">=</span> <span class="st">"."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">clean_names</a></span><span class="op">(</span>case <span class="op">=</span> <span class="st">"all_caps"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># landings data</span></span>
-<span><span class="va">mrip_landing</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw/mrip_BLACK_SEA_BASS_harvest.csv'</span><span class="op">)</span>,</span>
-<span>                         skip <span class="op">=</span> <span class="fl">46</span>, <span class="co"># of rows you want to ignore</span></span>
-<span>                         na.strings <span class="op">=</span> <span class="st">"."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">clean_names</a></span><span class="op">(</span>case <span class="op">=</span> <span class="st">"all_caps"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># effort data </span></span>
-<span><span class="va">mrip_effort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw/mrip_effort_series.csv'</span><span class="op">)</span>,</span>
-<span>                        skip <span class="op">=</span> <span class="fl">44</span>, <span class="co"># of rows you want to ignore</span></span>
-<span>                        na.strings <span class="op">=</span> <span class="st">"."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">clean_names</a></span><span class="op">(</span>case <span class="op">=</span> <span class="st">"all_caps"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># trips files</span></span>
-<span><span class="va">path</span> <span class="op">=</span> <span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw/mrip_directed_trips'</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">path</span>, </span>
-<span>                    pattern <span class="op">=</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/glob2rx.html" class="external-link">glob2rx</a></span><span class="op">(</span><span class="st">'mrip*.csv'</span><span class="op">)</span>,</span>
-<span>                    full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>This vignette shows example data pulls and plots used for the 2025
-black sea bass ESP report card: - Total Recreational Catch - Total
-Recreational Trips - Recreational Effort (proportion of trips targeting
-black sea bass) - Total Recreational Landings</p>
+Program (MRIP) can be done through the <a href="https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries" class="external-link">MRIP
+Query Tool website</a>.</p>
+<p>Alternatively, queries for recreational trips, catch, and landings
+can be performed using the functions in this package.</p>
+<p>This vignette shows example data pulls and plots used for Black Sea
+Bass:</p>
+<ul>
+<li><p>Total Recreational Catch and Landings</p></li>
+<li><p>Total Recreational Trips</p></li>
+</ul>
 </div>
 <div class="section level2">
-<h2 id="run-mrip-functions-and-plot-time-series">Run MRIP functions and plot time series<a class="anchor" aria-label="anchor" href="#run-mrip-functions-and-plot-time-series"></a>
+<h2 id="black-sea-bass-recreational-catch-and-landings">Black Sea Bass Recreational Catch and Landings<a class="anchor" aria-label="anchor" href="#black-sea-bass-recreational-catch-and-landings"></a>
 </h2>
-<p>The code for functions referenced here can be found in
-‘create_recreational_indicators.R’ and ‘plot_indicator_ts.R’.</p>
 <div class="section level3">
-<h3 id="black-sea-bass-recreational-catch">Black Sea Bass Recreational Catch<a class="anchor" aria-label="anchor" href="#black-sea-bass-recreational-catch"></a>
+<h3 id="pull-data">Pull data<a class="anchor" aria-label="anchor" href="#pull-data"></a>
 </h3>
-<p>Query ‘Time Series’ under ‘Catch Data’.</p>
-<p>Choose years of interest, summarize by Annual, Calendar Year,
-Atlantic coast by state, Black Sea Bass, all modes and areas, Total
-Catch</p>
-<p>Download csv as output</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">total_rec_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">mrip_catch</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">total_rec_catch</span><span class="op">)</span></span></code></pre></div>
-<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-</div>
-<div class="section level3">
-<h3 id="black-sea-bass-recreational-landings">Black Sea Bass Recreational Landings<a class="anchor" aria-label="anchor" href="#black-sea-bass-recreational-landings"></a>
-</h3>
-<p>Query ‘Time Series’ under ‘Catch Data’.</p>
-<p>Choose years of interest, summarize by Annual, Calendar Year,
-Atlantic Coast by State, Black Sea Bass, all modes and areas, Harvest (A
-+ B1), choose # of fish/weight (lbs), mean length and weight</p>
-<p>Download csv as output</p>
+<p>Get recreational catch data for Black Sea Bass using the
+<code>get_mrip_catch</code> function. The <code>type</code> argument can
+be set to “all” for all catch types (A, B1, B2) or “landings” for just
+the landings (A and B1).</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bsb_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_catch.html">get_mrip_catch</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, type <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_catch</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## $data</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 44 × 13</span></span></span>
+<span><span class="co">##    `Estimate Status`  Year `Fishing Year`     `Common Name` `Cumulative Through`</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> FINAL              <span style="text-decoration: underline;">1</span>981 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> FINAL              <span style="text-decoration: underline;">1</span>982 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> FINAL              <span style="text-decoration: underline;">1</span>983 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> FINAL              <span style="text-decoration: underline;">1</span>984 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> FINAL              <span style="text-decoration: underline;">1</span>985 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> FINAL              <span style="text-decoration: underline;">1</span>986 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> FINAL              <span style="text-decoration: underline;">1</span>987 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> FINAL              <span style="text-decoration: underline;">1</span>988 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> FINAL              <span style="text-decoration: underline;">1</span>989 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> FINAL              <span style="text-decoration: underline;">1</span>990 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 34 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 8 more variables: `PSE Total Catch (A+B1+B2)` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Does Total Catch (A+B1+B2) Meet MRIP Standard` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Is Total Catch (A+B1+B2) Significantly Different From 0` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Total Catch (A+B1+B2)` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Total Catch (A+B1+B2) Lower 95% Confidence Limit` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Total Catch (A+B1+B2) Upper 95% Confidence Limit` &lt;chr&gt;, …</span></span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $metadata</span></span>
+<span><span class="co">## [1] " Your Query Parameters:   Query: MRIP CATCH TIME SERIES  Year: 1981 - 2024   Summarize By: ANNUAL  Fishing Year: CALENDAR YEAR (JANUARY 1 - DECEMBER 31)  Species: BLACK SEA BASS  Geographic Area: NORTH AND MID-ATLANTIC  Fishing Mode: ALL MODES COMBINED  Fishing Area: ALL AREAS COMBINED  Type of Catch: TOTAL CATCH (TYPE A + B1 + B2)  Information: NUMBERS OF FISHNotes on Query Results:        MRIP does not support the use of estimates with a percent standard error above 50 and in those instances, recommends considering higher levels of aggregation (e.g., across states, geographic regions, or fishing modes).Due to COVID-related disruptions to the Access Point Angler Intercept Survey and subsequent gaps in catch records, some catch estimates are based in part on imputed data.  Columns labeled 'Contribution of Imputed Data to {ESTIMATE} rate' represent the weighted percentage of catch rate information that can be attributed to imputed catch data. Note: This does *not* represent the percent difference between the estimate with and without imputed data incorporated. If no such column appears in your query results, no imputed data were used.Estimates for Hawaii (prior to 2023) and Puerto Rico (prior to 2014) are based on Marine Recreational Fisheries Statistics Survey methodology and have not been calibrated.         Beginning in 2023, estimates for Hawaii are produced using certified MRIP survey designs and weighted estimation methods. \n Return to Query Page\n"</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">total_rec_landings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_landings.html">create_total_rec_landings</a></span><span class="op">(</span><span class="va">mrip_landing</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">total_rec_landings</span><span class="op">)</span></span></code></pre></div>
-<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<code class="sourceCode R"><span><span class="va">bsb_landings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_catch.html">get_mrip_catch</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, type <span class="op">=</span> <span class="st">"landings"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_landings</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## $data</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 44 × 13</span></span></span>
+<span><span class="co">##    `Estimate Status`  Year `Fishing Year`     `Common Name` `Cumulative Through`</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> FINAL              <span style="text-decoration: underline;">1</span>981 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> FINAL              <span style="text-decoration: underline;">1</span>982 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> FINAL              <span style="text-decoration: underline;">1</span>983 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> FINAL              <span style="text-decoration: underline;">1</span>984 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> FINAL              <span style="text-decoration: underline;">1</span>985 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> FINAL              <span style="text-decoration: underline;">1</span>986 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> FINAL              <span style="text-decoration: underline;">1</span>987 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> FINAL              <span style="text-decoration: underline;">1</span>988 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> FINAL              <span style="text-decoration: underline;">1</span>989 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> FINAL              <span style="text-decoration: underline;">1</span>990 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 34 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 8 more variables: `PSE Total Harvest (A+B1)` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Does Total Harvest (A+B1) Meet MRIP Standard` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Is Total Harvest (A+B1) Significantly Different From 0` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Total Harvest (A+B1)` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Total Harvest (A+B1) Lower 95% Confidence Limit` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Total Harvest (A+B1) Upper 95% Confidence Limit` &lt;chr&gt;, …</span></span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $metadata</span></span>
+<span><span class="co">## [1] " Your Query Parameters:   Query: MRIP CATCH TIME SERIES  Year: 1981 - 2024   Summarize By: ANNUAL  Fishing Year: CALENDAR YEAR (JANUARY 1 - DECEMBER 31)  Species: BLACK SEA BASS  Geographic Area: NORTH AND MID-ATLANTIC  Fishing Mode: ALL MODES COMBINED  Fishing Area: ALL AREAS COMBINED  Type of Catch: HARVEST (TYPE A + B1)  Information: NUMBERS OF FISHNotes on Query Results:        MRIP does not support the use of estimates with a percent standard error above 50 and in those instances, recommends considering higher levels of aggregation (e.g., across states, geographic regions, or fishing modes).Due to COVID-related disruptions to the Access Point Angler Intercept Survey and subsequent gaps in catch records, some catch estimates are based in part on imputed data.  Columns labeled 'Contribution of Imputed Data to {ESTIMATE} rate' represent the weighted percentage of catch rate information that can be attributed to imputed catch data. Note: This does *not* represent the percent difference between the estimate with and without imputed data incorporated. If no such column appears in your query results, no imputed data were used.Estimates for Hawaii (prior to 2023) and Puerto Rico (prior to 2014) are based on Marine Recreational Fisheries Statistics Survey methodology and have not been calibrated.         Beginning in 2023, estimates for Hawaii are produced using certified MRIP survey designs and weighted estimation methods. \n Return to Query Page\n"</span></span></code></pre>
 </div>
 <div class="section level3">
-<h3 id="black-sea-bass-total-recreational-trips">Black Sea Bass Total Recreational Trips<a class="anchor" aria-label="anchor" href="#black-sea-bass-total-recreational-trips"></a>
+<h3 id="wrangle-data">Wrangle data<a class="anchor" aria-label="anchor" href="#wrangle-data"></a>
 </h3>
-<p>Query ‘Directed Trip’ under ‘Effort Data’.</p>
-<p>Choose year of interest, summarize by Annual, Calendar Year, Atlantic
-coast by state, Black Sea Bass, all modes and areas, Primary Target</p>
-<p>Download csv as output</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rec_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_rec_trips.html">create_rec_trips</a></span><span class="op">(</span>files <span class="op">=</span> <span class="va">files</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">rec_trips</span><span class="op">)</span></span></code></pre></div>
-<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-</div>
-<div class="section level3">
-<h3 id="black-sea-bass-recreational-effort">Black Sea Bass Recreational Effort<a class="anchor" aria-label="anchor" href="#black-sea-bass-recreational-effort"></a>
-</h3>
-<p>Note: must run ‘create_rec_trips’ prior to obtain ‘rec_trips’
-dataset.</p>
-<p>Query ‘Time Series’ under ‘Effort Data’.</p>
-<p>Choose years of interest, summarize by Annual, Calendar Year,
-Atlantic Coast by State, all modes and areas</p>
-<p>Download csv as output</p>
+<p>The function returns a list with the data and query metadata. These
+data can be used directly for analyses, with minimal data wrangling. The
+data can be formatted for use in ESPs with the function
+<code><a href="../reference/create_total_rec_catch.html">create_total_rec_catch()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">prop_sp_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_prop_sp_trips.html">create_prop_sp_trips</a></span><span class="op">(</span>total_trips <span class="op">=</span> <span class="va">mrip_effort</span>, </span>
-<span>                                      species_trips <span class="op">=</span> <span class="va">rec_trips</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">esp_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">bsb_catch</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  var_name <span class="op">=</span> <span class="st">"catch"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">esp_catch</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="4%">
+<col width="10%">
+<col width="12%">
+<col width="14%">
+<col width="26%">
+<col width="15%">
+<col width="14%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">YEAR</th>
+<th align="right">DATA_VALUE</th>
+<th align="left">CATEGORY</th>
+<th align="left">INDICATOR_TYPE</th>
+<th align="left">INDICATOR_NAME</th>
+<th align="left">INDICATOR_UNITS</th>
+<th align="left">SPECIES</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1981</td>
+<td align="right">7680855</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_catch_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="even">
+<td align="right">1982</td>
+<td align="right">12824985</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_catch_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="odd">
+<td align="right">1983</td>
+<td align="right">8172372</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_catch_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="even">
+<td align="right">1984</td>
+<td align="right">4566246</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_catch_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="odd">
+<td align="right">1985</td>
+<td align="right">8973265</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_catch_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="even">
+<td align="right">1986</td>
+<td align="right">29444111</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_catch_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">esp_landings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">bsb_landings</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  var_name <span class="op">=</span> <span class="st">"landings"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">esp_landings</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="4%">
+<col width="10%">
+<col width="12%">
+<col width="14%">
+<col width="28%">
+<col width="15%">
+<col width="14%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">YEAR</th>
+<th align="right">DATA_VALUE</th>
+<th align="left">CATEGORY</th>
+<th align="left">INDICATOR_TYPE</th>
+<th align="left">INDICATOR_NAME</th>
+<th align="left">INDICATOR_UNITS</th>
+<th align="left">SPECIES</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1981</td>
+<td align="right">2387527</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_landings_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="even">
+<td align="right">1982</td>
+<td align="right">10696079</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_landings_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="odd">
+<td align="right">1983</td>
+<td align="right">5075429</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_landings_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="even">
+<td align="right">1984</td>
+<td align="right">2447169</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_landings_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="odd">
+<td align="right">1985</td>
+<td align="right">4491941</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_landings_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+<tr class="even">
+<td align="right">1986</td>
+<td align="right">19254567</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">total_recreational_landings_n</td>
+<td align="left">number</td>
+<td align="left">BLACK SEA BASS</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="save-data">Save data<a class="anchor" aria-label="anchor" href="#save-data"></a>
+</h3>
+<p>If you would like to save the data, the <code>save_catch</code>
+function can be used to save the data and the query used as an Rds file.
+This function is useful for automating data pulls and saving them in a
+specified folder. The file names are automatically generated, and are
+printed when the function runs. The function returns the file name as a
+value, which can be used to read the data back in later.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/save_catch.html">save_catch</a></span><span class="op">(</span></span>
+<span>  this_species <span class="op">=</span> <span class="st">"black sea bass"</span>,</span>
+<span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"inst/mrip_data"</span><span class="op">)</span>,</span>
+<span>  catch_type <span class="op">=</span> <span class="st">"all"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Data saved at: C:/Users/abigail.tyrell/Documents/code/READ-EDAB-NEesp2/inst/mrip_data/catch_all_black_sea_bass.Rds</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "C:/Users/abigail.tyrell/Documents/code/READ-EDAB-NEesp2/inst/mrip_data/catch_all_black_sea_bass.Rds"</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/save_catch.html">save_catch</a></span><span class="op">(</span></span>
+<span>  this_species <span class="op">=</span> <span class="st">"black sea bass"</span>,</span>
+<span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"inst/mrip_data"</span><span class="op">)</span>,</span>
+<span>  catch_type <span class="op">=</span> <span class="st">"landings"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Data saved at: C:/Users/abigail.tyrell/Documents/code/READ-EDAB-NEesp2/inst/mrip_data/catch_landings_black_sea_bass.Rds</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "C:/Users/abigail.tyrell/Documents/code/READ-EDAB-NEesp2/inst/mrip_data/catch_landings_black_sea_bass.Rds"</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="plot-data">Plot data<a class="anchor" aria-label="anchor" href="#plot-data"></a>
+</h3>
+<p>The data can be plotted with <code><a href="../reference/plt_indicator.html">plt_indicator()</a></code> as long as
+it has columns named INDICATOR_NAME, DATA_VALUE, and YEAR.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">esp_catch</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">esp_landings</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="suggested-workflow">Suggested workflow<a class="anchor" aria-label="anchor" href="#suggested-workflow"></a>
+</h3>
+<p>We suggest using <code><a href="../reference/save_catch.html">save_catch()</a></code> to save the data, reading
+in the .Rds, and formatting using <code><a href="../reference/create_total_rec_catch.html">create_total_rec_catch()</a></code>
+to format the data for use in ESPs. This allows for easy access to the
+data and metadata, and ensures that the data is in a consistent format
+for analysis.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">save_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/save_catch.html">save_catch</a></span><span class="op">(</span></span>
+<span>  this_species <span class="op">=</span> <span class="st">"black sea bass"</span>,</span>
+<span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  catch_type <span class="op">=</span> <span class="st">"all"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">prop_sp_trips</span><span class="op">)</span></span></code></pre></div>
-<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="va">save_data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">esp_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">bsb_catch</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
+<p>This workflow can also be easily iterated over multiple species with
+<code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code>.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">species_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black sea bass"</span>, <span class="st">"summer flounder"</span>, <span class="st">"scup"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
+<span>  <span class="va">species_list</span>,</span>
+<span>  <span class="op">~</span> <span class="op">{</span></span>
+<span>    <span class="va">save_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/save_catch.html">save_catch</a></span><span class="op">(</span></span>
+<span>      this_species <span class="op">=</span> <span class="va">.x</span>,</span>
+<span>      out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      catch_type <span class="op">=</span> <span class="st">"all"</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="va">save_data</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">esp_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_rec_catch.html">create_total_rec_catch</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">esp_catch</span>, <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"esp_catch_"</span>, <span class="va">.x</span>, <span class="st">".csv"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="black-sea-bass-total-recreational-trips">Black Sea Bass Total Recreational Trips<a class="anchor" aria-label="anchor" href="#black-sea-bass-total-recreational-trips"></a>
+</h2>
+<p>Recreational trip queries must be done by year (single query for each
+year). The earliest possible year is 1981. Additionally, each region
+must be queried separately (i.e. Mid-Atlantic and North Atlantic, or by
+state).</p>
+<div class="section level3">
+<h3 id="simple-queries">Simple queries<a class="anchor" aria-label="anchor" href="#simple-queries"></a>
+</h3>
+<p>Here is a sample query for Black Sea Bass trips in the North Atlantic
+in 2020.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">trips_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">trips_2020</span></span></code></pre></div>
+<pre><code><span><span class="co">## $data</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 13</span></span></span>
+<span><span class="co">##   `Estimate Status`  Year `Fishing Year`                 Estimation Methodolog…¹</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> FINAL              <span style="text-decoration: underline;">2</span>020 Calendar Year (Jan 1 - Dec 31) MRIP (2020 - 2020)     </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ abbreviated name: ¹​`Estimation Methodology`</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 9 more variables: `Cumulative Through` &lt;chr&gt;, PSE &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Does Directed Trips Meet MRIP Standard` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Is Directed Trips Significantly Different From 0` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Directed Trips` &lt;chr&gt;, `Directed Trips Lower 95% Confidence Limit` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Directed Trips Upper 95% Confidence Limit` &lt;chr&gt;, Species &lt;fct&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   Region &lt;fct&gt;</span></span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $metadata</span></span>
+<span><span class="co">## [1] " Your Query Parameters:   Query: MRIP EFFORT DIRECTED TRIP  Year: 2020 - 2020   Summarize By: ANNUAL  Fishing Year: CALENDAR YEAR (JANUARY 1 - DECEMBER 31)  Species: BLACK SEA BASS  Geographic Area: NORTH ATLANTIC  Fishing Mode: ALL MODES COMBINED  Fishing Area: ALL AREAS COMBINED  Species Option: PRIMARY TARGET, SECONDARY TARGET, CAUGHT (TYPE A), HARVESTED (TYPE B1), RELEASED (TYPE B2)  Information: DIRECTED ANGLER TRIPSNotes on Query Results:        MRIP does not support the use of estimates with a percent standard error above 50 and in those instances, recommends considering higher levels of aggregation (e.g., across states, geographic regions, or fishing modes).        Results from 1981-2017 contain estimates resulting from the full application of both the Access Point Angler Intercept Survey (APAIS) and Fishing Effort Survey (FES) calibration.        As of 2018 wave 1, all estimates of shore and private/rental boat fishing effort are now based on the FES.          MRIP estimates for Louisiana are not available after 2013. State produced estimates are available through the MRIP National Query. For more information on state run surveys and estimates, please click here.          Estimates for Hawaii (prior to 2023) and Puerto Rico (prior to 2014) are based on Marine Recreational Fisheries Statistics Survey methodology and have not been calibrated.          Beginning in 2023, estimates for Hawaii are produced using certified MRIP survey designs and weighted estimation methods.         Review the glossary for a description of how the for-hire survey methods have changed over time.                        \n Return to Query Page\n"</span></span></code></pre>
+<p>To build a time series, multiple queries need to be run. Trips could
+be manually downloaded and combined, as shown below. The following
+queries Black Sea Bass trips for the North Atlantic and Mid-Atlantic
+from 2020-2024.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">trips_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span></span>
+<span><span class="va">trips_2021</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2021"</span><span class="op">)</span></span>
+<span><span class="va">trips_2022</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2022"</span><span class="op">)</span></span>
+<span><span class="va">trips_2023</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2023"</span><span class="op">)</span></span>
+<span><span class="va">trips_2024</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2024"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">trips2_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"Mid-Atlantic"</span>, year <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span></span>
+<span><span class="va">trips2_2021</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"Mid-Atlantic"</span>, year <span class="op">=</span> <span class="st">"2021"</span><span class="op">)</span></span>
+<span><span class="va">trips2_2022</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"Mid-Atlantic"</span>, year <span class="op">=</span> <span class="st">"2022"</span><span class="op">)</span></span>
+<span><span class="va">trips2_2023</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"Mid-Atlantic"</span>, year <span class="op">=</span> <span class="st">"2023"</span><span class="op">)</span></span>
+<span><span class="va">trips2_2024</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"Mid-Atlantic"</span>, year <span class="op">=</span> <span class="st">"2024"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  <span class="va">trips_2020</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  <span class="va">trips_2021</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  <span class="va">trips_2022</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  <span class="va">trips_2023</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  <span class="va">trips_2024</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mid_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  <span class="va">trips2_2020</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  <span class="va">trips2_2021</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  <span class="va">trips2_2022</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  <span class="va">trips2_2023</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  <span class="va">trips2_2024</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">n_trips</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 13</span></span></span>
+<span><span class="co">##   `Estimate Status`  Year `Fishing Year`                 Estimation Methodolog…¹</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> FINAL              <span style="text-decoration: underline;">2</span>020 Calendar Year (Jan 1 - Dec 31) MRIP (2020 - 2020)     </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> FINAL              <span style="text-decoration: underline;">2</span>021 Calendar Year (Jan 1 - Dec 31) MRIP (2021 - 2021)     </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> FINAL              <span style="text-decoration: underline;">2</span>022 Calendar Year (Jan 1 - Dec 31) MRIP (2022 - 2022)     </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> FINAL              <span style="text-decoration: underline;">2</span>023 Calendar Year (Jan 1 - Dec 31) MRIP (2023 - 2023)     </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> FINAL              <span style="text-decoration: underline;">2</span>024 Calendar Year (Jan 1 - Dec 31) MRIP (2024 - 2024)     </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ abbreviated name: ¹​`Estimation Methodology`</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 9 more variables: `Cumulative Through` &lt;chr&gt;, PSE &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Does Directed Trips Meet MRIP Standard` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Is Directed Trips Significantly Different From 0` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Directed Trips` &lt;chr&gt;, `Directed Trips Lower 95% Confidence Limit` &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   `Directed Trips Upper 95% Confidence Limit` &lt;chr&gt;, Species &lt;fct&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   Region &lt;fct&gt;</span></span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="save-data-1">Save data<a class="anchor" aria-label="anchor" href="#save-data-1"></a>
+</h3>
+<p>To make the data download more reproducible and efficient, there is a
+<code><a href="../reference/save_trips.html">save_trips()</a></code> function that can be iterated on with
+<code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code>. This function executes the MRIP query and
+saves the .Rds with the MRIP data download and query information in the
+specified folder. Data can then be read in and used in analyses. For
+example, the following code will download and save the same data that is
+shown in the <code>trips_2020</code> object above. The file name is
+automatically created and is returned by the function.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/save_trips.html">save_trips</a></span><span class="op">(</span></span>
+<span>  this_species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>,</span>
+<span>  this_year <span class="op">=</span> <span class="fl">2020</span>,</span>
+<span>  this_region <span class="op">=</span> <span class="st">"North Atlantic"</span>,</span>
+<span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"inst/mrip_data"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## MRIP query successful: BLACK SEA BASS North Atlantic 2020</span></span></code></pre>
+<pre><code><span><span class="co">## Data saved at: C:/Users/abigail.tyrell/Documents/code/READ-EDAB-NEesp2/inst/mrip_data/BLACK_SEA_BASS_trips/trips_BLACK_SEA_BASS_North_Atlantic_2020.Rds</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "C:/Users/abigail.tyrell/Documents/code/READ-EDAB-NEesp2/inst/mrip_data/BLACK_SEA_BASS_trips/trips_BLACK_SEA_BASS_North_Atlantic_2020.Rds"</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="automate-data-pulls-with-save_trips">Automate data pulls with <code>save_trips()</code><a class="anchor" aria-label="anchor" href="#automate-data-pulls-with-save_trips"></a>
+</h3>
+<p>To iterate with <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code>:</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create parameter grid</span></span>
+<span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span></span>
+<span>  region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"north atlantic"</span>, <span class="st">"mid-atlantic"</span><span class="op">)</span>,</span>
+<span>  year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span>,</span>
+<span>  species <span class="op">=</span> <span class="st">"Black sea bass"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># iterate</span></span>
+<span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/list_transpose.html" class="external-link">list_transpose</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    region <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">region</span>,</span>
+<span>    year <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">year</span>,</span>
+<span>    species <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">species</span></span>
+<span>  <span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="op">~</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">NEesp2</span><span class="fu">::</span><span class="fu"><a href="../reference/save_trips.html">save_trips</a></span><span class="op">(</span></span>
+<span>    this_species <span class="op">=</span> <span class="va">.x</span><span class="op">$</span><span class="va">species</span>,</span>
+<span>    this_year <span class="op">=</span> <span class="va">.x</span><span class="op">$</span><span class="va">year</span>,</span>
+<span>    this_region <span class="op">=</span> <span class="va">.x</span><span class="op">$</span><span class="va">region</span>,</span>
+<span>    out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Please note that iterating over a large number of species and years
+may fail. Since data is saved as it is queried, progress will be saved
+and can be resumed by adjusting <code>params</code> running the function
+again.</p>
+</div>
+<div class="section level3">
+<h3 id="wrangle-data-1">Wrangle data<a class="anchor" aria-label="anchor" href="#wrangle-data-1"></a>
+</h3>
+<p>After the MRIP trip data has been saved, it can be easily turned into
+a data frame using the <code>create_rec_trips</code> function. This
+function takes a single argument, which is the list of files to be
+combined. Note that this function will automatically combine the data
+from multiple regions, so if you would like to create region-specific
+indicators, you must run the function over two separate lists of
+files.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">esp_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_rec_trips.html">create_rec_trips</a></span><span class="op">(</span></span>
+<span>  files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"mrip_data"</span>, package <span class="op">=</span> <span class="st">"NEesp2"</span><span class="op">)</span>,</span>
+<span>    pattern <span class="op">=</span> <span class="st">"trips_Black_sea_bass*"</span>,</span>
+<span>    recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    full.names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">esp_trips</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="5%">
+<col width="12%">
+<col width="14%">
+<col width="16%">
+<col width="16%">
+<col width="17%">
+<col width="16%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">YEAR</th>
+<th align="right">DATA_VALUE</th>
+<th align="left">CATEGORY</th>
+<th align="left">INDICATOR_TYPE</th>
+<th align="left">INDICATOR_NAME</th>
+<th align="left">INDICATOR_UNITS</th>
+<th align="left">SPECIES</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">2020</td>
+<td align="right">6750639</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+<tr class="even">
+<td align="right">2021</td>
+<td align="right">6840012</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+<tr class="odd">
+<td align="right">2022</td>
+<td align="right">7528515</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+<tr class="even">
+<td align="right">2023</td>
+<td align="right">6915482</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+<tr class="odd">
+<td align="right">2024</td>
+<td align="right">5947798</td>
+<td align="left">Recreational</td>
+<td align="left">Socioeconomic</td>
+<td align="left">rec_trips</td>
+<td align="left">number</td>
+<td align="left">Black sea bass</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="plot-data-1">Plot data<a class="anchor" aria-label="anchor" href="#plot-data-1"></a>
+</h3>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">esp_trips</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## N &lt; 30</span></span></code></pre>
+<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

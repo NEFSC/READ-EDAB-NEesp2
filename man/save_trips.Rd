@@ -4,7 +4,14 @@
 \alias{save_trips}
 \title{Scrape and save MRIP trip data from MRIP Query tool}
 \usage{
-save_trips(this_species, this_year, this_region, out_folder, wait = TRUE)
+save_trips(
+  this_species,
+  this_year,
+  this_region,
+  out_folder,
+  wait = TRUE,
+  return_fname = TRUE
+)
 }
 \arguments{
 \item{this_species}{the common name of the species as it appears in the MRIP data. capitalization does not matter.}
@@ -16,9 +23,11 @@ save_trips(this_species, this_year, this_region, out_folder, wait = TRUE)
 \item{out_folder}{where to save the data}
 
 \item{wait}{whether to pause after saving the data. Default is TRUE.}
+
+\item{return_fmane}{whether to return the file name of the saved data. Default is TRUE.}
 }
 \value{
-Returns a list of the scraped data and metadata.
+Saves an Rds file. Returns the file name.
 }
 \description{
 This function scrapes MRIP trip data from the MRIP Query tool and saves it as an Rds.
