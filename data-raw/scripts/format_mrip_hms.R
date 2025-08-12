@@ -1,3 +1,5 @@
+library(magrittr)
+library(dplyr)
 ## try to process hms similar to ecodata
 
 new_hms <- read.csv(here::here("data-raw/hms_mrip_combined.csv"))
