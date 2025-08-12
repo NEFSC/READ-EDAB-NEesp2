@@ -72,3 +72,49 @@ write.csv(
   here::here("data-raw/hms_mrip/hms_mrip_2025-08-04.csv"),
   row.names = FALSE
 )
+
+########################################
+## Format to ecodata formatting
+
+new_hms <- read.csv(here::here("data-raw/hms_mrip/hms_mrip_2025-08-04.csv"))
+
+hms_key <- read.csv("https://raw.githubusercontent.com/NOAA-EDAB/ecodata/refs/heads/master/data-raw/hms-mrip/hms_sp_category.csv")
+
+rec_hms <- new_hms |>
+  dplyr::left_join(hms_key |> dplyr::select(COMMON_NAME, SP_CATEGORY),
+                   by = c("SPECIES" = "COMMON_NAME")) |>
+  dplyr::group_by(YEAR, SP_CATEGORY, REGION) |>
+  dplyr::summarise(Value = sum(DATA_VALUE)) |>
+  dplyr::rename(Var = SP_CATEGORY) |>
+  dplyr::rename(Time = YEAR,
+                EPU = REGION) |>
+  dplyr::mutate(EPU = dplyr::case_when(
+    EPU == "MID-ATLANTIC" ~ "MAB",
+    EPU == "NORTH ATLANTIC" ~ "NE")) |>
+  dplyr::mutate(
+    Var = paste0(Var, "-", EPU)) |>
+  dplyr::select(Time, Var, Value, EPU) |>
+  dplyr::filter(!stringr::str_detect(Var, "Pelagic")) # Remove pelagics from this dataset per HMS request
+
+
+## Plot/compare to ecodata::rec_hms
+
+#ecodata_hms <- ecodata::rec_hms
+
+rec_hms |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = Time,
+    y = Value,
+    color = Var
+  )) +
+  ggplot2::geom_point() +
+  ggplot2::theme_bw()
+
+ecodata::rec_hms |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = Time,
+    y = Value,
+    color = Var
+  )) +
+  ggplot2::geom_point() +
+  ggplot2::theme_bw()
