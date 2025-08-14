@@ -7,8 +7,16 @@ condition <- NEesp2::species_condition(
   output = "soe"
 )
 
+all_condition <- readRDS(here::here("data-raw/condition.rds"))$survdat |>
+  NEesp2::species_condition(
+    LWparams = NEesp2::LWparams,
+    species.codes = NEesp2::species.codes,
+    output = "soe"
+  )
+
 head(condition)
 head(ecodata::condition)
+head(all_condition)
 
 ecodata::condition |>
   dplyr::filter(Var == "Black sea bass") |>

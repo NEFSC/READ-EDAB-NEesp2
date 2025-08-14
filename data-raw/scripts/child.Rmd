@@ -1,0 +1,5 @@
+### `r i` condition comparison
+    
+```{r}
+plt_species(data = all_condition, species = i)
+```
