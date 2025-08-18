@@ -43,6 +43,16 @@ create_total_mrip <- function(
     DATA_VALUE = total_rec_catch$data_value |>
       stringr::str_remove_all(",") |>
       as.numeric(),
+    LOWER_95_CI = total_rec_catch |>
+      dplyr::select(dplyr::contains("LOWER")) |>
+      dplyr::pull() |>
+      stringr::str_remove_all(",") |>
+      as.numeric(),
+    UPPER_95_CI = total_rec_catch |>
+      dplyr::select(dplyr::contains("UPPER")) |>
+      dplyr::pull() |>
+      stringr::str_remove_all(",") |>
+      as.numeric(),
     CATEGORY = "Recreational",
     INDICATOR_TYPE = "Socioeconomic",
     INDICATOR_NAME = paste0("total_recreational_", var_name, "_", var_units),

@@ -1,0 +1,53 @@
+---
+title: "Condition comparison"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+devtools::load_all()
+
+plt_species <- function(data, species) {
+  ecodata::condition |>
+  dplyr::filter(Var == species) |>
+  dplyr::mutate(source = "ecodata") |>
+  dplyr::bind_rows(
+    data |>
+  dplyr::filter(Var == species) |>
+      dplyr::mutate(source = "new")
+  ) |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = Time,
+    y = Value,
+    color = EPU,
+    shape = source
+  )) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::theme_bw() +
+  ggplot2::ggtitle(paste(species, "condition comparison"))
+}
+```
+
+## Create data
+```{r, echo = TRUE}
+all_condition <- readRDS(here::here("data-raw/condition.rds"))$survdat |>
+  NEesp2::species_condition(
+    LWparams = NEesp2::LWparams,
+    species.codes = NEesp2::species.codes,
+    output = "soe"
+  )
+```
+
+## Compare data
+
+```{r, results = "asis"}
+for(i in unique(ecodata::condition$Var)) {
+  res <- knitr::knit_child(
+    input = here::here("data-raw/scripts/child.Rmd"),
+    quiet = TRUE
+  )
+  cat(res, sep = "\n\n")
+}
+```
