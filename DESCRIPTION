@@ -47,7 +47,7 @@ Suggests:
 Remotes:
     nmfs-general-modeling-tools/nmfspalette,
     NOAA-EDAB/ecodata,
-    NOAA-EDAB/assessmentdata
+    NOAA-EDAB/assessmentdata,
     NEFSC/READ_EDAB_Utilities
 VignetteBuilder: 
     knitr
