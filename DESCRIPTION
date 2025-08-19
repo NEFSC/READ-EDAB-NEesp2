@@ -12,6 +12,7 @@ BugReports: https://github.com/NEFSC/READ-EDAB-NEesp2/issues
 Suggests:
     bookdown,
     deps,
+    devtools,
     dplyr,
     DT,
     ecodata,
@@ -47,6 +48,7 @@ Remotes:
     nmfs-general-modeling-tools/nmfspalette,
     NOAA-EDAB/ecodata,
     NOAA-EDAB/assessmentdata
+    NEFSC/READ_EDAB_Utilities
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
