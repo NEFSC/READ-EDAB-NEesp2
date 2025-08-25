@@ -17,13 +17,13 @@ files <- list.files(recursive = TRUE, all.files = TRUE) %>%
   stringr::str_subset(pattern = ".Renviron", negate = TRUE)
 total_size <- (sum(file.size(files))/1073741824) %>%
   stringr::str_trunc(width = 4, ellipsis = "")
-
 cat(badger::badge_devel("NEFSC/READ-EDAB-NEesp2", "blue"),
     badger::badge_last_commit("NEFSC/READ-EDAB-NEesp2"),
     badger::badge_custom("repo size", paste(total_size, "GB"), color = "blue", url = "https://github.com/NEFSC/READ-EDAB-NEesp2"),
     sep = "\n")
 ```
 [![](https://github.com/NEFSC/READ-EDAB-NEesp2/workflows/gitleaks/badge.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2/actions/workflows/secretScan.yml)
+[![R-CMD-check](https://github.com/NEFSC/READ-EDAB-NEesp2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 # Ecosystem and Socioeconomic Profiles 

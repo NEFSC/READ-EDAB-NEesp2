@@ -3,8 +3,9 @@
 
 [![](https://img.shields.io/badge/devel%20version-0.1.1-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2)
 [![](https://img.shields.io/github/last-commit/NEFSC/READ-EDAB-NEesp2.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2/commits/main)
-[![](https://img.shields.io/badge/repo%20size-1.25%20GB-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2)
+[![](https://img.shields.io/badge/repo%20size-0.60%20GB-blue.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2)
 [![](https://github.com/NEFSC/READ-EDAB-NEesp2/workflows/gitleaks/badge.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2/actions/workflows/secretScan.yml)
+[![R-CMD-check](https://github.com/NEFSC/READ-EDAB-NEesp2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/NEFSC/READ-EDAB-NEesp2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 # Ecosystem and Socioeconomic Profiles
@@ -72,14 +73,14 @@ templates will be added shortly.
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th><a href="https://github.com/atyrell3">atyrell3</a></th>
 <th><a href="https://github.com/stephanie-owen">stephanie-owen</a></th>
 <th></th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><a href="https://github.com/atyrell3"><img
 src="https://avatars.githubusercontent.com/u/77738923?s=100&amp;u=92e54f60ca179f3e41c1a3610fb3ecdb9e233434&amp;v=4" /></a></td>
 <td><a href="https://github.com/stephanie-owen"><img

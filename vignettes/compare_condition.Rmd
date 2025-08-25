@@ -1,0 +1,428 @@
+---
+title: "Compare condition data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Compare condition data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = TRUE,
+                      fig.width = 7)
+devtools::load_all()
+
+plt_species <- function(data1, data2, species) {
+  ecodata::condition |>
+  dplyr::filter(Var == species) |>
+  dplyr::mutate(source = "ecodata") |>
+  dplyr::bind_rows(
+    data1 |>
+  dplyr::filter(Var == species) |>
+      dplyr::mutate(source = "new_2025pull")
+  ) |>
+  dplyr::bind_rows(
+    data2 |>
+  dplyr::filter(Var == species) |>
+      dplyr::mutate(source = "new_2024pull")
+  ) |>
+  ggplot2::ggplot(ggplot2::aes(
+    x = Time,
+    y = Value,
+    color = EPU,
+    shape = source
+  )) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::theme_bw() +
+  ggplot2::ggtitle(paste(species, "condition comparison")) +
+  ggplot2::theme(legend.position = "bottom")
+}
+
+plot_by_time <- function(data, grouping, facet, ncols = 1) {
+ dat <- data |>
+  dplyr::group_by(!!!rlang::syms(grouping)) |>
+  dplyr::summarise(sum_sq_deviation = sum(dev_squared, na.rm = TRUE),
+                   sum_sq_deviation_2024 = sum(dev_squared_2024, na.rm = TRUE)) 
+
+plt <- dat |>
+  tidyr::pivot_longer(cols = c("sum_sq_deviation", "sum_sq_deviation_2024")) |>
+  ggplot2::ggplot(ggplot2::aes(x = Time,
+                               y = value,
+                               color = name)) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::theme_bw() +
+  ggplot2::ggtitle("Sum of squared deviations between ecodata and new condition data")
+
+if(!is.null(facet)) {
+  plt <- plt +
+  ggplot2::facet_wrap(ggplot2::vars(!!!rlang::syms(facet)), ncol = ncols)  
+}
+
+return(plt)
+}
+
+plot_by_single <- function(data, single) {
+ dat <- data |>
+  dplyr::group_by(!!!rlang::syms(single)) |>
+  dplyr::summarise(sum_sq_deviation = sum(dev_squared, na.rm = TRUE),
+                   sum_sq_deviation_2024 = sum(dev_squared_2024, na.rm = TRUE)) 
+
+plt <- dat |>
+  tidyr::pivot_longer(cols = c("sum_sq_deviation", "sum_sq_deviation_2024")) |>
+  ggplot2::ggplot(ggplot2::aes(x = .data[[single]],
+                               y = value,
+                               fill = name)) +
+  ggplot2::geom_col(position = ggplot2::position_dodge()) + 
+  ggplot2::theme_bw() +
+  ggplot2::ggtitle("Sum of squared deviations between ecodata and new condition data") +
+  ggplot2::theme(legend.position = "top",
+                 axis.text.x = ggplot2::element_text(angle = 45,
+                                                     hjust = 1))
+
+return(plt)
+}
+```
+
+This vignette compares fish condition data produced with the `NEesp2::species_condition` function to the condition data in the `ecodata` package. The `NEesp2::species_condition` function was built based on [Laurel's condition code](https://github.com/Laurels1/Condition/blob/master/R/RelConditionEPU.R). This analysis validates whether the function can be used to automate the workflow for the 2026 SOE.
+
+## Create data with `NEesp2::species_condition` 
+I'm creating condition data with two different survdat pulls, one from 2024 and one from mid-2025. I think the 2024 pull is the same one used to create the current ecodata condition data; it is on github [here](https://github.com/Laurels1/Condition/blob/master/data/Survdat.RData). The 2025 pull is a more recent pull that includes data through 2024.
+
+```{r, echo = TRUE}
+# using a recent survdat pull:
+all_condition <- readRDS(here::here("data-raw/condition.rds"))$survdat |>
+  NEesp2::species_condition(
+    LWparams = NEesp2::LWparams,
+    species.codes = NEesp2::species.codes,
+    output = "soe"
+  )
+
+# using an older survdat pull:
+load(here::here("data-raw/Survdat_2024.Rdata"))
+all_condition_2024 <- survdat |>
+  NEesp2::species_condition(
+    LWparams = NEesp2::LWparams,
+    species.codes = NEesp2::species.codes,
+    output = "soe"
+  )
+```
+
+Different numbers of outliers were removed from each dataset. That could be because the more recent survdat pull has some additional data points that are being treated as outliers, or something else is going on.
+
+## Compare data
+
+A series of plots to compare both condition calculations to what's in ecodata.
+
+```{r, results = "asis", echo = FALSE}
+for(i in unique(ecodata::condition$Var)) {
+  res <- knitr::knit_child(
+    input = here::here("data-raw/scripts/child.Rmd"),
+    quiet = TRUE
+  )
+  cat(res, sep = "\n\n")
+}
+```
+
+## Assess deviations
+
+There are some small differences between the newly-calculated data and ecodata. These next analyses look at squared deviations from the ecodata values, to see if there is a systematic bias in any of the data.
+
+```{r}
+full_data <- ecodata::condition |>
+  dplyr::rename(ecodata_value = Value) |>
+  dplyr::full_join(
+    all_condition |>
+      dplyr::rename(new_value = Value)
+  ) |>
+  dplyr::full_join(
+    all_condition_2024 |>
+      dplyr::rename(new_value_2024 = Value))
+  
+
+dev_data <- full_data |>
+  dplyr::mutate(dev_squared = (ecodata_value - new_value)^2,
+                dev_squared_2024 = (ecodata_value - new_value_2024)^2)
+```
+
+### By EPU
+
+#### EPUs across all years 
+```{r, echo = FALSE, fig.height = 10, message = FALSE}
+plot_by_time(data = dev_data, grouping = c("Time", "EPU"), facet = "EPU")
+```
+
+#### EPUs summed by year
+
+```{r, echo = FALSE}
+plot_by_single(data = dev_data, single = "EPU")
+```
+
+
+### By species
+
+#### Species across all years
+
+```{r, fig.height = 20, echo = FALSE, message = FALSE}
+plot_by_time(data = dev_data, grouping = c("Time", "Var"), facet = "Var", ncols = 3) +
+  ggplot2::theme(legend.position = "top")
+```
+
+#### Species summed by year
+
+```{r, echo = FALSE, fig.height = 10}
+species_dat <- dev_data |>
+  dplyr::filter(!is.na(Var)) |>
+  dplyr::mutate(species_group = stringr::str_detect(Var, "^[A-L]"))
+
+fig1 <- species_dat |>
+  dplyr::filter(species_group) |>
+  plot_by_single(single = "Var") +
+  ggplot2::theme(axis.title.x = ggplot2::element_blank()) +
+  ggplot2::ylim(c(0, 0.0042))
+
+fig2 <- species_dat |>
+  dplyr::filter(!species_group) |>
+  plot_by_single(single = "Var") +
+  ggplot2::theme(plot.title = ggplot2::element_blank()) +
+  ggplot2::ylim(c(0, 0.0042))
+
+ggpubr::ggarrange(fig1, fig2, ncol = 1, nrow = 2, common.legend = TRUE, legend = "top")
+```
+
+### By year
+```{r, echo = FALSE}
+plot_by_time(data = dev_data, grouping = "Time", facet = NULL)
+```
+
+## What's going on with mackerel?
+
+Mackerel has a notable difference in the Scotian Shelf value in 2015. First, recalculate the data:
+```{r}
+survdat_2024 <- survdat |>
+  dplyr::filter(SVSPP == 121)
+
+survdat_2025 <- readRDS(here::here("data-raw/condition.rds"))$survdat  |>
+  dplyr::filter(SVSPP == 121)
+
+cond_comparison <- survdat_2024 |>
+  NEesp2::species_condition(
+    LWparams = NEesp2::LWparams,
+    species.codes = NEesp2::species.codes,
+    output = "soe"
+  ) |>
+  dplyr::mutate(source = "survdat_2024") |>
+  dplyr::bind_rows(
+    survdat_2025 |>
+      NEesp2::species_condition(
+        LWparams = NEesp2::LWparams,
+        species.codes = NEesp2::species.codes,
+        output = "soe"
+      ) |>
+      dplyr::mutate(source = "survdat_2025")
+  ) |>
+  dplyr::bind_rows(ecodata::condition |>
+                     dplyr::filter(Var == "Atlantic mackerel") |>
+                     dplyr::mutate(source = "ecodata"))
+```
+
+Then plot:
+
+```{r}
+cond_comparison |> 
+  ggplot2::ggplot(ggplot2::aes(x = Time,
+                               y = Value,
+                               color = source)) +
+  ggplot2::geom_line()+
+  ggplot2::geom_point() +
+  ggplot2::theme_bw() +
+  ggplot2::facet_wrap(~EPU)
+```
+
+### Scotian Shelf in 2015
+
+#### 2024 survdat pull
+
+Take a look at what's in the 2024 dataset. 
+
+```{r, message = FALSE}
+mackerel_2024 <- survdat_2024 |>
+      dplyr::left_join(NEesp2::strata_epu_key) |>
+  dplyr::filter(EPU == "SS",
+                YEAR == 2015,
+                SEASON == "FALL") |>
+  dplyr::select(CRUISE6, STRATUM, LENGTH, LAT, LON, EST_TOWDATE, INDID, INDWT, SEX)
+
+knitr::kable(mackerel_2024)
+```
+
+#### 2025 survdat pull
+
+Take a look at what's in the 2025 dataset.
+
+```{r, message = FALSE}
+mackerel_2025 <- survdat_2025 |>
+      dplyr::left_join(NEesp2::strata_epu_key) |>
+  dplyr::filter(EPU == "SS",
+                YEAR == 2015,
+                SEASON == "FALL") |>
+  dplyr::select(CRUISE6, STRATUM, LENGTH, LAT, LON, EST_TOWDATE, INDID, INDWT, SEX)
+
+knitr::kable(mackerel_2025)
+```
+
+Looks like the October 17, 2015 tow is missing from the 2025 pull.
+
+Double check the input data:
+```{r}
+test_survdat <- readRDS(here::here("data-raw/condition.rds"))$survdat  |>
+  dplyr::filter(stringr::str_detect(EST_TOWDATE, "2015-10-17"))
+
+test_survdat$SVSPP |> unique() |> sort()
+```
+
+Mackerel isn't in there (SVSPP 121).
+
+## What's going on with witch flounder?
+
+Witch flounder has a notable difference in the Mid-Atlantic Bight value in 2015. First, recalculate the data:
+
+```{r}
+survdat_2024 <- survdat |>
+  dplyr::filter(SVSPP == 107)
+
+survdat_2025 <- readRDS(here::here("data-raw/condition.rds"))$survdat  |>
+  dplyr::filter(SVSPP == 107)
+
+cond_2024 <- survdat_2024 |>
+  NEesp2::species_condition(
+    LWparams = NEesp2::LWparams,
+    species.codes = NEesp2::species.codes,
+    record_outliers = TRUE,
+    output = "soe"
+  )  
+
+cond_2025 <- survdat_2025 |>
+      NEesp2::species_condition(
+        LWparams = NEesp2::LWparams,
+        species.codes = NEesp2::species.codes,
+    record_outliers = TRUE,
+        output = "soe"
+      ) 
+
+cond_comparison <- cond_2024$condition |>
+  dplyr::mutate(source = "survdat_2024") |> 
+  dplyr::bind_rows(cond_2025$condition|>
+      dplyr::mutate(source = "survdat_2025")) |>
+  dplyr::bind_rows(ecodata::condition |>
+                     dplyr::filter(Var == "Witch flounder") |>
+                     dplyr::mutate(source = "ecodata"))
+```
+
+Plot the data:
+```{r}
+cond_comparison |>
+  ggplot2::ggplot(ggplot2::aes(x = Time,
+                               y = Value,
+                               color = source)) +
+  ggplot2::geom_line()+
+  ggplot2::geom_point() +
+  ggplot2::theme_bw() +
+  ggplot2::facet_wrap(~EPU)
+```
+
+### Mid-Atlantic Bight in 2015
+
+#### 2024 survdat pull
+```{r, message = FALSE}
+witch_2024 <- survdat_2024 |>
+      dplyr::left_join(NEesp2::strata_epu_key) |>
+  dplyr::filter(EPU == "MAB",
+                YEAR == 2015,
+                SEASON == "FALL") |>
+  dplyr::select(CRUISE6, STRATUM, LENGTH, LAT, LON, EST_TOWDATE, INDID, INDWT, SEX)
+
+knitr::kable(witch_2024)
+```
+
+#### 2025 survdat pull
+```{r, message = FALSE}
+witch_2025 <- survdat_2025 |>
+      dplyr::left_join(NEesp2::strata_epu_key) |>
+  dplyr::filter(EPU == "MAB",
+                YEAR == 2015,
+                SEASON == "FALL") |>
+  dplyr::select(CRUISE6, STRATUM, LENGTH, LAT, LON, EST_TOWDATE, INDID, INDWT, SEX)
+
+knitr::kable(witch_2025)
+```
+
+The two datasets are the same. Is the discrepancy caused by outliers being removed?
+
+#### Outlier analysis
+
+Outliers in the 2024 data:
+```{r, message = FALSE}
+# cond_comparison |>
+#   dplyr::filter(Time == 2015) |>
+#   dplyr::arrange(EPU)
+
+cond_2024$outliers |>
+  dplyr::filter(YEAR == 2015)  |>
+  dplyr::select(CRUISE6, STRATUM, LENGTH, LAT, LON, EST_TOWDATE, INDID, INDWT, SEX) |>
+      dplyr::left_join(NEesp2::strata_epu_key) |>
+  dplyr::filter(EPU == "MAB") |>
+  dplyr::arrange(INDWT) |>
+  nrow()
+```
+
+There are no outliers in the 2024 data set.
+
+Outliers in the 2025 data:
+```{r, message = FALSE}
+cond_2025$outliers |>
+  dplyr::filter(YEAR == 2015)  |>
+  dplyr::select(CRUISE6, STRATUM, LENGTH, LAT, LON, EST_TOWDATE, INDID, INDWT, SEX) |>
+        dplyr::left_join(NEesp2::strata_epu_key) |>
+  dplyr::filter(EPU == "MAB") |>
+   dplyr::arrange(INDWT) |>
+  knitr::kable()
+```
+
+The 2025 data set has one outlier. This data point is considered an outlier in the 2025 data, but not in the 2024 data, which causes the difference in the 2015 condition value in the MAB. 
+
+Take a look at the outlier:
+
+```{r}
+plt <- survdat_2024 |>
+  dplyr::mutate(source = "2024") |>
+  dplyr::bind_rows(
+    survdat_2025 |>
+      dplyr::mutate(source = "2025")
+  ) |>
+  dplyr::filter(SEASON == "FALL",
+                !is.na(LENGTH),
+                !is.na(INDWT)) |>
+  ggplot2::ggplot(ggplot2::aes(x = LENGTH,
+                               y = INDWT,
+                               color = source,
+                               shape = source)) +
+  ggplot2::geom_point(cex = 2,
+                      alpha = 0.5) +
+  ggplot2::theme_bw()
+
+plt +
+  ggplot2::geom_point(ggplot2::aes(x = LENGTH,
+                               y = INDWT),
+                      data = witch_2025[1,],
+                      inherit.aes = FALSE,
+                      color = "black")
+```
+
+The black point is the outlier, as defined by having a relative condition < 2SD below the species' mean relative condition over all years. I don't think it should be treated as an outlier. 
+
+## Summary
+
+Some discrepancies are caused by differences in the underlying survdat data. These should be validated against the current data in the NEFSC database. Other discrepancies are caused by differences in outlier removal. Since outliers are defined based on standard deviations, the addition of more data changes the outlier cutoff. We would need to update the outlier removal method to be more consistent over time if we want to avoid this issue in the future.

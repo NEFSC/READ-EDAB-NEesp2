@@ -1,5 +1,7 @@
 ### `r i` condition comparison
     
-```{r}
-plt_species(data = all_condition, species = i)
+```{r, echo = FALSE}
+plt_species(data1 = all_condition, 
+            data2 = all_condition_2024,
+            species = i)
 ```

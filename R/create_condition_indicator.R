@@ -9,22 +9,32 @@
 #' @param by_EPU logical. If TRUE, calculates condition by EPUs specified in the input data, if FALSE, calculates condition for all data combined.
 #' @param by_sex logical. If TRUE, calculates condition by sex. If FALSE, calculates condition across sexes.
 #' @param length_break numeric vector. If not NULL, will calculate condition by length breaks specified in the vector. User must specify minimum and maximum lengths in this parameter, e.g., c(0, 20, 70). If NULL, will not calculate by length groupings.
+#' @param more_than_20_years logical. If TRUE, only returns species with 20 or more years of data.
+#' @param record_outliers logical. If TRUE, returns a list with two data frames: the first is the condition data frame, the second is a data frame of outliers that were removed from the analysis. If FALSE, only returns the condition data frame.
 #' @param output character. If "soe", returns a data frame of species condition for the State of the Ecosystem report. If "esp", returns a data frame for ESPs. If "full", returns a data frame of all calculated values. *Setting by_sex = TRUE or length_break to any value will always return a full dataframe*
 #' @importFrom magrittr %>%
 #' @return Returns a data frame of species condition
 #' @export
 
-species_condition <- function(data,
-                              LWparams = NEesp2::LWparams,
-                              species.codes = NEesp2::species.codes,
-                              by_EPU = TRUE,
-                              by_sex = FALSE,
-                              length_break = NULL,
-                              output = "soe") {
-  if (by_sex |
-    !is.null(length_break)) {
+species_condition <- function(
+  data,
+  LWparams = NEesp2::LWparams,
+  species.codes = NEesp2::species.codes,
+  by_EPU = TRUE,
+  by_sex = FALSE,
+  length_break = NULL,
+  more_than_20_years = TRUE,
+  record_outliers = FALSE,
+  output = "soe"
+) {
+  if (
+    by_sex |
+      !is.null(length_break)
+  ) {
     if (output != "full") {
-      message("You asked to group results by sex and/or length ; data will not be formatted for SOE or ESP output.")
+      message(
+        "You asked to group results by sex and/or length ; data will not be formatted for SOE or ESP output."
+      )
     }
     output <- "full"
   }
@@ -71,18 +81,24 @@ species_condition <- function(data,
 
   # Add SEX for Combined gender back into Wigley at all data (loses 4 Gender==Unsexed):
   LWpar_sexed <- new_dat |>
-    dplyr::mutate(sex = dplyr::case_when(
-      Gender == "Combined" | Gender == "Unsexed" ~ as.character(0),
-      Gender == "Male" ~ as.character(1),
-      Gender == "Female" ~ as.character(2),
-      TRUE ~ NA
-    ))
+    dplyr::mutate(
+      sex = dplyr::case_when(
+        Gender == "Combined" | Gender == "Unsexed" ~ as.character(0),
+        Gender == "Male" ~ as.character(1),
+        Gender == "Female" ~ as.character(2),
+        TRUE ~ NA
+      )
+    )
 
   LWpar_spp <- LWpar_sexed %>%
     dplyr::mutate(SVSPP = as.numeric(LW_SVSPP))
 
   # Join survdat data with LW data
-  mergedata <- dplyr::left_join(fall, LWpar_spp, by = c("SEASON", "SVSPP", "sex"))
+  mergedata <- dplyr::left_join(
+    fall,
+    LWpar_spp,
+    by = c("SEASON", "SVSPP", "sex")
+  )
 
   # filters out values without losing rows with NAs:
   mergewt <- dplyr::filter(mergedata, is.na(INDWT) | INDWT < 900)
@@ -102,7 +118,8 @@ species_condition <- function(data,
   ###########################################
   ### Calculate species condition ###
 
-  condcalc <- dplyr::mutate(mergeLW,
+  condcalc <- dplyr::mutate(
+    mergeLW,
     predwt = (exp(lna)) * LENGTH^b,
     RelCond = INDWT / predwt
   ) |>
@@ -111,7 +128,23 @@ species_condition <- function(data,
     dplyr::mutate(mean = mean(RelCond), sd = sd(RelCond)) |>
     dplyr::ungroup() |>
     # might want to update this outlier removal eventually
-    dplyr::filter(RelCond < (mean + (2 * sd)) & RelCond > (mean - (2 * sd))) |>
+    dplyr::mutate(
+      outlier = RelCond > (mean + (2 * sd)) | RelCond < (mean - (2 * sd))
+    )
+
+  message(paste0(
+    "Removing ",
+    sum(condcalc$outlier, na.rm = TRUE),
+    " outliers from the data set."
+  ))
+
+  if (record_outliers) {
+    outliers <- condcalc |>
+      dplyr::filter(outlier == TRUE)
+  }
+
+  condcalc <- condcalc |>
+    dplyr::filter(outlier == FALSE) |>
     dplyr::filter(is.na(sex) | sex != 4) %>%
     dplyr::mutate(sexMF = sex)
 
@@ -145,11 +178,18 @@ species_condition <- function(data,
     # select columns
     dplyr::select(dplyr::all_of(c(grouping_vars, "MeanCond", "nCond"))) |>
     # group again, without YEAR
-    dplyr::group_by(!!!rlang::syms(grouping_vars[-which(grouping_vars == "YEAR")])) |>
+    dplyr::group_by(
+      !!!rlang::syms(grouping_vars[-which(grouping_vars == "YEAR")])
+    ) |>
     # filter to only species with 20+ years of data
-    dplyr::mutate(n = dplyr::n()) |>
-    dplyr::filter(n >= 20) |>
-    dplyr::select(-n) |>
+    dplyr::mutate(n = dplyr::n())
+
+  if (more_than_20_years) {
+    condition <- condition |>
+      dplyr::filter(n >= 20) |>
+      dplyr::select(-n)
+  }
+  condition <- condition |>
     # calculate sd and variance across years
     dplyr::mutate(
       sd = sd(MeanCond, na.rm = TRUE),
@@ -173,6 +213,10 @@ species_condition <- function(data,
     condition <- condition |>
       dplyr::select(Species, EPU, YEAR, MeanCond, INDICATOR_NAME) |>
       dplyr::rename(DATA_VALUE = MeanCond)
+  }
+
+  if (record_outliers) {
+    condition <- list(condition = condition, outliers = outliers)
   }
   return(condition)
 }
