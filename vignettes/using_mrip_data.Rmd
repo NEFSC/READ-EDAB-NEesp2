@@ -34,10 +34,14 @@ This vignette shows example data pulls and plots used for Black Sea Bass:
 Get recreational catch data for Black Sea Bass using the `get_mrip_catch` function. The `type` argument can be set to "all" for all catch types (A, B1, B2) or "landings" for just the landings (A and B1).
 
 ```{r}
-bsb_catch <- get_mrip_catch(species = "BLACK SEA BASS", type = "all")
+bsb_catch <- get_mrip_catch(species = "BLACK SEA BASS", 
+                            type = "all", 
+                            region = "north and mid-atlantic")
 head(bsb_catch)
 
-bsb_landings <- get_mrip_catch(species = "BLACK SEA BASS", type = "landings")
+bsb_landings <- get_mrip_catch(species = "BLACK SEA BASS",
+                               type = "landings", 
+                               region = "north and mid-atlantic")
 head(bsb_landings)
 ```
 
@@ -65,12 +69,14 @@ If you would like to save the data, the `save_catch` function can be used to sav
 ```{r}
 save_catch(
   this_species = "black sea bass",
+  this_region = "north and mid-atlantic",
   out_folder = here::here("inst/mrip_data"),
   catch_type = "all"
 )
 
 save_catch(
   this_species = "black sea bass",
+  this_region = "north and mid-atlantic",
   out_folder = here::here("inst/mrip_data"),
   catch_type = "landings"
 )
@@ -92,6 +98,7 @@ We suggest using `save_catch()` to save the data, reading in the .Rds, and forma
 ```{r, eval = FALSE}
 save_data <- save_catch(
   this_species = "black sea bass",
+  this_region = "north and mid-atlantic",
   out_folder = here::here(),
   catch_type = "all"
 )
@@ -111,6 +118,7 @@ purrr::map(
   ~ {
     save_data <- save_catch(
       this_species = .x,
+      this_region = "north and mid-atlantic",
       out_folder = here::here(),
       catch_type = "all"
     )

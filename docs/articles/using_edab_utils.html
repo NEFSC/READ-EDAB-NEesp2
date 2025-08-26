@@ -47,6 +47,7 @@
     <li><a class="dropdown-item" href="../articles/accessing-survdat-data.html">Accessing Bottom Trawl Survey Data</a></li>
     <li><a class="dropdown-item" href="../articles/using_mrip_data.html">Using MRIP Data for Recreational Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/using_survdat_data.html">Using {survdat} for Bottom Trawl Indicators</a></li>
+    <li><a class="dropdown-item" href="../articles/compare_condition.html">Comparison of condition data methods</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Functions</a></li>
@@ -99,16 +100,20 @@ of BTS strata<a class="anchor" aria-label="anchor" href="#crop-netcdfs-of-bottom
 <span>                            <span class="co">#area.names = c('01030'),</span></span>
 <span>                            var.name <span class="op">=</span> <span class="st">'bottomT'</span>,</span>
 <span>                            write.out <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Already standard format (-180:180)"</span></span>
 <span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">crop_bottomT</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_edab_utils_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">crop_bottomS</span> <span class="op">&lt;-</span> <span class="fu">EDABUtilities</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EDABUtilities/man/crop_nc_2d.html" class="external-link">crop_nc_2d</a></span><span class="op">(</span>data.in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'glorys_bottomS.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                            output.files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'crop_glorys_bottomS.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                            shp.file <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw/shapefiles'</span>,<span class="st">'BTS_STRATA.shp'</span><span class="op">)</span>,</span>
 <span>                            var.name <span class="op">=</span> <span class="st">'bottomS'</span>,</span>
 <span>                            write.out <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Already standard format (-180:180)"</span></span>
 <span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">crop_bottomS</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_edab_utils_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="make-2d-summary-time-series-mean-monthly-bottom-temperature-in-golden-tilefish-bts-strata">Make 2d summary time series: mean monthly bottom temperature in
@@ -118,6 +123,7 @@ golden tilefish BTS strata<a class="anchor" aria-label="anchor" href="#make-2d-s
 area.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">monthly_bt</span> <span class="op">&lt;-</span> <span class="fu">EDABUtilities</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EDABUtilities/man/make_2d_summary_ts.html" class="external-link">make_2d_summary_ts</a></span><span class="op">(</span>data.in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'glorys_bottomT.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                            file.time <span class="op">=</span> <span class="st">'annual'</span>,</span>
 <span>                            output.files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'GLORYS_monthly_bottomT.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                            shp.file <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw/shapefiles'</span>,<span class="st">'BTS_STRATA.shp'</span><span class="op">)</span>,</span>
 <span>                            var.name <span class="op">=</span> <span class="st">'bottomT'</span>,</span>
@@ -128,8 +134,7 @@ area.</p>
 <span>                            agg.time <span class="op">=</span> <span class="st">'days'</span>,</span>
 <span>                            tz <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>                            touches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                            write.out <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>                            file.time <span class="op">=</span> <span class="st">"monthly"</span><span class="op">)</span></span>
+<span>                            write.out <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">monthly_bt</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,<span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y<span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>lwd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span> </span>
@@ -138,6 +143,7 @@ area.</p>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">'Bottom Temperature'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">area</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_edab_utils_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="make-2d-summary-time-series-mean-daily-bottom-salinity-in-golden-tilefish-bts-strata">Make 2d summary time series: mean daily bottom salinity in golden
@@ -158,7 +164,7 @@ area.</p>
 <span>                   tz <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>                   touches <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                   write.out <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>                   file.time <span class="op">=</span> <span class="st">"daily"</span><span class="op">)</span></span>
+<span>                   file.time <span class="op">=</span> <span class="st">"annual"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">daily_bS</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,<span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y<span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>lwd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">+</span> </span>
@@ -167,6 +173,7 @@ area.</p>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">'Bottom Salinity'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">area</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_edab_utils_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="make-2d-gridded-time-series-calculate-number-of-days-nd-above-a-bottom-temperature-threshold-14c-in-the-golden-tilefish-bts-strata">Make 2d gridded time series: calculate number of days (nd) above a
@@ -195,6 +202,7 @@ strata<a class="anchor" aria-label="anchor" href="#make-2d-gridded-time-series-c
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">'GTF Strata'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">'Days'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="using_edab_utils_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -208,7 +216,7 @@ strata<a class="anchor" aria-label="anchor" href="#make-2d-gridded-time-series-c
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
