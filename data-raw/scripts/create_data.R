@@ -81,3 +81,4 @@ hms_key <- read.csv(
   ))
 
 usethis::use_data(hms_key)
+write.csv(hms_key, here::here("data-raw/hms_mrip/hms_key.csv"))
