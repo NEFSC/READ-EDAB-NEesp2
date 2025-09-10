@@ -8,6 +8,8 @@ rpt_card_table(data, widths = c(0.9, 0.75, 3, 3))
 }
 \arguments{
 \item{data}{A data frame or tibble}
+
+\item{widths}{A numeric vector of column widths (in inches). Default is c(0.9, 0.75, 3, 3)}
 }
 \value{
 A flextable

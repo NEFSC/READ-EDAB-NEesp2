@@ -15,8 +15,8 @@ BugReports: https://github.com/NEFSC/READ-EDAB-NEesp2/issues
 Depends: 
     R (>= 3.5.0)
 Imports:
-  magrittr,
-  rlang
+    magrittr,
+    rlang
 Suggests:
     assessmentdata,
     bookdown,
@@ -38,11 +38,13 @@ Suggests:
     knitr,
     lintr,
     lwgeom,
+    mockery,
     nmfspalette,
     pander,
     papeR,
     priceR,
     rmarkdown,
+    rvest,
     scales,
     sf,
     stringr,
@@ -54,7 +56,7 @@ Suggests:
     utils,
     viridis
 VignetteBuilder: 
-    rmarkdown
+    knitr
 Remotes:
     NEFSC/READ_EDAB_Utilities,
     nmfs-general-modeling-tools/nmfspalette,

@@ -10,7 +10,7 @@ create_mrip_trips(files, remove_non_standard = TRUE)
 \arguments{
 \item{files}{A list of the full file names of annual directed trip data (.csv format). Must download for each year in MRIP query tool.}
 
-\item{states}{States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'}
+\item{remove_non_standard}{Boolean, if TRUE will remove non-standard data ("Does Directed Trips Meet MRIP Standard" = NO)}
 }
 \value{
 Saves R object \code{rec_trips}, returns directed recreational trips indicator
