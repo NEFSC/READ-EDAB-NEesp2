@@ -38,16 +38,16 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
   
-      - name: Install remote dependencies
-        run: |
-          Rscript -e "pak::pkg_install('nmfs-general-modeling-tools/nmfspalette')"
-          Rscript -e "pak::pkg_install('NOAA-EDAB/assessmentdata')"
-          Rscript -e "pak::pkg_install('NOAA-EDAB/ecodata')"
-          Rscript -e "pak::pkg_install('NOAA-EDAB/survdat')"
-          Rscript -e "pak::pkg_install('NEFSC/READ_EDAB_Utilities@dev')"
-
-      - name: Install dependencies
-        run: Rscript -e "pak::lockfile_create(lockfile = '.github/pkg.lock')"
+      # - name: Install remote dependencies
+      #   run: |
+      #     Rscript -e "pak::pkg_install('nmfs-general-modeling-tools/nmfspalette')"
+      #     Rscript -e "pak::pkg_install('NOAA-EDAB/assessmentdata')"
+      #     Rscript -e "pak::pkg_install('NOAA-EDAB/ecodata')"
+      #     Rscript -e "pak::pkg_install('NOAA-EDAB/survdat')"
+      #     Rscript -e "pak::pkg_install('NEFSC/READ_EDAB_Utilities@dev')"
+      # 
+      # - name: Install dependencies
+      #   run: Rscript -e "pak::lockfile_create(lockfile = '.github/pkg.lock')"
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
