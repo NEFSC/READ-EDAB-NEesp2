@@ -58,7 +58,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes:
-    NEFSC/READ_EDAB_Utilities,
+    NEFSC/READ_EDAB_Utilities@dev,
     nmfs-general-modeling-tools/nmfspalette,
     NOAA-EDAB/assessmentdata,
     NOAA-EDAB/ecodata,
