@@ -11,19 +11,21 @@ esp_csv_to_nc <- function(
     data,
     fname) {
   data <- data |>
-    dplyr::rename(creator_name = CONTACT) |> # rename for metadata requirements
+   # dplyr::rename(creator_name = 'STEPHANIE OWEN') |> # rename for metadata requirements
     dplyr::mutate(
       long_name = INDICATOR_NAME,
-      title = paste(INTENDED_ESP_NAME, "ESP"),
+      title = paste("HERRING SNAPSHOT ESP"),
       Conventions = "CF-1.11, COARDS, ACDD-1.3",
       Metadata_Conventions = "Unidata Dataset Discovery v1.0",
       creator_email = "nefsc.esp.leads@noaa.gov",
       creator_type = "person",
+      creator_name = "Stephanie Owen",
+      creator_url = 'https://www.fisheries.noaa.gov/new-england-mid-atlantic/ecosystems/northeast-ecosystem-dynamics-and-assessment-our-research',
       acknowledgements = "The data are sponsored by NOAA and may be freely distributed",
       institution = "DOC | NOAA | National Marine Fisheries Service | Fisheries Northeast Fisheries Science Center",
-      program = "Ecosystem Dynamics and Assessment Branch",
+      program_name = "Ecosystem Dynamics and Assessment Branch",
       publisher_type = "institution",
-      publisher_name = "Northeast Fisheries Science Center",
+      publisher_name = "DOC | NOAA | National Marine Fisheries Service | Northeast Fisheries Science Center",
       publisher_url = "https://www.fisheries.noaa.gov/about/northeast-fisheries-science-center",
       publisher_email = "nefsc.erddap@noaa.gov",
       contributor_name = "Ecosystem Dynamics and Assessment Branch",
@@ -31,7 +33,10 @@ esp_csv_to_nc <- function(
       contributor_url = "https://www.fisheries.noaa.gov/new-england-mid-atlantic/ecosystems/northeast-ecosystem-dynamics-and-assessment-our-research",
       contributor_institution = "DOC | NOAA Fisheries | Northeast Fisheries Science Center",
       naming_authority = "gov.noaa.nefsc",
-      license = "The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.  Neither the data, contributor, NEFSC, NOAA, nor the United States Government, nor any of their employees or contractors, makes any warranty, expressed or implied, including warranties of marketability and fitness for a particular purpose, or assumes any legal liability for the accuracy, completeness, or usefulness of this information."
+      license = "The data may be used and redistributed for free but is not intended for legal use, since it may contain inaccuracies.  Neither the data, contributor, NEFSC, NOAA, nor the United States Government, nor any of their employees or contractors, makes any warranty, expressed or implied, including warranties of marketability and fitness for a particular purpose, or assumes any legal liability for the accuracy, completeness, or usefulness of this information.",
+      project_name = "Ecosystem and Socioeconomic Profiles",
+      project_url = "https://www.fisheries.noaa.gov/new-england-mid-atlantic/science-data/ecosystem-and-socioeconomic-profiles-northeast-united-states",
+      project_email = "nefsc.esp.leads@noaa.gov"
     )
 
   var.index <- data |>
