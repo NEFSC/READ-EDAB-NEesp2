@@ -82,7 +82,11 @@ data_pull <- purrr::map2(
   }
 )
 
+<<<<<<< HEAD
+## recalculating with confidence intervals
+=======
 ## recalculating with confidence intervals ----
+>>>>>>> dev
 files <- list.files(
   here::here("data-raw/hms_mrip/2025-08-04"),
   full.names = TRUE
@@ -105,7 +109,10 @@ data_pull <- purrr::map(
 )
 
 
+<<<<<<< HEAD
+=======
 ## save output ----
+>>>>>>> dev
 output <- purrr::reduce(data_pull, dplyr::bind_rows)
 write.csv(
   output,
