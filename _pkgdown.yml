@@ -37,6 +37,8 @@ navbar:
          href: articles/using_mrip_data.html
       -  text: "Using {survdat} for Bottom Trawl Indicators"
          href: articles/using_survdat_data.html
+      -  text: "Comparison of condition data methods"
+         href: articles/compare_condition.html
     - text: "Functions"
       href: reference/index.html
     - text: "News"
