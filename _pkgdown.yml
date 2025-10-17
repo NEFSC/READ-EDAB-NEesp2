@@ -29,6 +29,8 @@ navbar:
          href: articles/rmarkdown-intro.html
       -  text: "Using EDAB-Utils R package"
          href: articles/using_edab_utils.html
+      -  text: "Creating Spatial Indicator Time Series with EDAB_Utilities"
+         href: articles/create-spatial-indicator-time-series.html
       -  text: "Accessing Bottom Trawl Survey Data"
          href: articles/accessing-survdat-data.html
       -  text: "Using MRIP Data for Recreational Indicators"
