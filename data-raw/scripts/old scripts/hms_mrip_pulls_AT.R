@@ -2,6 +2,7 @@
 
 devtools::load_all()
 
+## set up query ----
 species_list <- c(
   'atlantic angel shark',
   'atlantic sharpnose shark',
@@ -33,13 +34,28 @@ species_list <- c(
   'spinner shark',
   'thresher shark',
   'tiger shark',
-  'white shark'
+  'white shark',
+  # billfishes
+  'billfish family',
+  'black marlin',
+  'blue marlin',
+  'shortbill spearfish',
+  'striped marlin',
+  # tunas -- not including mackerels and pacific fish
+  'albacore',
+  'bigeye tuna',
+  'bluefin tuna',
+  'skipjack tuna',
+  'striped bonito',
+  'wahoo',
+  'yellowfin tuna'
 )
 
 region_list <- c('north atlantic', 'mid-atlantic')
 
 query_params <- expand.grid(species = species_list, regions = region_list)
 
+## query from mrip ----
 data_pull <- purrr::map2(
   query_params$species,
   query_params$regions,
@@ -66,7 +82,11 @@ data_pull <- purrr::map2(
   }
 )
 
+<<<<<<< HEAD
 ## recalculating with confidence intervals
+=======
+## recalculating with confidence intervals ----
+>>>>>>> dev
 files <- list.files(
   here::here("data-raw/hms_mrip/2025-08-04"),
   full.names = TRUE
@@ -89,6 +109,10 @@ data_pull <- purrr::map(
 )
 
 
+<<<<<<< HEAD
+=======
+## save output ----
+>>>>>>> dev
 output <- purrr::reduce(data_pull, dplyr::bind_rows)
 write.csv(
   output,
@@ -103,7 +127,29 @@ new_hms <- read.csv(here::here("data-raw/hms_mrip/hms_mrip_2025-08-14.csv"))
 
 hms_key <- read.csv(
   "https://raw.githubusercontent.com/NOAA-EDAB/ecodata/refs/heads/master/data-raw/hms-mrip/hms_sp_category.csv"
-)
+) |>
+  dplyr::bind_rows(tibble::tibble(
+    COMMON_NAME = c(
+      'billfish family',
+      'black marlin',
+      'blue marlin',
+      'shortbill spearfish',
+      'striped marlin'
+    ),
+    SP_CATEGORY = "Billfishes"
+  )) |>
+  dplyr::bind_rows(tibble::tibble(
+    COMMON_NAME = c(
+      'albacore',
+      'bigeye tuna',
+      'bluefin tuna',
+      'skipjack tuna',
+      'striped bonito',
+      'wahoo',
+      'yellowfin tuna'
+    ),
+    SP_CATEGORY = "Scombridae"
+  ))
 
 rec_hms <- new_hms |>
   dplyr::left_join(

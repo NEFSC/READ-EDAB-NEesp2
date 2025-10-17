@@ -22,18 +22,18 @@ species_condition <- function(data,
                               length_break = NULL,
                               output = "soe") {
   if (by_sex |
-    !is.null(length_break)) {
+      !is.null(length_break)) {
     if (output != "full") {
       message("You asked to group results by sex and/or length ; data will not be formatted for SOE or ESP output.")
     }
     output <- "full"
   }
-
+  
   # add 0 to length_break if needed
   if (!0 %in% length_break & !is.null(length_break)) {
     length_break <- c(0, length_break)
   }
-
+  
   if (by_EPU) {
     survey.data <- data %>%
       dplyr::left_join(NEesp2::strata_epu_key)
@@ -41,16 +41,16 @@ species_condition <- function(data,
     survey.data <- data |>
       dplyr::mutate(EPU = "UNIT")
   }
-
+  
   # Change sex = NA to sex = 0
   fall <- survey.data %>%
     dplyr::filter(SEASON == "FALL") %>%
     dplyr::mutate(sex = dplyr::if_else(is.na(SEX), "0", as.character(SEX)))
-
+  
   # filter LWparams to fall only, add in male/female if data is "combined"
   LWfall <- LWparams %>%
     dplyr::filter(SEASON == "FALL")
-
+  
   add_sexes <- LWfall |>
     dplyr::group_by(SpeciesName) |>
     dplyr::mutate(count = dplyr::n()) |>
@@ -65,10 +65,10 @@ species_condition <- function(data,
       relationship = "many-to-many"
     ) |>
     dplyr::select(-count)
-
+  
   new_dat <- dplyr::bind_rows(LWfall, add_sexes) |>
     dplyr::arrange(SpeciesName)
-
+  
   # Add SEX for Combined gender back into Wigley at all data (loses 4 Gender==Unsexed):
   LWpar_sexed <- new_dat |>
     dplyr::mutate(sex = dplyr::case_when(
@@ -77,13 +77,13 @@ species_condition <- function(data,
       Gender == "Female" ~ as.character(2),
       TRUE ~ NA
     ))
-
+  
   LWpar_spp <- LWpar_sexed %>%
     dplyr::mutate(SVSPP = as.numeric(LW_SVSPP))
-
+  
   # Join survdat data with LW data
   mergedata <- dplyr::left_join(fall, LWpar_spp, by = c("SEASON", "SVSPP", "sex"))
-
+  
   # filters out values without losing rows with NAs:
   mergewt <- dplyr::filter(mergedata, is.na(INDWT) | INDWT < 900)
   mergewtno0 <- dplyr::filter(mergewt, is.na(INDWT) | INDWT > 0.004)
@@ -98,13 +98,13 @@ species_condition <- function(data,
   #                 !is.na(lna),
   #                 INDWT < 900 | INDWT > 0.004,
   #                 LENGTH > 0)
-
+  
   ###########################################
   ### Calculate species condition ###
-
+  
   condcalc <- dplyr::mutate(mergeLW,
-    predwt = (exp(lna)) * LENGTH^b,
-    RelCond = INDWT / predwt
+                            predwt = (exp(lna)) * LENGTH^b,
+                            RelCond = INDWT / predwt
   ) |>
     dplyr::filter(is.na(RelCond) | RelCond < 300) %>%
     dplyr::group_by(SVSPP, SEX) %>%
@@ -114,16 +114,16 @@ species_condition <- function(data,
     dplyr::filter(RelCond < (mean + (2 * sd)) & RelCond > (mean - (2 * sd))) |>
     dplyr::filter(is.na(sex) | sex != 4) %>%
     dplyr::mutate(sexMF = sex)
-
+  
   cond.epu <- dplyr::left_join(condcalc, species.codes, by = c("SVSPP"))
-
+  
   # Summarize annually -- parameterized groupings
   grouping_vars <- c("Species", "YEAR", "EPU")
-
+  
   if (by_sex) {
     grouping_vars <- c(grouping_vars, "sexMF")
   }
-
+  
   if (!is.null(length_break)) {
     cond.epu <- cond.epu |>
       dplyr::mutate(
@@ -131,10 +131,10 @@ species_condition <- function(data,
       )
     grouping_vars <- c(grouping_vars, "length_group")
   }
-
+  
   grouped_condition <- cond.epu |>
     dplyr::group_by(!!!rlang::syms(grouping_vars))
-
+  
   condition <- grouped_condition %>%
     dplyr::summarize(
       MeanCond = mean(RelCond),
@@ -158,7 +158,7 @@ species_condition <- function(data,
     ) %>%
     # dplyr::rename(DATA_VALUE = MeanCond) %>%
     dplyr::ungroup()
-
+  
   # format for different outputs
   if (output == "soe") {
     condition <- condition |>
