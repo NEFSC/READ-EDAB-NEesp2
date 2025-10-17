@@ -86,15 +86,15 @@ return(plt)
 }
 ```
 
-This vignette compares fish condition data produced with the `NEesp2::species_condition` function to the condition data in the `ecodata` package. The `NEesp2::species_condition` function was built based on [Laurel's condition code](https://github.com/Laurels1/Condition/blob/master/R/RelConditionEPU.R). This analysis validates whether the function can be used to automate the workflow for the 2026 SOE.
+This vignette compares fish condition data produced with the `NEesp2::species_condition_old` function to the condition data in the `ecodata` package. The `NEesp2::species_condition_old` function was built based on [Laurel's condition code](https://github.com/Laurels1/Condition/blob/master/R/RelConditionEPU.R). This analysis validates whether the function can be used to automate the workflow for the 2026 SOE.
 
-## Create data with `NEesp2::species_condition` 
+## Create data with `NEesp2::species_condition_old` 
 I'm creating condition data with two different survdat pulls, one from 2024 and one from mid-2025. I think the 2024 pull is the same one used to create the current ecodata condition data; it is on github [here](https://github.com/Laurels1/Condition/blob/master/data/Survdat.RData). The 2025 pull is a more recent pull that includes data through 2024.
 
 ```{r, echo = TRUE}
 # using a recent survdat pull:
 all_condition <- readRDS(here::here("data-raw/condition.rds"))$survdat |>
-  NEesp2::species_condition(
+  NEesp2::species_condition_old(
     LWparams = NEesp2::LWparams,
     species.codes = NEesp2::species.codes,
     output = "soe"
@@ -103,7 +103,7 @@ all_condition <- readRDS(here::here("data-raw/condition.rds"))$survdat |>
 # using an older survdat pull:
 load(here::here("data-raw/Survdat_2024.Rdata"))
 all_condition_2024 <- survdat |>
-  NEesp2::species_condition(
+  NEesp2::species_condition_old(
     LWparams = NEesp2::LWparams,
     species.codes = NEesp2::species.codes,
     output = "soe"
@@ -208,7 +208,7 @@ survdat_2025 <- readRDS(here::here("data-raw/condition.rds"))$survdat  |>
   dplyr::filter(SVSPP == 121)
 
 cond_comparison <- survdat_2024 |>
-  NEesp2::species_condition(
+  NEesp2::species_condition_old(
     LWparams = NEesp2::LWparams,
     species.codes = NEesp2::species.codes,
     output = "soe"
@@ -216,7 +216,7 @@ cond_comparison <- survdat_2024 |>
   dplyr::mutate(source = "survdat_2024") |>
   dplyr::bind_rows(
     survdat_2025 |>
-      NEesp2::species_condition(
+      NEesp2::species_condition_old(
         LWparams = NEesp2::LWparams,
         species.codes = NEesp2::species.codes,
         output = "soe"
@@ -297,7 +297,7 @@ survdat_2025 <- readRDS(here::here("data-raw/condition.rds"))$survdat  |>
   dplyr::filter(SVSPP == 107)
 
 cond_2024 <- survdat_2024 |>
-  NEesp2::species_condition(
+  NEesp2::species_condition_old(
     LWparams = NEesp2::LWparams,
     species.codes = NEesp2::species.codes,
     record_outliers = TRUE,
@@ -305,7 +305,7 @@ cond_2024 <- survdat_2024 |>
   )  
 
 cond_2025 <- survdat_2025 |>
-      NEesp2::species_condition(
+      NEesp2::species_condition_old(
         LWparams = NEesp2::LWparams,
         species.codes = NEesp2::species.codes,
     record_outliers = TRUE,
