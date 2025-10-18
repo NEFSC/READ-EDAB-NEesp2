@@ -33,15 +33,31 @@ This vignette shows example data pulls and plots used for Black Sea Bass:
 
 Get recreational catch data for Black Sea Bass using the `get_mrip_catch` function. The `type` argument can be set to "all" for all catch types (A, B1, B2) or "landings" for just the landings (A and B1).
 
-```{r}
+```{r, eval = FALSE}
 bsb_catch <- get_mrip_catch(species = "BLACK SEA BASS", 
                             type = "all", 
                             region = "north and mid-atlantic")
-head(bsb_catch)
+```
 
+```{r, include = FALSE}
+bsb_catch <- readRDS(system.file("mrip_data/bsb_catch.rds", package = "NEesp2"))
+```
+
+```{r}
+head(bsb_catch)
+```
+
+```{r, eval = FALSE}
 bsb_landings <- get_mrip_catch(species = "BLACK SEA BASS",
                                type = "landings", 
                                region = "north and mid-atlantic")
+```
+
+```{r, include = FALSE}
+bsb_landings <- readRDS(system.file("mrip_data/bsb_landings.rds", package = "NEesp2"))
+```
+
+```{r}
 head(bsb_landings)
 ```
 
@@ -66,7 +82,7 @@ head(esp_landings) |>
 
 If you would like to save the data, the `save_catch` function can be used to save the data and the query used as an Rds file. This function is useful for automating data pulls and saving them in a specified folder. The file names are automatically generated, and are printed when the function runs. The function returns the file name as a value, which can be used to read the data back in later.
 
-```{r}
+```{r, eval = FALSE}
 save_catch(
   this_species = "black sea bass",
   this_region = "north and mid-atlantic",
@@ -219,7 +235,7 @@ head(n_trips)
 
 To make the data download more reproducible and efficient, there is a `save_trips()` function that can be iterated on with `purrr::map()`. This function executes the MRIP query and saves the .Rds with the MRIP data download and query information in the specified folder. Data can then be read in and used in analyses. For example, the following code will download and save the same data that is shown in the `trips_2020` object above. The file name is automatically created and is returned by the function.
 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 save_trips(
   this_species = "BLACK SEA BASS",
   this_year = 2020,

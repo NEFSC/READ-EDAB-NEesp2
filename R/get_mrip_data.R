@@ -285,7 +285,7 @@ save_trips <- function(
 #' @param out_folder where to save the data
 #' @param catch_type the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".
 #' @param wait whether to pause after saving the data. Default is TRUE.
-#' @param return_fmane whether to return the file name of the saved data. Default is TRUE.
+#' @param return_fname whether to return the file name of the saved data. Default is TRUE.
 #' @return Saves list of the scraped data and metadata. Returns the file name.
 #' @export
 
@@ -298,7 +298,6 @@ save_catch <- function(
   wait = TRUE,
   return_fname = TRUE
 ) {
-
   fname <- paste0(
     out_folder,
     "/catch_",
