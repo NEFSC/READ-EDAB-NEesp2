@@ -4,7 +4,7 @@
 \alias{plot_condition}
 \title{Plot Condition}
 \usage{
-plot_condition(data, var, return = TRUE)
+plot_condition(data, var)
 }
 \arguments{
 \item{data}{A data frame of species condition from \code{species_condition(..., output = "soe")}}

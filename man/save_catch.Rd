@@ -23,7 +23,7 @@ save_catch(
 
 \item{wait}{whether to pause after saving the data. Default is TRUE.}
 
-\item{return_fmane}{whether to return the file name of the saved data. Default is TRUE.}
+\item{return_fname}{whether to return the file name of the saved data. Default is TRUE.}
 }
 \value{
 Saves list of the scraped data and metadata. Returns the file name.

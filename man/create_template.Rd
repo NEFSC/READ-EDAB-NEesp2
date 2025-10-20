@@ -8,6 +8,8 @@ create_template(path = getwd(), over = FALSE)
 }
 \arguments{
 \item{path}{Where to create the template. Defaults to the present working directory.}
+
+\item{over}{whether to overwrite existing files. Defaults to FALSE.}
 }
 \description{
 This function creates an ESP two-pager template at the specified path.

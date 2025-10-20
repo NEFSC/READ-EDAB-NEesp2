@@ -19,8 +19,6 @@ create_total_mrip(
 \item{var_units}{The variable units to use in the indicator name. Default is "n".}
 
 \item{remove_non_standard}{Boolean, if TRUE will remove non-standard data ("Does Total Catch (A+B1+B2) Meet MRIP Standard" = NO)}
-
-\item{species}{The species common name}
 }
 \value{
 a tibble
