@@ -13,11 +13,11 @@ plt_indicator <- function(data,
                           ar = 1/4,
                           include_trends = TRUE) {
   plt <- data |>
-    dplyr::group_by(INDICATOR_NAME) |>
-    dplyr::mutate(mean = mean(DATA_VALUE, na.rm = TRUE),
-                  sd = stats::sd(DATA_VALUE, na.rm = TRUE)) |>
-    ggplot2::ggplot(ggplot2::aes(x = YEAR,
-                                 y = DATA_VALUE
+    dplyr::group_by(.data$INDICATOR_NAME) |>
+    dplyr::mutate(mean = mean(.data$DATA_VALUE, na.rm = TRUE),
+                  sd = stats::sd(.data$DATA_VALUE, na.rm = TRUE)) |>
+    ggplot2::ggplot(ggplot2::aes(x = .data$YEAR,
+                                 y = .data$DATA_VALUE
     )) +
     ggplot2::geom_hline(ggplot2::aes(
       yintercept = .data$mean + .data$sd

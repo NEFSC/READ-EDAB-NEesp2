@@ -105,9 +105,9 @@ species_condition_old <- function(
   )
 
   # filters out values without losing rows with NAs:
-  mergewt <- dplyr::filter(mergedata, is.na(.data$INDWT) | INDWT < 900)
-  mergewtno0 <- dplyr::filter(mergewt, is.na(.data$INDWT) | INDWT > 0.004)
-  mergelenno0 <- dplyr::filter(mergewtno0, is.na(.data$LENGTH) | LENGTH > 0)
+  mergewt <- dplyr::filter(mergedata, is.na(.data$INDWT) | .data$INDWT < 900)
+  mergewtno0 <- dplyr::filter(mergewt, is.na(.data$INDWT) | .data$INDWT > 0.004)
+  mergelenno0 <- dplyr::filter(mergewtno0, is.na(.data$LENGTH) | .data$LENGTH > 0)
   mergelen <- dplyr::filter(mergelenno0, !is.na(.data$LENGTH))
   mergeindwt <- dplyr::filter(mergelen, !is.na(.data$INDWT))
   mergeLW <- dplyr::filter(mergeindwt, !is.na(.data$lna))
@@ -137,7 +137,7 @@ species_condition_old <- function(
     # might want to update this outlier removal eventually
     dplyr::mutate(
       outlier = .data$RelCond > (.data$mean + (2 * .data$sd)) |
-        RelCond < (.data$mean - (2 * .data$sd))
+        .data$RelCond < (.data$mean - (2 * .data$sd))
     )
 
   message(paste0(
@@ -216,9 +216,9 @@ species_condition_old <- function(
     condition <- condition |>
       dplyr::select(.data$YEAR, .data$Species, .data$EPU, .data$MeanCond) |>
       dplyr::rename(
-        Var = Species,
-        Time = YEAR,
-        Value = MeanCond
+        Var = .data$Species,
+        Time = .data$YEAR,
+        Value = .data$MeanCond
       ) |>
       dplyr::mutate(Units = "MeanCond")
   } else if (output == "esp") {
@@ -230,7 +230,7 @@ species_condition_old <- function(
         "MeanCond",
         "INDICATOR_NAME"
       ) |>
-      dplyr::rename(DATA_VALUE = MeanCond)
+      dplyr::rename(DATA_VALUE = .data$MeanCond)
   }
 
   if (record_outliers) {

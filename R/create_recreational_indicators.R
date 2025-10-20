@@ -9,6 +9,7 @@
 #' @param var_units The variable units to use in the indicator name. Default is "n".
 #' @param remove_non_standard Boolean, if TRUE will remove non-standard data ("Does Total Catch (A+B1+B2) Meet MRIP Standard" = NO)
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @return a tibble
 #' @export
 
@@ -29,7 +30,7 @@ create_total_mrip <- function(
 
   if (remove_non_standard) {
     total_rec_catch <- total_rec_catch |>
-      dplyr::filter(keep != "NO")
+      dplyr::filter(.data$keep != "NO")
     message(
       "Removing data that does not meet MRIP standards. If you want to keep this data, set `remove_non_standard = FALSE`."
     )
@@ -78,9 +79,9 @@ create_total_mrip <- function(
 #' @param files A list of the full file names of annual directed trip data (.csv format). Must download for each year in MRIP query tool.
 #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @return Saves R object `rec_trips`, returns directed recreational trips indicator
 #' @export
-# `%>%` <- magrittr::`%>%`
 
 create_mrip_trips <- function(files, remove_non_standard = TRUE) {
   rec_trips <- files |>
@@ -105,26 +106,26 @@ create_mrip_trips <- function(files, remove_non_standard = TRUE) {
 
   if (remove_non_standard) {
     rec_trips <- rec_trips |>
-      dplyr::filter(DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD != "No")
+      dplyr::filter(.data$DOES_DIRECTED_TRIPS_MEET_MRIP_STANDARD != "No")
   }
 
   output <- rec_trips |>
-    dplyr::group_by(YEAR, SPECIES) |>
-    dplyr::summarise(DATA_VALUE = sum(DIRECTED_TRIPS, na.rm = TRUE)) |>
+    dplyr::group_by(.data$YEAR, .data$SPECIES) |>
+    dplyr::summarise(.data$DATA_VALUE = sum(.data$DIRECTED_TRIPS, na.rm = TRUE)) |>
     dplyr::mutate(
-      CATEGORY = "Recreational",
-      INDICATOR_TYPE = "Socioeconomic",
-      INDICATOR_NAME = "rec_trips",
-      INDICATOR_UNITS = "number"
+      .data$CATEGORY = "Recreational",
+      .data$INDICATOR_TYPE = "Socioeconomic",
+      .data$INDICATOR_NAME = "rec_trips",
+      .data$INDICATOR_UNITS = "number"
     ) |>
     dplyr::select(
-      YEAR,
-      DATA_VALUE,
-      CATEGORY,
-      INDICATOR_TYPE,
-      INDICATOR_NAME,
-      INDICATOR_UNITS,
-      SPECIES
+      .data$YEAR,
+      .data$DATA_VALUE,
+      .data$CATEGORY,
+      .data$INDICATOR_TYPE,
+      .data$INDICATOR_NAME,
+      .data$INDICATOR_UNITS,
+      .data$SPECIES
     )
 
   return(output)
@@ -142,9 +143,9 @@ create_mrip_trips <- function(files, remove_non_standard = TRUE) {
 #' @param species_trips The directed trips data for species of interest (R object `rec_trips`) from function 'create_rec_trips'
 #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @return Saves the R data object `prop_sp_trips`
 #' @export
-# `%>%` <- magrittr::`%>%`
 
 ## TODO: needs to be updated to work with new format of output,
 ## function should be updated to reflect that the total_trips and species_trips need to contain data at the same regional level
@@ -168,17 +169,17 @@ create_prop_sp_trips <- function(
   return = TRUE
 ) {
   total_trips <- total_trips |>
-    dplyr::filter(STATE %in% states) |>
+    dplyr::filter(.data$STATE %in% states) |>
     groupby_state(groupby = groupby_state) |>
     dplyr::summarise(
-      total_trips = sum(as.numeric(ANGLER_TRIPS), na.rm = TRUE)
+      total_trips = sum(as.numeric(.data$ANGLER_TRIPS), na.rm = TRUE)
     ) |>
-    dplyr::mutate(YEAR = as.numeric(YEAR))
+    dplyr::mutate(YEAR = as.numeric(.data$YEAR))
 
   sp <- species_trips |>
-    dplyr::filter(STATE %in% states) |>
+    dplyr::filter(.data$STATE %in% states) |>
     groupby_state(groupby = groupby_state) |>
-    dplyr::summarise(DATA_VALUE = sum(as.numeric(DATA_VALUE), na.rm = TRUE))
+    dplyr::summarise(DATA_VALUE = sum(as.numeric(.data$DATA_VALUE), na.rm = TRUE))
 
   prop_sp_trips <- dplyr::full_join(total_trips, sp, by = "YEAR") |>
     dplyr::mutate(

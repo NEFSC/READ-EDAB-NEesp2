@@ -4,6 +4,7 @@
 #'
 #' @param data A data frame containing ESP indicator data in long format. Must contain columns: INDICATOR_NAME, UNITS, DATA_VALUE, YEAR, and SUBMISSION_YEAR
 #' @param fname A character string specifying the file path where the .nc file will be saved
+#' @importFrom rlang .data
 #' @return .nc file saved at the specified filepath
 #' @export
 
@@ -40,16 +41,16 @@ esp_csv_to_nc <- function(
     )
 
   var.index <- data |>
-    dplyr::select(INDICATOR_NAME, UNITS) |>
+    dplyr::select(.data$INDICATOR_NAME, .data$UNITS) |>
     dplyr::distinct()
 
-  years <- sort(unique(data$YEAR))
+  years <- sort(unique(.data$YEAR))
 
   data2 <- data |>
     # expand to include missing years
     dplyr::full_join(expand.grid(
       YEAR = years,
-      INDICATOR_NAME = unique(data$INDICATOR_NAME)
+      INDICATOR_NAME = unique(.data$INDICATOR_NAME)
     )) |>
     dplyr::arrange(YEAR)
 
@@ -87,9 +88,9 @@ esp_csv_to_nc <- function(
       names_to = "attribute",
       values_to = "value"
     ) |>
-    dplyr::group_by(attribute) |>
-    dplyr::mutate(num_vals = dplyr::n_distinct(value)) |>
-    dplyr::filter(num_vals == 1)
+    dplyr::group_by(.data$attribute) |>
+    dplyr::mutate(.data$num_vals = dplyr::n_distinct(.data$value)) |>
+    dplyr::filter(.data$num_vals == 1)
 
   if (nrow(global_attr) > 0) {
     purrr::walk2(
@@ -107,7 +108,7 @@ esp_csv_to_nc <- function(
       dplyr::filter(INDICATOR_NAME == var.index$INDICATOR_NAME[j])
 
     var.data <- all_data |>
-      dplyr::select(DATA_VALUE) |>
+      dplyr::select(.data$DATA_VALUE) |>
       as.matrix()
 
     var.data[which(is.na(var.data))] <- -999
