@@ -131,7 +131,7 @@ species_condition_old <- function(
     dplyr::group_by(.data$SVSPP, .data$SEX) %>%
     dplyr::mutate(
       mean = mean(.data$RelCond),
-      sd = sd(.data$RelCond)
+      sd = stats::sd(.data$RelCond)
     ) |>
     dplyr::ungroup() |>
     # might want to update this outlier removal eventually
@@ -204,8 +204,8 @@ species_condition_old <- function(
   condition <- condition |>
     # calculate sd and variance across years
     dplyr::mutate(
-      sd = sd(.data$MeanCond, na.rm = TRUE),
-      variance = var(.data$MeanCond, na.rm = TRUE),
+      sd = stats::sd(.data$MeanCond, na.rm = TRUE),
+      variance = stats::var(.data$MeanCond, na.rm = TRUE),
       INDICATOR_NAME = "mean condition"
     ) %>%
     # dplyr::rename(DATA_VALUE = MeanCond) %>%

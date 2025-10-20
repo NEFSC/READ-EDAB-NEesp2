@@ -16,7 +16,7 @@ create_swept_area <- function(...) {
     dplyr::rename(swept_area_biomass = tot.biomass, 
                   variance = tot.bio.var,
                   se = tot.bio.SE) %>%
-    dplyr::mutate(sd = sd(swept_area_biomass, na.rm = TRUE),
+    dplyr::mutate(sd = stats::sd(swept_area_biomass, na.rm = TRUE),
                   INDICATOR_UNITS = "numberstow-1") %>%
     tidyr::pivot_longer(cols = c("swept_area_biomass")) %>%
     dplyr::rename(INDICATOR_NAME = name,
@@ -42,7 +42,7 @@ create_stratified_mean <- function(...) {
     dplyr::rename(strat_mean_biomass = strat.biomass, 
                   variance = biomass.var, 
                   se = biomass.SE) %>%
-    dplyr::mutate(sd = sd(strat_mean_biomass, na.rm = TRUE),
+    dplyr::mutate(sd = stats::sd(strat_mean_biomass, na.rm = TRUE),
                   INDICATOR_UNITS = "kgtow-1") %>%
     tidyr::pivot_longer(cols = c("strat_mean_biomass")) %>%
     dplyr::rename(INDICATOR_NAME = name,

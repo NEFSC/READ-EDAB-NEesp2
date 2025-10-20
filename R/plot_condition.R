@@ -17,7 +17,7 @@ plot_condition <- function(data,
     dplyr::group_by(Species) |>
     dplyr::mutate(scaleCond = scale(DATA_VALUE,scale =T,center=T))
   
-  xs <- quantile(condition$scaleCond, seq(0,1, length.out = 6), na.rm = TRUE)
+  xs <- stats::quantile(condition$scaleCond, seq(0,1, length.out = 6), na.rm = TRUE)
   
   condition <- condition |>
     dplyr::mutate(category = cut(scaleCond,
@@ -35,7 +35,7 @@ plot_condition <- function(data,
     dplyr::arrange(YEAR) |>
     dplyr::group_by(EPU) |>
     dplyr::mutate(mean = mean(DATA_VALUE, na.rm = TRUE),
-                  sd = sd(DATA_VALUE, na.rm = TRUE)) |>
+                  sd = stats::sd(DATA_VALUE, na.rm = TRUE)) |>
     ggplot2::ggplot(ggplot2::aes(x = YEAR,
                                  y = DATA_VALUE,
                                  color = category,

@@ -62,7 +62,7 @@ format_tbl_data <- function(file,
                             term_year,
                             dir) {
   if(stringr::str_detect(file, "csv$")) {
-    out <- read.csv(file)
+    out <- base::read.csv(file)
   } else if(stringr::str_detect(file, "xlsx$")) {
     out <- readxl::read_excel(file)
   } else {

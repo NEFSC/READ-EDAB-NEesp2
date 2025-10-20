@@ -83,7 +83,7 @@ esp_csv_to_nc <- function(
     tidyr::drop_na("SUBMISSION_YEAR") |>
     dplyr::mutate_all(as.character) |>
     tidyr::pivot_longer(
-      cols = everything(),
+      cols = tidyselect::everything(),
       names_to = "attribute",
       values_to = "value"
     ) |>

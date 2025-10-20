@@ -3,7 +3,6 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   accessing-survdat-data: accessing-survdat-data.html
-  compare_condition: compare_condition.html
   create-spatial-indicator-time-series: create-spatial-indicator-time-series.html
   esp-links: esp-links.html
   general-workflow: general-workflow.html
@@ -14,7 +13,7 @@ articles:
   using_mrip_data: using_mrip_data.html
   using_survdat_data: using_survdat_data.html
   why-esp: why-esp.html
-last_built: 2025-10-17T14:35Z
+last_built: 2025-10-20T14:35Z
 urls:
   reference: https://nefsc.github.io/READ-EDAB-NEesp2/reference
   article: https://nefsc.github.io/READ-EDAB-NEesp2/articles

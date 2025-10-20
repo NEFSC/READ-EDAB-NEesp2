@@ -105,7 +105,7 @@ add_fig_paths <- function(path,
                           list_files) {
   
   if(stringr::str_detect(path, "csv$")) {
-    output <- read.csv(path)
+    output <- base::read.csv(path)
   } else {
     output <- readxl::read_excel(path)
   }
