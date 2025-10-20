@@ -89,8 +89,8 @@ esp_csv_to_nc <- function(
       values_to = "value"
     ) |>
     dplyr::group_by(.data$attribute) |>
-    dplyr::mutate(.data$num_vals = dplyr::n_distinct(.data$value)) |>
-    dplyr::filter(.data$num_vals == 1)
+    dplyr::mutate(num_vals = dplyr::n_distinct(.data$value)) |>
+    dplyr::filter(num_vals == 1)
 
   if (nrow(global_attr) > 0) {
     purrr::walk2(

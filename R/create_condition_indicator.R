@@ -45,17 +45,17 @@ species_condition <- function(data,
   
   # Change sex = NA to sex = 0
   fall <- survey.data %>%
-    dplyr::filter(.data$SEASON == "FALL") %>%
-    dplyr::mutate(.data$sex = dplyr::if_else(is.na(.data$SEX), "0", as.character(.data$SEX)))
+    dplyr::filter(SEASON == "FALL") %>%
+    dplyr::mutate(sex = dplyr::if_else(is.na(.data$SEX), "0", as.character(.data$SEX)))
   
   # filter LWparams to fall only, add in male/female if data is "combined"
   LWfall <- LWparams %>%
-    dplyr::filter(.data$SEASON == "FALL")
+    dplyr::filter(SEASON == "FALL")
   
   add_sexes <- LWfall |>
-    dplyr::group_by(.data$SpeciesName) |>
-    dplyr::mutate(.data$count = dplyr::n()) |>
-    dplyr::filter(.data$count == 1) |>
+    dplyr::group_by(SpeciesName) |>
+    dplyr::mutate(count = dplyr::n()) |>
+    dplyr::filter(count == 1) |>
     dplyr::ungroup() |>
     dplyr::select(-.data$Gender) |>
     dplyr::full_join(
@@ -72,7 +72,7 @@ species_condition <- function(data,
   
   # Add SEX for Combined gender back into Wigley at all data (loses 4 Gender==Unsexed):
   LWpar_sexed <- new_dat |>
-    dplyr::mutate(.data$sex = dplyr::case_when(
+    dplyr::mutate(sex = dplyr::case_when(
       Gender == "Combined" | Gender == "Unsexed" ~ as.character(0),
       Gender == "Male" ~ as.character(1),
       Gender == "Female" ~ as.character(2),

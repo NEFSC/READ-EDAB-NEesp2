@@ -111,12 +111,12 @@ create_mrip_trips <- function(files, remove_non_standard = TRUE) {
 
   output <- rec_trips |>
     dplyr::group_by(.data$YEAR, .data$SPECIES) |>
-    dplyr::summarise(.data$DATA_VALUE = sum(.data$DIRECTED_TRIPS, na.rm = TRUE)) |>
+    dplyr::summarise(DATA_VALUE = sum(.data$DIRECTED_TRIPS, na.rm = TRUE)) |>
     dplyr::mutate(
-      .data$CATEGORY = "Recreational",
-      .data$INDICATOR_TYPE = "Socioeconomic",
-      .data$INDICATOR_NAME = "rec_trips",
-      .data$INDICATOR_UNITS = "number"
+      CATEGORY = "Recreational",
+      INDICATOR_TYPE = "Socioeconomic",
+      INDICATOR_NAME = "rec_trips",
+      INDICATOR_UNITS = "number"
     ) |>
     dplyr::select(
       .data$YEAR,
