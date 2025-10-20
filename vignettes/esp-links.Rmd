@@ -32,7 +32,7 @@ https://github.com/atyrell3/RT2022/tree/main/bluefishESP
 
 ### Black Sea Bass
 
-Github repository for the 2023 Black sea bass ESP and ESP report card
+Github repository for the 2023 Black sea bass ESP and snapshot ESP
 
 https://github.com/ScottLarge-NOAA/bsb
 
@@ -40,4 +40,16 @@ https://github.com/ScottLarge-NOAA/bsb
 
 Github repository for the 2024 Golden tilefish ESP
 
-https://github.com/SSalois1/tilefish_indicators 
+https://github.com/SSalois1/tilefish_indicators
+
+### Atlantic herring
+
+Github repository for the 2026 Atlantic herring snapshot ESP
+
+https://github.com/NEFSC/READ-EDAB-herring_snapshotESP
+
+### Longfin Squid
+
+Github repository for the 2026 Longfin squid snapshot ESP
+
+https://github.com/NEFSC/READ-EDAB-longfinESP

@@ -294,7 +294,7 @@ save_catch <- function(
   this_region,
   out_folder,
   catch_type = "all",
-  this_data_type,
+ # this_data_type,
   wait = TRUE,
   return_fname = TRUE
 ) {
@@ -319,7 +319,7 @@ save_catch <- function(
     species = this_species,
     type = catch_type,
     region = this_region,
-    data_type = this_data_type
+  #  data_type = this_data_type
   )
 
   saveRDS(out, fname)
