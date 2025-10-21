@@ -9,7 +9,6 @@ save_catch(
   this_region,
   out_folder,
   catch_type = "all",
-  this_data_type,
   wait = TRUE,
   return_fname = TRUE
 )
