@@ -63,7 +63,6 @@ create_total_mrip <- function(
 
   return(output)
 }
-# create_total_rec_catch(dat2$DATA, species = "atlantic cod")
 
 #' Get MRIP trips file list
 
@@ -138,7 +137,7 @@ create_mrip_trips <- function(files, remove_non_standard = TRUE) {
 #' Download csv as output
 #'
 #' @param total_trips The MRIP trip data (R object `mrip_effort`) of total annual angler trips from downloaded csv file
-#' @param species_trips The directed trips data for species of interest (R object `rec_trips`) from function 'create_rec_trips'
+#' @param species_trips The directed trips data for species of interest (R object `rec_trips`) 
 #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
 #' @param groupby_state Boolean, if TRUE will group by state, if FALSE will sum across all states
 #' @param return Boolean, if TRUE will return the R data object `prop_sp_trips`
