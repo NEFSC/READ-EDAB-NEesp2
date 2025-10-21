@@ -1,8 +1,8 @@
 #' Plot Risk Assessment summary 
 #'
 #' @param risk_elements A tibble of the stock's risk assessment results (number of risk elements at each level, by category. Results should be ordered from Low to High)
+#' @importFrom rlang .data
 #' @return A ggplot
-#' 
 #' @export
 
 plot_risk <- function(risk_elements = tibble::tibble(stock = c(1, 5, 2, 0),
@@ -12,27 +12,27 @@ plot_risk <- function(risk_elements = tibble::tibble(stock = c(1, 5, 2, 0),
   
   data <- risk_elements |>
     dplyr::mutate(level = rep(c("Low", "Lowmod", "Modhigh", "High"))) |>
-    tidyr::pivot_longer(cols = -level) |>
-    dplyr::group_by(name) |>
-    dplyr::mutate(percent = value/sum(value),
-                  lab = ifelse(value != 0,
-                               paste(value, level),
+    tidyr::pivot_longer(cols = -.data$level) |>
+    dplyr::group_by(.data$name) |>
+    dplyr::mutate(percent = .data$value/sum(.data$value),
+                  lab = ifelse(.data$value != 0,
+                               paste(.data$value, .data$level),
                                NA),
-                  pos = cumsum(percent),
-                  xlab = paste0(stringr::str_to_title(name),
-                         "\n(", sum(value), " Risk Elements)"))
+                  pos = cumsum(.data$percent),
+                  xlab = paste0(stringr::str_to_title(.data$name),
+                         "\n(", sum(.data$value), " Risk Elements)"))
   
   data$level = factor(data$level, levels = rev(c("Low", "Lowmod", "Modhigh", "High")))
 
   plt <-
      data |>
-    ggplot2::ggplot(ggplot2::aes(x = xlab,
-                                y = percent,
+    ggplot2::ggplot(ggplot2::aes(x = .data$xlab,
+                                y = .data$percent,
                                 # color = level, 
-                                fill = level)) +
+                                fill = .data$level)) +
     ggplot2::geom_col() +
-      ggplot2::geom_text(ggplot2::aes(y = pos - 0.05,
-                                       label = lab)) +
+      ggplot2::geom_text(ggplot2::aes(y = .data$pos - 0.05,
+                                       label = .data$lab)) +
     # ggplot2::geom_text(ggplot2::aes(y = -0.1,
     #                                 label = xlab)) +
       ggplot2::theme_classic() +

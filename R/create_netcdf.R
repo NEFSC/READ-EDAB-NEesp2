@@ -4,6 +4,7 @@
 #'
 #' @param data A data frame containing ESP indicator data in long format. Must contain columns: INDICATOR_NAME, UNITS, DATA_VALUE, YEAR, and SUBMISSION_YEAR
 #' @param fname A character string specifying the file path where the .nc file will be saved
+#' @importFrom rlang .data
 #' @return .nc file saved at the specified filepath
 #' @export
 
@@ -13,7 +14,7 @@ esp_csv_to_nc <- function(
   data <- data |>
    # dplyr::rename(creator_name = 'STEPHANIE OWEN') |> # rename for metadata requirements
     dplyr::mutate(
-      long_name = INDICATOR_NAME,
+      long_name = .data$INDICATOR_NAME,
       title = paste("HERRING SNAPSHOT ESP"),
       Conventions = "CF-1.11, COARDS, ACDD-1.3",
       Metadata_Conventions = "Unidata Dataset Discovery v1.0",
@@ -40,25 +41,25 @@ esp_csv_to_nc <- function(
     )
 
   var.index <- data |>
-    dplyr::select(INDICATOR_NAME, UNITS) |>
+    dplyr::select(.data$INDICATOR_NAME, .data$UNITS) |>
     dplyr::distinct()
 
-  years <- sort(unique(data$YEAR))
+  years <- sort(unique(.data$YEAR))
 
   data2 <- data |>
     # expand to include missing years
     dplyr::full_join(expand.grid(
       YEAR = years,
-      INDICATOR_NAME = unique(data$INDICATOR_NAME)
+      INDICATOR_NAME = unique(.data$INDICATOR_NAME)
     )) |>
-    dplyr::arrange(YEAR)
+    dplyr::arrange(.data$YEAR)
 
   # Define dimensions
   time_dim <- ncdf4::ncdim_def(name = "year", units = "years", vals = years)
 
   # Define variables
   var.ls <- purrr::map2(
-    var.index$INDICATOR_NAME,
+    var.index$.data$INDICATOR_NAME,
     var.index$UNITS,
     ~ ncdf4::ncvar_def(
       name = .x,
@@ -83,13 +84,13 @@ esp_csv_to_nc <- function(
     tidyr::drop_na("SUBMISSION_YEAR") |>
     dplyr::mutate_all(as.character) |>
     tidyr::pivot_longer(
-      cols = everything(),
+      cols = tidyselect::everything(),
       names_to = "attribute",
       values_to = "value"
     ) |>
-    dplyr::group_by(attribute) |>
-    dplyr::mutate(num_vals = dplyr::n_distinct(value)) |>
-    dplyr::filter(num_vals == 1)
+    dplyr::group_by(.data$attribute) |>
+    dplyr::mutate(num_vals = dplyr::n_distinct(.data$value)) |>
+    dplyr::filter(.data$num_vals == 1)
 
   if (nrow(global_attr) > 0) {
     purrr::walk2(
@@ -104,10 +105,10 @@ esp_csv_to_nc <- function(
   # Puts all the values in
   for (j in 1:nrow(var.index)) {
     all_data <- data2 |>
-      dplyr::filter(INDICATOR_NAME == var.index$INDICATOR_NAME[j])
+      dplyr::filter(.data$INDICATOR_NAME == var.index$INDICATOR_NAME[j])
 
     var.data <- all_data |>
-      dplyr::select(DATA_VALUE) |>
+      dplyr::select(.data$DATA_VALUE) |>
       as.matrix()
 
     var.data[which(is.na(var.data))] <- -999

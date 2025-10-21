@@ -19,6 +19,7 @@
 #' @param write.out logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters
 #' @return Returns a data frame summarized by timestep for each area.names
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @export
 
 create_spatial_indicator <- function(indicator_name,
@@ -30,16 +31,16 @@ create_spatial_indicator <- function(indicator_name,
     terra::as.data.frame(na.rm = FALSE) 
   
   output <- df %>%
-    dplyr::mutate(time = as.Date(time),
-                  DAY = lubridate::day(time), 
-                  MONTH = lubridate::month(time), 
-                  YEAR = lubridate::year(time)) %>%
-    subset(select = -c(agg.time, time, ls.id, var.name) ) |>
+    dplyr::mutate(time = as.Date(.data$time),
+                  DAY = lubridate::day(.data$time), 
+                  MONTH = lubridate::month(.data$time), 
+                  YEAR = lubridate::year(.data$time)) %>%
+    subset(select = -c(.data$agg.time, .data$time, .data$ls.id, .data$var.name) ) |>
     dplyr::mutate(INDICATOR_NAME = indicator_name,
                   INDICATOR_UNITS = units)  %>%
-    dplyr::rename(DATA_VALUE = value,
-                  AREA = area,
-                  STATISTIC = statistic) %>%
+    dplyr::rename(DATA_VALUE = .data$value,
+                  AREA = .data$area,
+                  STATISTIC = .data$statistic) %>%
     purrr::discard(~all(is.na(.)))
   
   return(output)

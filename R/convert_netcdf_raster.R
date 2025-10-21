@@ -30,7 +30,7 @@ nc_to_raster <- function(nc,
   raster::extent(r) <- raster::extent(extent)
   
   if(show_images){
-    par(mfrow = c(1,2))
+    graphics::par(mfrow = c(1,2))
     raster::plot(r, 1, sub = "Full dataset")
   }
   
@@ -39,7 +39,7 @@ nc_to_raster <- function(nc,
   
   if(show_images){
     raster::plot(ne_data, 1, sub = "Cropped dataset")
-    par(mfrow = c(1,1))
+    graphics::par(mfrow = c(1,1))
   }
   
   message("Done!")

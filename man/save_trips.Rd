@@ -24,7 +24,7 @@ save_trips(
 
 \item{wait}{whether to pause after saving the data. Default is TRUE.}
 
-\item{return_fmane}{whether to return the file name of the saved data. Default is TRUE.}
+\item{return_fname}{whether to return the file name of the saved data. Default is TRUE.}
 }
 \value{
 Saves an Rds file. Returns the file name.

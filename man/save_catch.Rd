@@ -16,13 +16,15 @@ save_catch(
 \arguments{
 \item{this_species}{the common name of the species as it appears in the MRIP data. capitalization does not matter.}
 
+\item{this_region}{the name of the region. Can be a state name, "North Atlantic", "Mid-Atlantic", etc. Capitalization does not matter.}
+
 \item{out_folder}{where to save the data}
 
 \item{catch_type}{the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".}
 
 \item{wait}{whether to pause after saving the data. Default is TRUE.}
 
-\item{return_fmane}{whether to return the file name of the saved data. Default is TRUE.}
+\item{return_fname}{whether to return the file name of the saved data. Default is TRUE.}
 }
 \value{
 Saves list of the scraped data and metadata. Returns the file name.

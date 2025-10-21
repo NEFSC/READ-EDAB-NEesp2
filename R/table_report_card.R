@@ -3,6 +3,8 @@
 #' This function creates a flextable for ESP report cards.
 #'
 #' @param data A data frame or tibble
+#' @param widths A numeric vector of column widths in inches
+#' @importFrom rlang .data
 #' @return A flextable
 #' @export
 
@@ -15,8 +17,8 @@ rpt_card_table <- function(data,
   
   small_dat <- data |>
     dplyr::mutate(figure = NA) |>
-    dplyr::select(-c(w, h)) |>
-    dplyr::rename(time_series = figure)
+    dplyr::select(-c(.data$w, .data$h)) |>
+    dplyr::rename(time_series = .data$figure)
   
   colnames(small_dat) <- colnames(small_dat) |>
     stringr::str_replace_all("_", " ") |>
@@ -54,6 +56,7 @@ rpt_card_table <- function(data,
 #' @param file the file path
 #' @param term_year the terminal year to use in the table header
 #' @param dir the directory where the time series images are saved
+#' @importFrom rlang .data
 #' @return A tibble
 #' @export
 
@@ -62,7 +65,7 @@ format_tbl_data <- function(file,
                             term_year,
                             dir) {
   if(stringr::str_detect(file, "csv$")) {
-    out <- read.csv(file)
+    out <- base::read.csv(file)
   } else if(stringr::str_detect(file, "xlsx$")) {
     out <- readxl::read_excel(file)
   } else {
@@ -71,10 +74,10 @@ format_tbl_data <- function(file,
   
   output <- out |>
     janitor::clean_names() |>
-    dplyr::mutate(figure =  paste0(dir, "/", time_series)) |>
+    dplyr::mutate(figure =  paste0(dir, "/", .data$time_series)) |>
     dplyr::rename_with(.fn = ~paste(.x, "in", term_year, sep = "_"),
                        .cols = "status") |>
-    dplyr::select(-time_series)
+    dplyr::select(-.data$time_series)
   
   return(output)
 }

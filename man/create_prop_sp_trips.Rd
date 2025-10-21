@@ -19,6 +19,10 @@ create_prop_sp_trips(
 \item{species_trips}{The directed trips data for species of interest (R object \code{rec_trips}) from function 'create_rec_trips'}
 
 \item{states}{States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'}
+
+\item{groupby_state}{Boolean, if TRUE will group by state, if FALSE will sum across all states}
+
+\item{return}{Boolean, if TRUE will return the R data object \code{prop_sp_trips}}
 }
 \value{
 Saves the R data object \code{prop_sp_trips}
