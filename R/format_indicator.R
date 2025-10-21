@@ -72,6 +72,7 @@ format_indicator <- function(out_dir,
 #' @param key The metadata (a tibble)
 #' @param ind_name Name of the indicator. This is a primary key and must match what has been used in previous years. This is a text string.
 #' @param ... Passed to `NEesp2::format_indicator()`
+#' @importFrom rlang .data
 #' @return A .txt file saved in `out_dir` (`out_dir` must be pased with `...`)
 #' @export
 
@@ -79,9 +80,9 @@ format_from_template <- function(key,
                                  ind_name,
                                  ...) {
   this_dat <- key |>
-    dplyr::filter(indicator_name == ind_name)
+    dplyr::filter(.data$indicator_name == .data$ind_name)
 
-  format_indicator(indicator_name = ind_name,
+  format_indicator(indicator_name = .data$ind_name,
                    description = this_dat$description,
                    status = this_dat$status,
                    factors = this_dat$factors,
@@ -105,7 +106,7 @@ add_fig_paths <- function(path,
                           list_files) {
   
   if(stringr::str_detect(path, "csv$")) {
-    output <- read.csv(path)
+    output <- base::read.csv(path)
   } else {
     output <- readxl::read_excel(path)
   }

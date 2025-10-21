@@ -199,7 +199,7 @@ get_mrip_trips <- function(species, region, year) {
 #' @param this_year the year of data to query. Must be a single value. The earliest year possible is 1981.
 #' @param out_folder where to save the data
 #' @param wait whether to pause after saving the data. Default is TRUE.
-#' @param return_fmane whether to return the file name of the saved data. Default is TRUE.
+#' @param return_fname whether to return the file name of the saved data. Default is TRUE.
 #' @return Saves an Rds file. Returns the file name.
 #' @export
 
@@ -282,10 +282,11 @@ save_trips <- function(
 #' Used as a helper function to automate data pulls.
 #'
 #' @param this_species the common name of the species as it appears in the MRIP data. capitalization does not matter.
+#' @param this_region the name of the region. Can be a state name, "North Atlantic", "Mid-Atlantic", etc. Capitalization does not matter.
 #' @param out_folder where to save the data
 #' @param catch_type the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".
 #' @param wait whether to pause after saving the data. Default is TRUE.
-#' @param return_fmane whether to return the file name of the saved data. Default is TRUE.
+#' @param return_fname whether to return the file name of the saved data. Default is TRUE.
 #' @return Saves list of the scraped data and metadata. Returns the file name.
 #' @export
 

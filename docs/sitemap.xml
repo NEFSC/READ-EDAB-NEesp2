@@ -1,6 +1,8 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/404.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/accessing-survdat-data.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/compare_condition.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/create-spatial-indicator-time-series.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/esp-links.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/general-workflow.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/articles/index.html</loc></url>
@@ -25,6 +27,7 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_coldpool_index.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_coldpool_persistence.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_gsi.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_mrip_trips.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_pp.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_prop_sp_trips.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_rec_trips.html</loc></url>
@@ -34,6 +37,7 @@
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_stratified_mean.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_swept_area.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_template.html</loc></url>
+<url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_total_mrip.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_total_rec_catch.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_total_rec_landings.html</loc></url>
 <url><loc>https://nefsc.github.io/READ-EDAB-NEesp2/reference/create_wcr.html</loc></url>
