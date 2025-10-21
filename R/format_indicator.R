@@ -82,7 +82,7 @@ format_from_template <- function(key,
   this_dat <- key |>
     dplyr::filter(.data$indicator_name == .data$ind_name)
 
-  format_indicator(.data$indicator_name = .data$ind_name,
+  format_indicator(indicator_name = .data$ind_name,
                    description = this_dat$description,
                    status = this_dat$status,
                    factors = this_dat$factors,

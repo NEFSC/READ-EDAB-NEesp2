@@ -183,7 +183,7 @@ create_prop_sp_trips <- function(
 
   prop_sp_trips <- dplyr::full_join(total_trips, sp, by = "YEAR") |>
     dplyr::mutate(
-      DATA_VALUE = DATA_VALUE / total_trips,
+      DATA_VALUE = .data$DATA_VALUE / total_trips,
       INDICATOR_NAME = "proportion_sp_trips",
       INDICATOR_UNITS = "%"
     ) |>

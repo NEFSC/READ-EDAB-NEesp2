@@ -14,7 +14,7 @@ esp_csv_to_nc <- function(
   data <- data |>
    # dplyr::rename(creator_name = 'STEPHANIE OWEN') |> # rename for metadata requirements
     dplyr::mutate(
-      long_name = INDICATOR_NAME,
+      long_name = .data$INDICATOR_NAME,
       title = paste("HERRING SNAPSHOT ESP"),
       Conventions = "CF-1.11, COARDS, ACDD-1.3",
       Metadata_Conventions = "Unidata Dataset Discovery v1.0",
@@ -52,14 +52,14 @@ esp_csv_to_nc <- function(
       YEAR = years,
       INDICATOR_NAME = unique(.data$INDICATOR_NAME)
     )) |>
-    dplyr::arrange(YEAR)
+    dplyr::arrange(.data$YEAR)
 
   # Define dimensions
   time_dim <- ncdf4::ncdim_def(name = "year", units = "years", vals = years)
 
   # Define variables
   var.ls <- purrr::map2(
-    var.index$INDICATOR_NAME,
+    var.index$.data$INDICATOR_NAME,
     var.index$UNITS,
     ~ ncdf4::ncvar_def(
       name = .x,
@@ -90,7 +90,7 @@ esp_csv_to_nc <- function(
     ) |>
     dplyr::group_by(.data$attribute) |>
     dplyr::mutate(num_vals = dplyr::n_distinct(.data$value)) |>
-    dplyr::filter(num_vals == 1)
+    dplyr::filter(.data$num_vals == 1)
 
   if (nrow(global_attr) > 0) {
     purrr::walk2(
@@ -105,7 +105,7 @@ esp_csv_to_nc <- function(
   # Puts all the values in
   for (j in 1:nrow(var.index)) {
     all_data <- data2 |>
-      dplyr::filter(INDICATOR_NAME == var.index$INDICATOR_NAME[j])
+      dplyr::filter(.data$INDICATOR_NAME == var.index$INDICATOR_NAME[j])
 
     var.data <- all_data |>
       dplyr::select(.data$DATA_VALUE) |>

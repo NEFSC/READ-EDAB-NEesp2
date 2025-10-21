@@ -43,7 +43,7 @@ create_stratified_mean <- function(...) {
     dplyr::select(.data$YEAR, .data$SEASON, .data$SVSPP, .data$strat.biomass, .data$biomass.var, .data$biomass.SE) %>%
     dplyr::rename(strat_mean_biomass = .data$strat.biomass, 
                   variance = .data$biomass.var, 
-                  se = biomass.SE) %>%
+                  se = .data$biomass.SE) %>%
     dplyr::mutate(sd = stats::sd(.data$strat_mean_biomass, na.rm = TRUE),
                   INDICATOR_UNITS = "kgtow-1") %>%
     tidyr::pivot_longer(cols = c("strat_mean_biomass")) %>%

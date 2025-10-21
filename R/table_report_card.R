@@ -73,7 +73,7 @@ format_tbl_data <- function(file,
   
   output <- out |>
     janitor::clean_names() |>
-    dplyr::mutate(figure =  paste0(dir, "/", time_series)) |>
+    dplyr::mutate(figure =  paste0(dir, "/", .data$time_series)) |>
     dplyr::rename_with(.fn = ~paste(.x, "in", term_year, sep = "_"),
                        .cols = "status") |>
     dplyr::select(-.data$time_series)

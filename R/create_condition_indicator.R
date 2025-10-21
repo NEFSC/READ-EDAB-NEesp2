@@ -45,17 +45,17 @@ species_condition <- function(data,
   
   # Change sex = NA to sex = 0
   fall <- survey.data %>%
-    dplyr::filter(SEASON == "FALL") %>%
+    dplyr::filter(.data$SEASON == "FALL") %>%
     dplyr::mutate(sex = dplyr::if_else(is.na(.data$SEX), "0", as.character(.data$SEX)))
   
   # filter LWparams to fall only, add in male/female if data is "combined"
   LWfall <- LWparams %>%
-    dplyr::filter(SEASON == "FALL")
+    dplyr::filter(.data$SEASON == "FALL")
   
   add_sexes <- LWfall |>
-    dplyr::group_by(SpeciesName) |>
+    dplyr::group_by(.data$SpeciesName) |>
     dplyr::mutate(count = dplyr::n()) |>
-    dplyr::filter(count == 1) |>
+    dplyr::filter(.data$count == 1) |>
     dplyr::ungroup() |>
     dplyr::select(-.data$Gender) |>
     dplyr::full_join(
@@ -68,7 +68,7 @@ species_condition <- function(data,
     dplyr::select(-.data$count)
   
   new_dat <- dplyr::bind_rows(LWfall, add_sexes) |>
-    dplyr::arrange(SpeciesName)
+    dplyr::arrange(.data$SpeciesName)
   
   # Add SEX for Combined gender back into Wigley at all data (loses 4 Gender==Unsexed):
   LWpar_sexed <- new_dat |>
@@ -128,7 +128,7 @@ species_condition <- function(data,
   if (!is.null(length_break)) {
     cond.epu <- cond.epu |>
       dplyr::mutate(
-        length_group = cut(LENGTH, breaks = length_break, include.lowest = TRUE)
+        length_group = cut(.data$LENGTH, breaks = length_break, include.lowest = TRUE)
       )
     grouping_vars <- c(grouping_vars, "length_group")
   }
@@ -149,8 +149,8 @@ species_condition <- function(data,
     dplyr::group_by(!!!rlang::syms(grouping_vars[-which(grouping_vars == "YEAR")])) |>
     # filter to only species with 20+ years of data
     dplyr::mutate(n = dplyr::.data$n()) |>
-    dplyr::filter(n >= 20) |>
-    dplyr::select(-n) |>
+    dplyr::filter(.data$n >= 20) |>
+    dplyr::select(-.data$n) |>
     # calculate sd and variance across years
     dplyr::mutate(
       sd = stats::sd(.data$MeanCond, na.rm = TRUE),

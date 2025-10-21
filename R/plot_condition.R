@@ -30,7 +30,7 @@ plot_condition <- function(data,
                                  include.lowest = TRUE))
   
   condition <- condition |>
-    dplyr::filter(Species %in% var) |>
+    dplyr::filter(.data$Species %in% var) |>
     dplyr::ungroup() |>
     dplyr::arrange(.data$YEAR) |>
     dplyr::group_by(.data$EPU) |>
