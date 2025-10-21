@@ -170,7 +170,7 @@ create_prop_sp_trips <- function(
 ) {
   total_trips <- total_trips |>
     dplyr::filter(.data$STATE %in% states) |>
-    groupby_state(groupby = groupby_state) |>
+    NEesp2::groupby_state(groupby = groupby_state) |>
     dplyr::summarise(
       total_trips = sum(as.numeric(.data$ANGLER_TRIPS), na.rm = TRUE)
     ) |>
@@ -178,7 +178,7 @@ create_prop_sp_trips <- function(
 
   sp <- species_trips |>
     dplyr::filter(.data$STATE %in% states) |>
-    groupby_state(groupby = groupby_state) |>
+    NEesp2::groupby_state(groupby = groupby_state) |>
     dplyr::summarise(DATA_VALUE = sum(as.numeric(.data$DATA_VALUE), na.rm = TRUE))
 
   prop_sp_trips <- dplyr::full_join(total_trips, sp, by = "YEAR") |>
