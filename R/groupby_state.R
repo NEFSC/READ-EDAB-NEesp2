@@ -4,6 +4,8 @@
 #'
 #' @param data the data (a tibble)
 #' @param groupby Boolean, if TRUE will group by STATE and YEAR, if false will group by YEAR only
+#' @return a tibble
+#' @export
 
 groupby_state <- function(data, groupby) {
   if (groupby) {
