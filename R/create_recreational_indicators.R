@@ -4,7 +4,6 @@
 #' Input data is MRIP catch (A, B1, B2 catch combined)
 #'
 #' @param data The mrip data
-#' @param species The species common name
 #' @param var_name The variable name to use in the indicator name. Default is "catch".
 #' @param var_units The variable units to use in the indicator name. Default is "n".
 #' @param remove_non_standard Boolean, if TRUE will remove non-standard data ("Does Total Catch (A+B1+B2) Meet MRIP Standard" = NO)
@@ -15,7 +14,6 @@
 
 create_total_mrip <- function(
   data,
-  # species,
   var_name = "catch",
   var_units = "n",
   remove_non_standard = TRUE
@@ -77,7 +75,7 @@ create_total_mrip <- function(
 #' Choose year of interest, summarize by Annual, Calendar Year, Atlantic coast by state, species of interest, all modes and areas, Primary Target
 #' Download csv as output
 #' @param files A list of the full file names of annual directed trip data (.csv format). Must download for each year in MRIP query tool.
-#' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
+#' @param remove_non_standard Boolean, if TRUE will remove non-standard data ("Does Directed Trips Meet MRIP Standard" = NO)
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @return Saves R object `rec_trips`, returns directed recreational trips indicator
@@ -142,6 +140,8 @@ create_mrip_trips <- function(files, remove_non_standard = TRUE) {
 #' @param total_trips The MRIP trip data (R object `mrip_effort`) of total annual angler trips from downloaded csv file
 #' @param species_trips The directed trips data for species of interest (R object `rec_trips`) from function 'create_rec_trips'
 #' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
+#' @param groupby_state Boolean, if TRUE will group by state, if FALSE will sum across all states
+#' @param return Boolean, if TRUE will return the R data object `prop_sp_trips`
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @return Saves the R data object `prop_sp_trips`

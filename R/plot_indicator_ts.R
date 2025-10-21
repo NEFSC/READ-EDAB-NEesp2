@@ -4,6 +4,7 @@
 #'
 #' @param data A data frame with columns of YEAR, INDICATOR_NAME, and DATA_VALUE
 #' @param ar Aspect Ratio for the resulting plot
+#' @param include_trends Boolean, if TRUE will include trend lines from ecodata
 #' @return A ggplot
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data

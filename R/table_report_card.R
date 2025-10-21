@@ -3,6 +3,7 @@
 #' This function creates a flextable for ESP report cards.
 #'
 #' @param data A data frame or tibble
+#' @param widths A numeric vector of column widths in inches
 #' @importFrom rlang .data
 #' @return A flextable
 #' @export

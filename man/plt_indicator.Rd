@@ -10,6 +10,8 @@ plt_indicator(data, ar = 1/4, include_trends = TRUE)
 \item{data}{A data frame with columns of YEAR, INDICATOR_NAME, and DATA_VALUE}
 
 \item{ar}{Aspect Ratio for the resulting plot}
+
+\item{include_trends}{Boolean, if TRUE will include trend lines from ecodata}
 }
 \value{
 A ggplot

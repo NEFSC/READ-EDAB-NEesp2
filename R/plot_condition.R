@@ -2,6 +2,7 @@
 #'
 #' @param data A data frame of species condition from `species_condition(..., output = "soe")`
 #' @param var species of interest to plot
+#' @param return Boolean, if TRUE will return the ggplot object
 #' @importFrom rlang .data
 #' @return A ggplot
 #' @export
