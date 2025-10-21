@@ -16,7 +16,7 @@ create_prop_sp_trips(
 \arguments{
 \item{total_trips}{The MRIP trip data (R object \code{mrip_effort}) of total annual angler trips from downloaded csv file}
 
-\item{species_trips}{The directed trips data for species of interest (R object \code{rec_trips}) from function 'create_rec_trips'}
+\item{species_trips}{The directed trips data for species of interest (R object \code{rec_trips})}
 
 \item{states}{States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'}
 
