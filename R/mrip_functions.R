@@ -22,7 +22,8 @@ groupby_state <- function(data, groupby) {
 #'
 #' This function read in MRIP catch data
 #'
-#' @param spceies the species common name
+#' @param species the species common name
+#' @param type the type of data to read in, options are "all", "private", "charter", or "for_hire"
 #' @param dir the directory where MRIP catch files are saved
 #' @return a tibble
 #' @export
@@ -81,56 +82,3 @@ get_trip_files <- function(dir, species) {
   return(files)
 }
 
-
-#' Create MRIP recreational landings indicator
-#'
-#' This function creates an indicator for total recreational landings
-#' For new data queries, use MRIP Query Tool (https://www.fisheries.noaa.gov/data-tools/recreational-fisheries-statistics-queries)
-#' Query 'Time Series' under 'Catch Data'.
-#' Choose years of interest, summarize by Annual, Calendar Year, Atlantic Coast by State, species of interest, all modes and areas, Harvest (A + B1), choose # of fish/weight (lbs), mean length and weight
-#' Download csv as output
-#'
-#' @param data The MRIP harvest data (R object `mrip_landing`)
-#' @param states States in which to filter data, from MRIP query 'ATLANTIC COAST BY STATE'
-#' @importFrom magrittr %>%
-#' @return Saves the R data object `total_rec_landings`
-#' @export
-# `%>%` <- magrittr::`%>%`
-
-## TODO: I think this function can be deprecated
-
-create_total_rec_landings <- function(data,
-                                      states = c(
-                                        "MAINE",
-                                        "CONNECTICUT",
-                                        "MASSACHUSETTS",
-                                        "NEW HAMPSHIRE",
-                                        "NEW JERSEY",
-                                        "NEW YORK",
-                                        "RHODE ISLAND",
-                                        "MARYLAND",
-                                        "DELAWARE",
-                                        "NORTH CAROLINA"
-                                      ),
-                                      groupby_state = FALSE,
-                                      return = TRUE) {
-  total_rec_landings <- data %>%
-    dplyr::rename(lbs_ab1 = HARVEST_A_B1_TOTAL_WEIGHT_LB) %>%
-    dplyr::filter(STATE %in% states) %>%
-    groupby_state(groupby = groupby_state) |>
-    dplyr::summarise(DATA_VALUE = sum(lbs_ab1, na.rm = TRUE)) %>%
-    dplyr::mutate(
-      CATEGORY = "Recreational",
-      INDICATOR_TYPE = "Socioeconomic",
-      INDICATOR_NAME = "total_recreational_landings_lbs",
-      INDICATOR_UNITS = "lbs"
-    ) %>%
-    # dplyr::rename(YEAR = Year,
-    #               STATE = State) %>% #remove STATE = State here if want all states summed
-    dplyr::ungroup() %>%
-    dplyr::mutate(YEAR = as.numeric(YEAR))
-  
-  if (return) {
-    return(total_rec_landings)
-  }
-}

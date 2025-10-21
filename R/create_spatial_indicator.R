@@ -5,7 +5,7 @@
 #' Converts .nc files to data frame.
 #' @param indicator_name name of the indicator (character)
 #' @param units units associated with the indicator (character)
-# @param ... passed to `EDABUtilities::make_2d_summary_ts`
+#' @param ... passed to `EDABUtilities::make_2d_summary_ts`
 #' @param data.in Either a character vector of full input file names for a list of spatRasters
 #' @param file.time string. What time scale the input files are on ('daily','monthly','annual')? Assumes all monthly or annual files are on a daily timestep
 #' @param output.files character vector of full output file names corresponding to each input file

@@ -7,9 +7,11 @@
 read_rec_catch(species, dir, type = "all")
 }
 \arguments{
+\item{species}{the species common name}
+
 \item{dir}{the directory where MRIP catch files are saved}
 
-\item{spceies}{the species common name}
+\item{type}{the type of data to read in, options are "all", "private", "charter", or "for_hire"}
 }
 \value{
 a tibble

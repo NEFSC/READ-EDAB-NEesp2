@@ -11,6 +11,8 @@ create_spatial_indicator(indicator_name, units, ...)
 
 \item{units}{units associated with the indicator (character)}
 
+\item{...}{passed to \code{EDABUtilities::make_2d_summary_ts}}
+
 \item{data.in}{Either a character vector of full input file names for a list of spatRasters}
 
 \item{file.time}{string. What time scale the input files are on ('daily','monthly','annual')? Assumes all monthly or annual files are on a daily timestep}
