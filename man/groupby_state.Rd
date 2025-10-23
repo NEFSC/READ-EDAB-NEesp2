@@ -11,6 +11,9 @@ groupby_state(data, groupby)
 
 \item{groupby}{Boolean, if TRUE will group by STATE and YEAR, if false will group by YEAR only}
 }
+\value{
+a tibble
+}
 \description{
 This function groups by year or by year and state
 }
