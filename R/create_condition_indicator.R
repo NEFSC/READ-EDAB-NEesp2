@@ -57,7 +57,7 @@ species_condition <- function(data,
     dplyr::mutate(count = dplyr::n()) |>
     dplyr::filter(.data$count == 1) |>
     dplyr::ungroup() |>
-    dplyr::select(-.data$Gender) |>
+    dplyr::select(-"Gender") |>
     dplyr::full_join(
       tibble::tibble(
         count = 1,
@@ -65,7 +65,7 @@ species_condition <- function(data,
       ),
       relationship = "many-to-many"
     ) |>
-    dplyr::select(-.data$count)
+    dplyr::select(-"count")
   
   new_dat <- dplyr::bind_rows(LWfall, add_sexes) |>
     dplyr::arrange(.data$SpeciesName)
@@ -83,7 +83,7 @@ species_condition <- function(data,
     dplyr::mutate(SVSPP = as.numeric(.data$LW_SVSPP))
   
   # Join survdat data with LW data
-  mergedata <- dplyr::left_join(fall, LWpar_spp, by = c("SEASON", "SVSPP", "sex"))
+  mergedata <- dplyr::left_join(fall, LWpar_spp, by = c("SEASON", "SVSPP", "sex"), relationship = "many-to-many")
   
   # filters out values without losing rows with NAs:
   mergewt <- dplyr::filter(mergedata, is.na(.data$INDWT) | .data$INDWT < 900)
@@ -150,7 +150,7 @@ species_condition <- function(data,
     # filter to only species with 20+ years of data
     dplyr::mutate(n = dplyr::n()) |>
     dplyr::filter(.data$n >= 20) |>
-    dplyr::select(-.data$n) |>
+    dplyr::select(-"n") |>
     # calculate sd and variance across years
     dplyr::mutate(
       sd = stats::sd(.data$MeanCond, na.rm = TRUE),
@@ -172,7 +172,7 @@ species_condition <- function(data,
       dplyr::mutate(Units = "MeanCond")
   } else if (output == "esp") {
     condition <- condition |>
-      dplyr::select(.data$Species, .data$EPU, .data$YEAR, .data$MeanCond, .data$INDICATOR_NAME) |>
+      dplyr::select("Species", "EPU", "YEAR", "MeanCond", "INDICATOR_NAME") |>
       dplyr::rename(DATA_VALUE = .data$MeanCond)
   }
   return(condition)
