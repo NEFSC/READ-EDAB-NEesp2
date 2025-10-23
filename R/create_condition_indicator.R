@@ -139,7 +139,7 @@ species_condition <- function(data,
   condition <- grouped_condition %>%
     dplyr::summarize(
       MeanCond = mean(.data$RelCond),
-      nCond = dplyr::.data$n()
+      nCond = dplyr::n()
     ) |>
     dplyr::ungroup() |>
     dplyr::filter(.data$nCond >= 3) |>
@@ -148,7 +148,7 @@ species_condition <- function(data,
     # group again, without YEAR
     dplyr::group_by(!!!rlang::syms(grouping_vars[-which(grouping_vars == "YEAR")])) |>
     # filter to only species with 20+ years of data
-    dplyr::mutate(n = dplyr::.data$n()) |>
+    dplyr::mutate(n = dplyr::n()) |>
     dplyr::filter(.data$n >= 20) |>
     dplyr::select(-.data$n) |>
     # calculate sd and variance across years
