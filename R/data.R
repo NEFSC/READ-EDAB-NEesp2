@@ -53,7 +53,7 @@
 #'
 #'
 #' @title Survdat data pull 
-#' @description A data pull of bottom trawl survey data from 1983-2024 using the {survdat} package.
+#' @description A data pull of bottom trawl survey data from 1983-2024 using the survdat package.
 #' @format A data frame with 16527 rows and 28 variables:
 #' \describe{
 #'   \item{\code{CRUISE6}}{integer Code uniquely identifying cruise. The first four digits indicate the year and the last two digit uniquely identify the cruise within the year.}
