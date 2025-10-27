@@ -41,6 +41,6 @@ A data frame with 16527 rows and 28 variables:
 survdat_subset
 }
 \description{
-A data pull of bottom trawl survey data from 1983-2024 using the {survdat} package.
+A data pull of bottom trawl survey data from 1983-2024 using the survdat package.
 }
 \keyword{datasets}
