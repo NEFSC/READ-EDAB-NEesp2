@@ -11,6 +11,8 @@ species_condition(
   by_EPU = TRUE,
   by_sex = FALSE,
   length_break = NULL,
+  more_than_20_years = TRUE,
+  record_outliers = FALSE,
   output = "soe"
 )
 }
@@ -26,6 +28,10 @@ species_condition(
 \item{by_sex}{logical. If TRUE, calculates condition by sex. If FALSE, calculates condition across sexes.}
 
 \item{length_break}{numeric vector. If not NULL, will calculate condition by length breaks specified in the vector. User must specify minimum and maximum lengths in this parameter, e.g., c(0, 20, 70). If NULL, will not calculate by length groupings.}
+
+\item{more_than_20_years}{logical. If TRUE, only returns species with 20 or more years of data.}
+
+\item{record_outliers}{logical. If TRUE, returns a list with two data frames: the first is the condition data frame, the second is a data frame of outliers that were removed from the analysis. If FALSE, only returns the condition data frame.}
 
 \item{output}{character. If "soe", returns a data frame of species condition for the State of the Ecosystem report. If "esp", returns a data frame for ESPs. If "full", returns a data frame of all calculated values. \emph{Setting by_sex = TRUE or length_break to any value will always return a full dataframe}}
 }
