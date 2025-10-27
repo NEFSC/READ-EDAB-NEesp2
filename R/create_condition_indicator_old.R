@@ -69,7 +69,7 @@ species_condition_old <- function(
     dplyr::mutate(count = dplyr::n()) |>
     dplyr::filter(.data$count == 1) |>
     dplyr::ungroup() |>
-    dplyr::select("Gender") |>
+    dplyr::select(-"Gender") |>
     dplyr::full_join(
       tibble::tibble(
         count = 1,
