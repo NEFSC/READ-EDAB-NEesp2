@@ -16,6 +16,7 @@ Depends:
     R (>= 3.5.0)
 Imports:
     EDABUtilities (>= 0.0.0.9000),
+    janitor,
     magrittr,
     rlang
 Suggests:
