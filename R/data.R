@@ -114,4 +114,4 @@
 #'   \item{\code{DOE}}{character Date when record was inserted into Oracle. Date format (MM/DD/YY HH:MI:SS).}
 #'   \item{\code{UOE}}{character The Oracle username of the individual who entered the new record.} 
 #'}
-"species_data"
+"species"
