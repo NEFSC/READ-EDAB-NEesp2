@@ -88,7 +88,7 @@
 "survdat_subset"
 #'
 #'
-#' @title Species lookup table from {survdat}
+#' @title Species lookup table from survdat
 #' @description A species lookup table generated from survdat::get_species()
 #' @format A data frame with 2047 rows and 21 variables:
 #' \describe{
