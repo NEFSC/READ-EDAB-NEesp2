@@ -4,12 +4,14 @@
 \alias{plot_condition}
 \title{Plot Condition}
 \usage{
-plot_condition(data, var)
+plot_condition(data, var, return = TRUE)
 }
 \arguments{
 \item{data}{A data frame of species condition from \code{species_condition(..., output = "soe")}}
 
 \item{var}{species of interest to plot}
+
+\item{return}{Boolean, if TRUE will return the ggplot object}
 }
 \value{
 A ggplot
