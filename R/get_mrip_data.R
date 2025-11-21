@@ -287,6 +287,7 @@ save_trips <- function(
 #' @param catch_type the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".
 #' @param wait whether to pause after saving the data. Default is TRUE.
 #' @param return_fname whether to return the file name of the saved data. Default is TRUE.
+#' @param this_data_type the type of data to query. Can be any or all of c("numbers of fish", "weight of fish (pounds)", "weight of fish (kilograms)", "mean length", "mean weight"). Default is "numbers of fish".
 #' @return Saves list of the scraped data and metadata. Returns the file name.
 #' @export
 
@@ -295,11 +296,10 @@ save_catch <- function(
   this_region,
   out_folder,
   catch_type = "all",
- # this_data_type,
+  this_data_type = "numbers of fish",
   wait = TRUE,
   return_fname = TRUE
 ) {
-
   fname <- paste0(
     out_folder,
     "/catch_",
@@ -320,7 +320,7 @@ save_catch <- function(
     species = this_species,
     type = catch_type,
     region = this_region,
-  #  data_type = this_data_type
+    data_type = this_data_type
   )
 
   saveRDS(out, fname)
