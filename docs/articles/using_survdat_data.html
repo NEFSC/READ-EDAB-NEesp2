@@ -101,13 +101,14 @@ output data tables and plots using these functions.</p>
 R/create_condition_indicator.R and R/plot_condition.R</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">condition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/species_condition.html">species_condition</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">survdat_subset</span>,</span>
+<span>  data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va"><a href="../reference/survdat_subset.html">survdat_subset</a></span>,</span>
 <span>  LWparams <span class="op">=</span> <span class="va">LWparams</span>,</span>
 <span>  species.codes <span class="op">=</span> <span class="va">species.codes</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"esp"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Joining with `by = join_by(STRATUM)`</span></span>
-<span><span class="co">## Joining with `by = join_by(count)`</span></span></code></pre>
+<span><span class="co">## Joining with `by = join_by(count)`</span></span>
+<span><span class="co">## Removing 16811 outliers from the data set.</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_condition</span> <span class="op">&lt;-</span> <span class="va">condition</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"Black sea bass"</span><span class="op">)</span></span>
@@ -128,13 +129,14 @@ R/create_condition_indicator.R and R/plot_condition.R</p>
 also be assessed as a unit.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">condition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/species_condition.html">species_condition</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">survdat_subset</span>,</span>
+<span>  data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va"><a href="../reference/survdat_subset.html">survdat_subset</a></span>,</span>
 <span>  LWparams <span class="op">=</span> <span class="va">LWparams</span>,</span>
 <span>  species.codes <span class="op">=</span> <span class="va">species.codes</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"esp"</span>,</span>
 <span>  by_EPU <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Joining with `by = join_by(count)`</span></span></code></pre>
+<pre><code><span><span class="co">## Joining with `by = join_by(count)`</span></span>
+<span><span class="co">## Removing 16811 outliers from the data set.</span></span></code></pre>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_condition</span> <span class="op">&lt;-</span> <span class="va">condition</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"Black sea bass"</span><span class="op">)</span></span>
@@ -163,24 +165,25 @@ additional species were present in the data, the output would be
 aggregated at the species level.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">condition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/species_condition.html">species_condition</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">survdat_subset</span>,</span>
+<span>  data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va"><a href="../reference/survdat_subset.html">survdat_subset</a></span>,</span>
 <span>  LWparams <span class="op">=</span> <span class="va">LWparams</span>,</span>
 <span>  species.codes <span class="op">=</span> <span class="va">species.codes</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"soe"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Joining with `by = join_by(STRATUM)`</span></span>
-<span><span class="co">## Joining with `by = join_by(count)`</span></span></code></pre>
+<span><span class="co">## Joining with `by = join_by(count)`</span></span>
+<span><span class="co">## Removing 16811 outliers from the data set.</span></span></code></pre>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
-<span><span class="co">##    Time Var            EPU   Value Units   </span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>992 Black sea bass MAB   0.985 MeanCond</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>993 Black sea bass MAB   0.998 MeanCond</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>994 Black sea bass GB    0.983 MeanCond</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>994 Black sea bass MAB   1.02  MeanCond</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>995 Black sea bass MAB   0.997 MeanCond</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>996 Black sea bass MAB   0.982 MeanCond</span></span></code></pre>
+<span><span class="co">##    Time Var             EPU   Value Units   </span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>992 Acadian redfish GB    1.02  MeanCond</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>992 Acadian redfish GOM   0.978 MeanCond</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>992 Acadian redfish SS    1.00  MeanCond</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>993 Acadian redfish GB    1.02  MeanCond</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>993 Acadian redfish GOM   0.994 MeanCond</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>993 Acadian redfish SS    1.02  MeanCond</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="additional-condition-queries">Additional condition queries<a class="anchor" aria-label="anchor" href="#additional-condition-queries"></a>
@@ -191,7 +194,7 @@ dataset that contains additional data columns identifying the grouping
 parameters and data variance. For example:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">condition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/species_condition.html">species_condition</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">survdat_subset</span>,</span>
+<span>  data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va"><a href="../reference/survdat_subset.html">survdat_subset</a></span>,</span>
 <span>  LWparams <span class="op">=</span> <span class="va">LWparams</span>,</span>
 <span>  species.codes <span class="op">=</span> <span class="va">species.codes</span>,</span>
 <span>  by_sex <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -199,18 +202,19 @@ parameters and data variance. For example:</p>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## You asked to group results by sex and/or length ; data will not be formatted for SOE or ESP output.</span></span></code></pre>
 <pre><code><span><span class="co">## Joining with `by = join_by(STRATUM)`</span></span>
-<span><span class="co">## Joining with `by = join_by(count)`</span></span></code></pre>
+<span><span class="co">## Joining with `by = join_by(count)`</span></span>
+<span><span class="co">## Removing 16811 outliers from the data set.</span></span></code></pre>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">condition</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
-<span><span class="co">##   Species         YEAR EPU   sexMF length_group MeanCond nCond     sd variance</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> Black sea bass  <span style="text-decoration: underline;">1</span>992 MAB   0     [0,20]          1.08      5 0.050<span style="text-decoration: underline;">9</span> 0.002<span style="text-decoration: underline;">60</span> </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> Black sea bass  <span style="text-decoration: underline;">1</span>992 MAB   1     (20,65]         0.934     6 0.059<span style="text-decoration: underline;">5</span> 0.003<span style="text-decoration: underline;">54</span> </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> Black sea bass  <span style="text-decoration: underline;">1</span>992 MAB   2     [0,20]          0.994    36 0.024<span style="text-decoration: underline;">8</span> 0.000<span style="text-decoration: underline;">613</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> Black sea bass  <span style="text-decoration: underline;">1</span>992 MAB   2     (20,65]         0.950    16 0.039<span style="text-decoration: underline;">1</span> 0.001<span style="text-decoration: underline;">53</span> </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span> Black sea bass  <span style="text-decoration: underline;">1</span>993 MAB   1     [0,20]          0.981     5 0.039<span style="text-decoration: underline;">2</span> 0.001<span style="text-decoration: underline;">54</span> </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span> Black sea bass  <span style="text-decoration: underline;">1</span>993 MAB   1     (20,65]         0.973    14 0.059<span style="text-decoration: underline;">5</span> 0.003<span style="text-decoration: underline;">54</span> </span></span>
+<span><span class="co">##   Species          YEAR EPU   sexMF length_group MeanCond nCond     sd variance</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> Acadian redfish  <span style="text-decoration: underline;">1</span>992 GOM   0     [0,20]          1.09      6 0.055<span style="text-decoration: underline;">9</span> 0.003<span style="text-decoration: underline;">12</span> </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> Acadian redfish  <span style="text-decoration: underline;">1</span>992 GOM   1     [0,20]          1.02     27 0.027<span style="text-decoration: underline;">3</span> 0.000<span style="text-decoration: underline;">746</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> Acadian redfish  <span style="text-decoration: underline;">1</span>992 GOM   1     (20,65]         0.985    99 0.019<span style="text-decoration: underline;">4</span> 0.000<span style="text-decoration: underline;">378</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> Acadian redfish  <span style="text-decoration: underline;">1</span>992 GOM   2     [0,20]          0.927    13 0.026<span style="text-decoration: underline;">7</span> 0.000<span style="text-decoration: underline;">713</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> Acadian redfish  <span style="text-decoration: underline;">1</span>992 GOM   2     (20,65]         0.958    93 0.028<span style="text-decoration: underline;">1</span> 0.000<span style="text-decoration: underline;">790</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> Acadian redfish  <span style="text-decoration: underline;">1</span>992 SS    1     [0,20]          1.04     11 0.035<span style="text-decoration: underline;">8</span> 0.001<span style="text-decoration: underline;">28</span> </span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: INDICATOR_NAME &lt;chr&gt;</span></span></span></code></pre>
 </div>
 </div>
@@ -220,7 +224,7 @@ parameters and data variance. For example:</p>
 <p>Uses ‘species_range’ function in
 R/create_bottomtrawl_indicators.R</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">range</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/species_range.html">species_range</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">survdat_subset</span>, species <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">species</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">range</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/species_range.html">species_range</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va"><a href="../reference/survdat_subset.html">survdat_subset</a></span>, species <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">species</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Joining with `by = join_by(SVSPP)`</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_range</span> <span class="op">&lt;-</span> <span class="va">range</span> <span class="op">%&gt;%</span></span>
@@ -263,7 +267,7 @@ R/create_bottomtrawl_indicators.R</p>
 <p>Modified from ‘calc_swept_area’ in {survdat} package.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_swept_area</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_swept_area.html">create_swept_area</a></span><span class="op">(</span></span>
-<span>  surveyData <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va">survdat_subset</span>,</span>
+<span>  surveyData <span class="op">=</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="va"><a href="../reference/survdat_subset.html">survdat_subset</a></span>,</span>
 <span>  areaPolygon <span class="op">=</span> <span class="st">"NEFSC strata"</span>,</span>
 <span>  areaDescription <span class="op">=</span> <span class="st">"STRATA"</span>,</span>
 <span>  filterByArea <span class="op">=</span> <span class="st">"all"</span>,</span>
@@ -297,18 +301,21 @@ R/create_bottomtrawl_indicators.R</p>
 <span><span class="co">## [169]  7620  7630  7640  8580  7650  7660  7670  8590  8600  8770</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating Stratified Mean  ...</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating Swept Area Estimate  ...</span></span></code></pre>
-<pre><code><span><span class="co">## Assuming a value of q = 1411 for all groups</span></span></code></pre>
+<pre><code><span><span class="co">## Assuming a value of q = c(74, 105, 73, 75, 77, 143, 33, 72, 155, 103, 106, 121, 102, 76, 107, 131, 34, 141, 135, 32, 15, 23, 24, 26, 28, 78, 84, 101, 104, 108, 123, 136, 145, 146, 149, 163, 164, 192, 193, 197, 435, 437, 652, 745, 139, 203, 360, 563, 744, 938, 27, 112, 14, 22, 25, 35, 87, 4, 9, 18, 19, 21, 69, 270, 375, 376, 793, 3, 12, 16, 29, 31, 208, 428, 429, 600, 795, 934, 950, 156, 380, 176, 177, 194, 80, 654, 13, 79, 158, 166, 191, 205, 240, 263, 301, 318, 324, 388, 390, 451, 461, 530, 627, 867, 897, 978, 1, 36, 37, </span></span>
+<span><span class="co">## 46, 67, 88, 90, 91, 109, 110, 111, 120, 124, 129, 134, 137, 171, 172, 173, 175, 179, 180, 187, 190, 199, 202, 204, 211, 212, 213, 221, 232, 239, 252, 267, 310, 312, 313, 317, 321, 401, 425, 436, 444, 500, 529, 539, 546, 552, 557, 596, 631, 646, 650, 759, 856, 896, 925, 979, 56, 147, 168, 196, 198, 314, 439, 489, 621, 640, 773, 5, 99, 188, 378, 63, 126, 159, 322, 502, 617, 764, 83, 512, 554, 151, 154, 201, 320, 354, 357, 396, 503, 527, 604, 651, 866, 265, 355, 399, 952, 161, 382, 394, 578, 874, 898, </span></span>
+<span><span class="co">## 899, 931, 358, 363, 353, 573, 362)c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, </span></span>
+<span><span class="co">## 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) for all groups</span></span></code></pre>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_swept_area</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
 <span><span class="co">##    YEAR SVSPP   variance     se     sd INDICATOR_UNITS INDICATOR_NAME DATA_VALUE</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983   141    6.11<span style="color: #949494;">e</span> 8 2.47<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">313</span>872.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>984   141    3.83<span style="color: #949494;">e</span> 7 6.19<span style="color: #949494;">e</span>3 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…   2<span style="text-decoration: underline;">867</span>870.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>985   141    1.41<span style="color: #949494;">e</span> 9 3.76<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">696</span>770.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986   141    2.78<span style="color: #949494;">e</span> 9 5.27<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">428</span>373.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987   141    4.42<span style="color: #949494;">e</span>10 2.10<span style="color: #949494;">e</span>5 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">639</span>254.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988   141    5.16<span style="color: #949494;">e</span> 9 7.19<span style="color: #949494;">e</span>4 1.15<span style="color: #949494;">e</span>6 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">229</span>675.</span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983   141    1.82<span style="color: #949494;">e</span> 9 4.27<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">173</span>135.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>984   141    2.12<span style="color: #949494;">e</span>11 4.60<span style="color: #949494;">e</span>5 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">520</span>266.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>985   141    7.09<span style="color: #949494;">e</span> 9 8.42<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">291</span>241.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986   141    6.36<span style="color: #949494;">e</span> 9 7.97<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">255</span>190.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987   141    3.45<span style="color: #949494;">e</span>10 1.86<span style="color: #949494;">e</span>5 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">428</span>212.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988   141    2.73<span style="color: #949494;">e</span> 9 5.22<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">159</span>031.</span></span></code></pre>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_swept_area</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -366,14 +373,14 @@ R/create_bottomtrawl_indicators.R</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_strat_mean</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
-<span><span class="co">##    YEAR SEASON SVSPP variance     se    sd INDICATOR_UNITS INDICATOR_NAME    </span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983 FALL     141 0.000<span style="text-decoration: underline;">850</span> 0.029<span style="text-decoration: underline;">2</span> 0.845 kgtow-1         strat_mean_biomass</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>984 FALL     141 0.000<span style="text-decoration: underline;">104</span> 0.010<span style="text-decoration: underline;">2</span> 0.845 kgtow-1         strat_mean_biomass</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>985 FALL     141 0.002<span style="text-decoration: underline;">77</span>  0.052<span style="text-decoration: underline;">7</span> 0.845 kgtow-1         strat_mean_biomass</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986 FALL     141 0.001<span style="text-decoration: underline;">19</span>  0.034<span style="text-decoration: underline;">4</span> 0.845 kgtow-1         strat_mean_biomass</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987 FALL     141 0.063<span style="text-decoration: underline;">6</span>   0.252  0.845 kgtow-1         strat_mean_biomass</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988 FALL     141 0.023<span style="text-decoration: underline;">3</span>   0.153  0.845 kgtow-1         strat_mean_biomass</span></span>
+<span><span class="co">##    YEAR SEASON SVSPP  variance      se    sd INDICATOR_UNITS INDICATOR_NAME    </span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983 FALL     141 0.000<span style="text-decoration: underline;">042</span>3 0.006<span style="text-decoration: underline;">50</span>  5.87 kgtow-1         strat_mean_biomass</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>984 FALL     141 0.005<span style="text-decoration: underline;">02</span>   0.070<span style="text-decoration: underline;">9</span>   5.87 kgtow-1         strat_mean_biomass</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>985 FALL     141 0.000<span style="text-decoration: underline;">169</span>  0.013<span style="text-decoration: underline;">0</span>   5.87 kgtow-1         strat_mean_biomass</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986 FALL     141 0.000<span style="text-decoration: underline;">151</span>  0.012<span style="text-decoration: underline;">3</span>   5.87 kgtow-1         strat_mean_biomass</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987 FALL     141 0.000<span style="text-decoration: underline;">861</span>  0.029<span style="text-decoration: underline;">3</span>   5.87 kgtow-1         strat_mean_biomass</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988 FALL     141 0.000<span style="text-decoration: underline;">070</span>2 0.008<span style="text-decoration: underline;">38</span>  5.87 kgtow-1         strat_mean_biomass</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: DATA_VALUE &lt;dbl&gt;</span></span></span></code></pre>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_strat_mean</span> <span class="op">%&gt;%</span></span>

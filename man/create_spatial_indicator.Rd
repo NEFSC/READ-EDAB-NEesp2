@@ -12,28 +12,6 @@ create_spatial_indicator(indicator_name, units, ...)
 \item{units}{units associated with the indicator (character)}
 
 \item{...}{passed to \code{EDABUtilities::make_2d_summary_ts}}
-
-\item{data.in}{Either a character vector of full input file names for a list of spatRasters}
-
-\item{file.time}{string. What time scale the input files are on ('daily','monthly','annual')? Assumes all monthly or annual files are on a daily timestep}
-
-\item{output.files}{character vector of full output file names corresponding to each input file}
-
-\item{shp.file}{string. Shape file you wish to crop each input file to}
-
-\item{var.name}{string. Variable name you wish to extract.}
-
-\item{area.names}{character vector. Names of shape file areas you want to summarize.}
-
-\item{statistic}{string. Which statistic to calculate = 'mean'}
-
-\item{agg.time}{character. Time scale to calculate over (days, doy, months, season, or years)}
-
-\item{tz}{string. Time zone to convert. No correction if NA}
-
-\item{touches}{logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon}
-
-\item{write.out}{logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters}
 }
 \value{
 Returns a data frame summarized by timestep for each area.names

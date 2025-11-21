@@ -88,30 +88,30 @@
 "survdat_subset"
 #'
 #'
-#' @title DATASET_TITLE
-#' @description DATASET_DESCRIPTION
+#' @title Species lookup table from survdat
+#' @description A species lookup table generated from survdat::get_species()
 #' @format A data frame with 2047 rows and 21 variables:
 #' \describe{
-#'   \item{\code{SCINAME}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{COMNAME}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{SVSPP}}{integer COLUMN_DESCRIPTION}
-#'   \item{\code{SVABBR}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{PYSPP}}{double COLUMN_DESCRIPTION}
-#'   \item{\code{PYABBR}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{NODCCODE}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{NODCTYPE}}{logical COLUMN_DESCRIPTION}
-#'   \item{\code{NODCLEVL}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{NODCCTRL}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{NODCAUTH}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{AUTHOR}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{PICTURE}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{COMMNT}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{O_SVSCNM}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{O_SVCONM}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{O_SVSPP}}{integer COLUMN_DESCRIPTION}
-#'   \item{\code{DOC}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{UOC}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{DOE}}{character COLUMN_DESCRIPTION}
-#'   \item{\code{UOE}}{character COLUMN_DESCRIPTION} 
+#'   \item{\code{SCINAME}}{character Scientific name of specimen.}
+#'   \item{\code{COMNAME}}{character Accepted common name of a fish or invertebrate species.}
+#'   \item{\code{SVSPP}}{integer A standard code which represents a species caught in a trawl or dredge.}
+#'   \item{\code{SVABBR}}{character Abbreviation of common name of specimen.}
+#'   \item{\code{PYSPP}}{double Prey species name.}
+#'   \item{\code{PYABBR}}{character Prey abbreviation.}
+#'   \item{\code{NODCCODE}}{character National Oceanographic Data Center (NODC) taxononic code for species.}
+#'   \item{\code{NODCTYPE}}{logical National Oceanographic Data Center (NODC) Type name code: S-scientific name, C-Common name}
+#'   \item{\code{NODCLEVL}}{character National Oceanographic Data Center (NODC) taxanomic level: P-Phylum, C-Class, O-Order, F-Family, G-Genus, S-Species}
+#'   \item{\code{NODCCTRL}}{character National Oceanographic Data Center (NODC).}
+#'   \item{\code{NODCAUTH}}{character NODC code author (person who described species).}
+#'   \item{\code{AUTHOR}}{character Author of document.}
+#'   \item{\code{PICTURE}}{character Citation for picture of species.}
+#'   \item{\code{COMMNT}}{character Comment related to species in SVDBS.SVSPECIES_LIST.}
+#'   \item{\code{O_SVSCNM}}{character Former scientific name used by Survey branch.}
+#'   \item{\code{O_SVCONM}}{character Former common name used by Survey branch.}
+#'   \item{\code{O_SVSPP}}{integer Former species code.}
+#'   \item{\code{DOC}}{character Date when the current record was updated or changed. Date format (MM/DD/YY HH:MI:SS)}
+#'   \item{\code{UOC}}{character The Oracle username of the individual who changed the current record.}
+#'   \item{\code{DOE}}{character Date when record was inserted into Oracle. Date format (MM/DD/YY HH:MI:SS).}
+#'   \item{\code{UOE}}{character The Oracle username of the individual who entered the new record.} 
 #'}
-"species_data"
+"species"
