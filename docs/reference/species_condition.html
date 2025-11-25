@@ -67,6 +67,8 @@ Methods derived from Laurel Smith (https://github.com/Laurels1/Condition/blob/ma
 <span>  by_EPU <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  by_sex <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  length_break <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  more_than_20_years <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  record_outliers <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"soe"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -97,6 +99,14 @@ Methods derived from Laurel Smith (https://github.com/Laurels1/Condition/blob/ma
 
 <dt id="arg-length-break">length_break<a class="anchor" aria-label="anchor" href="#arg-length-break"></a></dt>
 <dd><p>numeric vector. If not NULL, will calculate condition by length breaks specified in the vector. User must specify minimum and maximum lengths in this parameter, e.g., c(0, 20, 70). If NULL, will not calculate by length groupings.</p></dd>
+
+
+<dt id="arg-more-than-years">more_than_20_years<a class="anchor" aria-label="anchor" href="#arg-more-than-years"></a></dt>
+<dd><p>logical. If TRUE, only returns species with 20 or more years of data.</p></dd>
+
+
+<dt id="arg-record-outliers">record_outliers<a class="anchor" aria-label="anchor" href="#arg-record-outliers"></a></dt>
+<dd><p>logical. If TRUE, returns a list with two data frames: the first is the condition data frame, the second is a data frame of outliers that were removed from the analysis. If FALSE, only returns the condition data frame.</p></dd>
 
 
 <dt id="arg-output">output<a class="anchor" aria-label="anchor" href="#arg-output"></a></dt>
