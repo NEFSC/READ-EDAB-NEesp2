@@ -1,38 +1,35 @@
-## Commercial ESP indicators Script
-## translated from Stata code 2/24/2026
-## Owner: Samantha Werner
-
-#overview-- This code creates six economic commercial fishing indicators used in ESP work.  
-# The code below pulls data, deflates any monetary values and formats data to what is needed for the time series plots. 
-
-#Indicators created: Commercial Landings (LBS): The total weight of the species landed (e.g., Commercial_LONGFINSQUID_Landings_LBS).
-
-#Number of Commercial Vessels: The count of unique permits landing that species (e.g., N_Commercial_Vessels_Landing_LONGFINSQUID).
-#Average Price per Pound: The average annual price, winsorized to handle outliers and adjusted for inflation (e.g., AVGPRICE_LONGFINSQUID_2024_DOLlb).
-#Total Annual Revenue: The total value of all landings for that species, adjusted for inflation (e.g., TOTALANNUALREV_LONGFINSQUID_2024Dols).
-#Average Revenue per Vessel: The average revenue earned per permit per year, adjusted for inflation (e.g., AVGVESREVperYr_LONGFINSQUID_2024_DOLlb).
-#Average Annual Diesel Price: The price of Ultra-Low-Sulfur No. 2 Diesel (from FRED), adjusted for inflation (e.g., AVGANNUAL_DIESEL_PRICE2024dols).
-
-## This uses CFDERS data but may need to be updated to CAMs 
-
-
-
-#######################Running the code steps##########################
-#1. Change top of the code to update:
-# - Oracle log in information
-# - The time series you want
-# - The species (nespp3) and how you want your species to be named within the end file (sppname)
-# - the year you want to deflate to
-
-## before running!!!#
-# - make sure you are connected to VPN
-#-- ensure all packages are installed 
-# -- you followed the steps above
-#-- you have a folder in your directory called "data"
-
-
-#install.packages("ROracle")
-#install.packages("DescTools")
+#' Pull Commercial Fisheries Data from Oracle
+#'
+#' translated from Stata code 2/24/2026
+#' Owner: Samantha Werner
+#' 
+#' overview-- This code creates six economic commercial fishing indicators used in ESP work.  
+#' The code below pulls data, deflates any monetary values and formats data to what is needed for the time series plots. 
+#' Must have access to the 'NEFSC_GARFO' schema in Oracle to run this code.
+#' Indicators created: Commercial Landings (LBS): The total weight of the species landed (e.g., Commercial_LONGFINSQUID_Landings_LBS).
+#'
+#' Number of Commercial Vessels: The count of unique permits landing that species (e.g., N_Commercial_Vessels_Landing_LONGFINSQUID).
+#' Average Price per Pound: The average annual price, winsorized to handle outliers and adjusted for inflation (e.g., AVGPRICE_LONGFINSQUID_2024_DOLlb).
+#' Total Annual Revenue: The total value of all landings for that species, adjusted for inflation (e.g., TOTALANNUALREV_LONGFINSQUID_2024Dols).
+#' Average Revenue per Vessel: The average revenue earned per permit per year, adjusted for inflation (e.g., AVGVESREVperYr_LONGFINSQUID_2024_DOLlb).
+#' Average Annual Diesel Price: The price of Ultra-Low-Sulfur No. 2 Diesel (from FRED), adjusted for inflation (e.g., AVGANNUAL_DIESEL_PRICE2024dols).
+#'
+#' This uses CFDERS data but may need to be updated to CAMs 
+#' 
+#' before running!!!
+#' make sure you are connected to VPN
+#' ensure all packages are installed 
+#' you have a folder in your directory called "data"
+#'
+#' @param ora_id username for Oracle connection (in quotation marks)
+#' @param oraprod_pw password for Oracle connection (in quotation marks)
+#' @param spp_name the name of the species you want to pull (e.g., "LONGFINSQUID")
+#' @param nespp3_codes the NESPP3 codes for the species you want to (e.g., "('801')") - note the single quotes inside the string for SQL
+#' @param start_year the first year you want to pull (e.g., 1996)
+#' @param end_year the last year you want to pull (e.g., 2025)
+#' @param deflate_yr the year you want to deflate to (e.g, 2025)
+#' @export
+#' 
 
 library(ROracle)
 library(DBI)
@@ -40,36 +37,26 @@ library(fredr)
 library(tidyverse)
 library(DescTools) # For Winsorize
 
-######################################################################
-############################update code below to match the years, species and user information#############
-#####################################################################
+get_commercial_data <- function(
+    ora_id,
+    oraprod_pw,
+    spp_name,
+    nespp3_codes,
+    start_year,
+    end_year,
+    deflate_yr
+) {
 
-# 1. Setup Credentials
-ora_id <- "INSERT USERNAME HERE"
-oraprod_pw <- "INSERT PASSWORD HERE"
-
-spp_name <- "LONGFINSQUID"       # Replace with your actual species name
-nespp3_codes <- "('801')" # Note the single quotes inside the string for SQL
-
-START.YEAR <- 1996
-END.YEAR   <- 2025
-
-## set year you would like to deflate to 
-deflate_yr <- 2025
 
 # This looks for a folder named 'data' then 'intermediate' inside your current directory
 data_intermediate <- file.path("data/intermediate")
 
-# Set your API key for FRED data (deflation) you may need to log into FRED API Keys and request a new one. https://fred.stlouisfed.org/docs/api/api_key.html
-fredr_set_key("a09e5d083681605146191f4996992c6e")
 
 #################################################################
 ##no editiing should be needed past this point
 #####################################################
-# 2. Build the connection string
-shost <- "nefsc-prod-01-db.nmfs.noaa.gov"
-port  <- 1521
-ssid  <- "NEFSC_DB_PROD.nefscproddbsn.nefscprodvcn.oraclevcn.com"
+
+source("\\nefscdata\\SOE_ESP_Data\\ESPs\\connect_socioeco_oracle.r")
 
 # Using the name consistent with your loop
 nefscusers.connect.string <- paste0(
@@ -162,17 +149,17 @@ print(head(Nvessels_final))
 ##################average prices##################
 
 #1. Pull Price Data from Oracle ---
-  # Uses the 'conn' object you already established
-  query_price <- paste0(
-    "SELECT SPPVALUE, SPPLNDLB, YEAR FROM NEFSC_GARFO.CFDERS_ALL_YEARS ",
-    "WHERE NESPP3 IN ", nespp3_codes, 
-    " AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR
-  )
+# Uses the 'conn' object you already established
+query_price <- paste0(
+  "SELECT SPPVALUE, SPPLNDLB, YEAR FROM NEFSC_GARFO.CFDERS_ALL_YEARS ",
+  "WHERE NESPP3 IN ", nespp3_codes, 
+  " AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR
+)
 
 price_raw <- dbGetQuery(conn, query_price)
 
 #--- 2. Calculate Average Annual Prices (Manual Winsorize) ---
-  price_annual <- price_raw %>%
+price_annual <- price_raw %>%
   mutate(price_lb = SPPVALUE / SPPLNDLB) %>%
   # Remove Infinity or NA if pounds were 0
   filter(is.finite(price_lb)) %>% 
@@ -329,8 +316,14 @@ write.csv(
 # 5. View a summary of what you appended
 print(table(final_master_file$INDICATOR_NAME))
 
+}
 
-
-
-
-
+get_commercial_data(
+  ora_id = "user",
+  oraprod_pw = "password",
+  spp_name = "LONGFINSQUID",
+  nespp3_codes = "('801')",
+  start_year = 1996,
+  end_year = 2025,
+  deflate_yr = 2025
+)
