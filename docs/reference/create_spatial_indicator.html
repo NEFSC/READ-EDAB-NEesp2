@@ -81,50 +81,6 @@ Converts .nc files to data frame.</p>
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>passed to <code><a href="https://rdrr.io/pkg/EDABUtilities/man/make_2d_summary_ts.html" class="external-link">EDABUtilities::make_2d_summary_ts</a></code></p></dd>
 
-
-<dt id="arg-data-in">data.in<a class="anchor" aria-label="anchor" href="#arg-data-in"></a></dt>
-<dd><p>Either a character vector of full input file names for a list of spatRasters</p></dd>
-
-
-<dt id="arg-file-time">file.time<a class="anchor" aria-label="anchor" href="#arg-file-time"></a></dt>
-<dd><p>string. What time scale the input files are on ('daily','monthly','annual')? Assumes all monthly or annual files are on a daily timestep</p></dd>
-
-
-<dt id="arg-output-files">output.files<a class="anchor" aria-label="anchor" href="#arg-output-files"></a></dt>
-<dd><p>character vector of full output file names corresponding to each input file</p></dd>
-
-
-<dt id="arg-shp-file">shp.file<a class="anchor" aria-label="anchor" href="#arg-shp-file"></a></dt>
-<dd><p>string. Shape file you wish to crop each input file to</p></dd>
-
-
-<dt id="arg-var-name">var.name<a class="anchor" aria-label="anchor" href="#arg-var-name"></a></dt>
-<dd><p>string. Variable name you wish to extract.</p></dd>
-
-
-<dt id="arg-area-names">area.names<a class="anchor" aria-label="anchor" href="#arg-area-names"></a></dt>
-<dd><p>character vector. Names of shape file areas you want to summarize.</p></dd>
-
-
-<dt id="arg-statistic">statistic<a class="anchor" aria-label="anchor" href="#arg-statistic"></a></dt>
-<dd><p>string. Which statistic to calculate = 'mean'</p></dd>
-
-
-<dt id="arg-agg-time">agg.time<a class="anchor" aria-label="anchor" href="#arg-agg-time"></a></dt>
-<dd><p>character. Time scale to calculate over (days, doy, months, season, or years)</p></dd>
-
-
-<dt id="arg-tz">tz<a class="anchor" aria-label="anchor" href="#arg-tz"></a></dt>
-<dd><p>string. Time zone to convert. No correction if NA</p></dd>
-
-
-<dt id="arg-touches">touches<a class="anchor" aria-label="anchor" href="#arg-touches"></a></dt>
-<dd><p>logical. If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon</p></dd>
-
-
-<dt id="arg-write-out">write.out<a class="anchor" aria-label="anchor" href="#arg-write-out"></a></dt>
-<dd><p>logical. If TRUE, will write a netCDF file with output.files. If FALSE will return a list of spatRasters</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
