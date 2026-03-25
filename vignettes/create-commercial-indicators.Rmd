@@ -2,7 +2,7 @@
 title: "Pulling Commercial Fishing Data and Creating Commercial Indicators"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Accessing Bottom Trawl Survey Data}
+  %\VignetteIndexEntry{Pull Data and Create Commercial Fishing Indicators}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
