@@ -11,8 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  warning = FALSE,
-  eval = FALSE
+  warning = FALSE
 )
 ```
 
@@ -55,7 +54,7 @@ The function sources a file in the network drive ("\\nefscdata\SOE_ESP_Data\READ
 
 An example data pull for longfin squid, from years 1996-2025 and deflating to 2025 will look like the following:
 
-```{r}
+```{r, eval = FALSE}
 get_commercial_data(
   ora_id = "user",
   oraprod_pw = "password",
