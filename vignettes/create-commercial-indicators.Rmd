@@ -48,7 +48,7 @@ As of 03/2026, prices and revenue can be deflated up to 2025 USD$.
   - END.YEAR: The last year you want to pull.
   - deflate_yr: The year you want to deflate to. 
 
-NESPP3 codes and species names can be found in table 10.35 here: https://apps-garfo.fisheries.noaa.gov/cams/cams-documentation/appendix-b-data-dictionary.html
+NESPP3 codes and species names can be found in 'data/species.codes.csv' or by running 'NEesp2::species.codes'.
 
 The function sources a file in the network drive ("\\nefscdata\SOE_ESP_Data\READ-EDAB-NEesp2\data-raw\scripts\connect_socioeco_oracle.R") that contains the connection string for the Oracle database. For confidential reasons, this script is not hosted on Github.
 
