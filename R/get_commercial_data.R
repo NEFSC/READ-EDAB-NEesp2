@@ -16,7 +16,7 @@
 #'
 #' This uses CFDERS data but may need to be updated to CAMs 
 #' 
-#' before running!!!
+#' before running!!! 
 #' make sure you are connected to VPN
 #' ensure all packages are installed 
 #' you have a folder in your directory called "data"
