@@ -6,17 +6,17 @@
 #' overview-- This code creates six economic commercial fishing indicators used in ESP work.  
 #' The code below pulls data, deflates any monetary values and formats data to what is needed for the time series plots. 
 #' Must have access to the 'NEFSC_GARFO' schema in Oracle to run this code.
-#' Indicators created: Commercial Landings (LBS): The total weight of the species landed (e.g., Commercial_LONGFINSQUID_Landings_LBS).
 #'
+#' Indicators created: Commercial Landings (LBS): The total weight of the species landed (e.g., Commercial_LONGFINSQUID_Landings_LBS).
 #' Number of Commercial Vessels: The count of unique permits landing that species (e.g., N_Commercial_Vessels_Landing_LONGFINSQUID).
-#' Average Price per Pound: The average annual price, winsorized to handle outliers and adjusted for inflation (e.g., AVGPRICE_LONGFINSQUID_2024_DOLlb).
-#' Total Annual Revenue: The total value of all landings for that species, adjusted for inflation (e.g., TOTALANNUALREV_LONGFINSQUID_2024Dols).
-#' Average Revenue per Vessel: The average revenue earned per permit per year, adjusted for inflation (e.g., AVGVESREVperYr_LONGFINSQUID_2024_DOLlb).
-#' Average Annual Diesel Price: The price of Ultra-Low-Sulfur No. 2 Diesel (from FRED), adjusted for inflation (e.g., AVGANNUAL_DIESEL_PRICE2024dols).
+#' Average Price per Pound: The average annual price, winsorized to handle outliers and adjusted for inflation (e.g., AVGPRICE_LONGFINSQUID_2025_DOLlb).
+#' Total Annual Revenue: The total value of all landings for that species, adjusted for inflation (e.g., TOTALANNUALREV_LONGFINSQUID_2025Dols).
+#' Average Revenue per Vessel: The average revenue earned per permit per year, adjusted for inflation (e.g., AVGVESREVperYr_LONGFINSQUID_2025_DOLlb).
+#' Average Annual Diesel Price: The price of Ultra-Low-Sulfur No. 2 Diesel (from FRED), adjusted for inflation (e.g., AVGANNUAL_DIESEL_PRICE2025dols).
 #'
 #' This uses CFDERS data but may need to be updated to CAMs 
 #' 
-#' before running!!!
+#' before running!!! 
 #' make sure you are connected to VPN
 #' ensure all packages are installed 
 #' you have a folder in your directory called "data"
@@ -27,7 +27,7 @@
 #' @param ora_id username for Oracle connection (in quotation marks)
 #' @param oraprod_pw password for Oracle connection (in quotation marks)
 #' @param spp_name the name of the species you want to pull (e.g., "LONGFINSQUID")
-#' @param nespp3_codes the NESPP3 codes for the species you want to (e.g., "('801')") - note the single quotes inside the string for SQL
+#' @param nespp3_codes the NESPP3 codes for the species you want to pull (e.g., "('801')") - note the single quotes inside the string for SQL
 #' @param START.YEAR the first year you want to pull (e.g., 1996)
 #' @param END.YEAR the last year you want to pull (e.g., 2025)
 #' @param deflate_yr the year you want to deflate to (e.g, 2025)
@@ -108,12 +108,11 @@ get_commercial_data <- function(
     mutate(
       CATEGORY = "Commercial",
       INDICATOR_NAME = paste0("Commercial_", spp_name, "_Landings_LBS"),
-      SIGN = "N/A",
       INDICATOR_TYPE = "Socioeconomic"
     ) %>%
     # Rename the sum column to DATA_VALUE (Equivalent to Stata rename)
     rename(DATA_VALUE = !!paste0("TOTAL_", spp_name)) %>%
-    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, SIGN, INDICATOR_TYPE)
+    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
   
   #
   
@@ -139,13 +138,12 @@ get_commercial_data <- function(
       CATEGORY = "Commercial",
       # This creates the long name you want in the final table
       INDICATOR_NAME = paste0("N_Commercial_Vessels_Landing_", spp_name),
-      SIGN = "N/A",
       INDICATOR_TYPE = "Socioeconomic"
     ) %>%
     # Now this rename will work because the SQL alias matches 'N_VESSELS'
     # Note: Oracle often returns names in UPPERCASE, so we check for both.
     rename(DATA_VALUE = any_of(c("N_VESSELS", "N_vessels"))) %>%
-    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, SIGN, INDICATOR_TYPE)
+    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
   
   # 4. View the result
   print(head(Nvessels_final))
@@ -193,10 +191,9 @@ get_commercial_data <- function(
       DATA_VALUE = (AVG_NOMINAL_PRICE / GDPDEF) * base_index_val,
       CATEGORY = "Commercial",
       INDICATOR_NAME = paste0("AVGPRICE_", spp_name, "_", deflate_yr, "_DOLlb"),
-      SIGN = "N/A",
       INDICATOR_TYPE = "Socioeconomic"
     ) %>%
-    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, SIGN, INDICATOR_TYPE)
+    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
   
   # --- 4. Cleanup ---
   
@@ -228,10 +225,9 @@ get_commercial_data <- function(
       DATA_VALUE = (TOTAL_REV / GDPDEF) * base_index_val,
       CATEGORY = "Commercial",
       INDICATOR_NAME = paste0("TOTALANNUALREV_", spp_name, "_", deflate_yr, "Dols"),
-      SIGN = "N/A",
       INDICATOR_TYPE = "Socioeconomic"
     ) %>%
-    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, SIGN, INDICATOR_TYPE)
+    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
   
   ################## Fuel Prices ##################
   
@@ -254,10 +250,9 @@ get_commercial_data <- function(
       DATA_VALUE = (DDFUELNYH / GDPDEF) * base_index_val,
       CATEGORY = "Commercial",
       INDICATOR_NAME = paste0("AVGANNUAL_DIESEL_PRICE", deflate_yr, "dols"),
-      SIGN = "N/A",
       INDICATOR_TYPE = "Socioeconomic"
     ) %>%
-    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, SIGN, INDICATOR_TYPE)
+    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
   
   ############ Average Revenue Per Vessel ##################
   
@@ -280,10 +275,9 @@ get_commercial_data <- function(
       DATA_VALUE = (AVG_VESSEL_REV / GDPDEF) * base_index_val,
       CATEGORY = "Commercial",
       INDICATOR_NAME = paste0("AVGVESREVperYr_", spp_name, "_", deflate_yr, "_DOLlb"),
-      SIGN = "N/A",
       INDICATOR_TYPE = "Socioeconomic"
     ) %>%
-    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, SIGN, INDICATOR_TYPE)
+    select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
   
   ##disconnect from oracle 
   dbDisconnect(conn)
@@ -322,12 +316,3 @@ get_commercial_data <- function(
   
 }
 
-get_commercial_data(
-  ora_id = "user",
-  oraprod_pw = "password",
-  spp_name = "LONGFINSQUID",
-  nespp3_codes = "('801')",
-  START.YEAR = 1996,
-  END.YEAR = 2025,
-  deflate_yr = 2025
-)
