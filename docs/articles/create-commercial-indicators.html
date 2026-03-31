@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Accessing Bottom Trawl Survey Data • NEesp2</title>
+<title>Pulling Commercial Fishing Data and Creating Commercial Indicators • NEesp2</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Accessing Bottom Trawl Survey Data">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Pulling Commercial Fishing Data and Creating Commercial Indicators">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -72,57 +72,97 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Accessing Bottom Trawl Survey Data</h1>
+      <h1>Pulling Commercial Fishing Data and Creating Commercial Indicators</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/NEFSC/READ-EDAB-NEesp2/blob/HEAD/vignettes/accessing-survdat-data.Rmd" class="external-link"><code>vignettes/accessing-survdat-data.Rmd</code></a></small>
-      <div class="d-none name"><code>accessing-survdat-data.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/NEFSC/READ-EDAB-NEesp2/blob/HEAD/vignettes/create-commercial-indicators.Rmd" class="external-link"><code>vignettes/create-commercial-indicators.Rmd</code></a></small>
+      <div class="d-none name"><code>create-commercial-indicators.Rmd</code></div>
     </div>
 
     
     
 <div class="section level2">
-<h2 id="nefsc-bottom-trawl-survey-data-in-survdat">NEFSC Bottom Trawl Survey Data in {survdat}<a class="anchor" aria-label="anchor" href="#nefsc-bottom-trawl-survey-data-in-survdat"></a>
+<h2 id="commercial-fishing-data-in-cfders">Commercial Fishing Data in CFDERS<a class="anchor" aria-label="anchor" href="#commercial-fishing-data-in-cfders"></a>
 </h2>
-<p>The R package {survdat} allows you to pull and process NEFSC bottom
-trawl survey data. More information on the {survdat} package can be
-found here: <a href="https://noaa-edab.github.io/survdat/index.html" class="external-link uri">https://noaa-edab.github.io/survdat/index.html</a></p>
-<p>Before using this package, you will need to submit a number of ITD
-tickets: - Install of Oracle Instant Client - Creation of Oracle
-username and password. Also request access to NEFSCDB1 and NEFSC_USERS
-databases in this ticket. - Install of {ROracle} package</p>
+<p>The NEesp2 function ‘get_commercial_data’ pulls CFDERS data from the
+NEFSC_GARFO Oracle database. To run the function you will need the
+following:</p>
+<ul>
+<li>Installation of Oracle Instant Client.</li>
+<li>Oracle username and password.<br>
+</li>
+<li>Installation of {ROracle} package.</li>
+<li>Access to the NEFSC_GARFO schema in SQL Developer. This can be
+granted with an ITD ticket.</li>
+</ul>
 <p>You must also be behind the NEFSC firewall (remote using VPN) for R
 to connect to Oracle databases.</p>
 </div>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="neesp2get_commercial_data">NEesp2::get_commercial_data<a class="anchor" aria-label="anchor" href="#neesp2get_commercial_data"></a>
 </h2>
-<p>To install {survdat} directly from Github:</p>
+<p>The function ‘get_commercial_data’ returns six commercial indicators
+that are used in ESPs:</p>
+<ul>
+<li>Commercial landings (in lbs)</li>
+<li>Number of commercial vessels</li>
+<li>Average price per pound (2025 USD$/lb)</li>
+<li>Total annual revenue (average revenue per vessel) (2025 USD$)</li>
+<li>Average annual diesel price (2025 USD$/gallon adjusted for inflation
+- from Federal Reserve Economic Data)</li>
+</ul>
+<p>As of 03/2026, prices and revenue can be deflated up to 2025
+USD$.</p>
+<p>‘get_commercial_data’ contains the following parameters as
+inputs:</p>
+<ul>
+<li>ora_id: Your Oracle username, must be in ““.</li>
+<li>oraprod_pw: Your Oracle password, must be in ““.</li>
+<li>spp_name: The name of the species you want to pull, must be in
+““.</li>
+<li>nespp3_codes: The NESPP3 codes for the species you want to pull.
+Must be in the following format: “(‘#’)”.</li>
+<li>START.YEAR : The first year of data you want to pull.</li>
+<li>END.YEAR: The last year you want to pull.</li>
+<li>deflate_yr: The year you want to deflate to.</li>
+</ul>
+<p>NESPP3 codes and species names can be found in
+‘data/species.codes.csv’ or by running ‘NEesp2::species.codes’.</p>
+<p>The function sources a file in the network drive
+(“\nefscdata_ESP_Data-EDAB-NEesp2-raw_socioeco_oracle.R”) that contains
+the connection string for the Oracle database. For confidential reasons,
+this script is not hosted on Github.</p>
+<p>An example data pull for longfin squid, from years 1996-2025 and
+deflating to 2025 will look like the following:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"NOAA-EDAB/survdat"</span>,build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The package {dbutils} must also be installed for R to connect to
-Oracle databases. More info on {dbutils} here: <a href="https://andybeet.github.io/dbutils/" class="external-link uri">https://andybeet.github.io/dbutils/</a></p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"andybeet/dbutils"</span><span class="op">)</span></span></code></pre></div>
-<p>To connect to Oracle databases and pull survdat data</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="st">"server name"</span>,<span class="st">"your username"</span><span class="op">)</span></span>
-<span><span class="fu">survdat</span><span class="fu">::</span><span class="fu"><a href="https://noaa-edab.github.io/survdat/reference/get_survdat_data.html" class="external-link">get_survdat_data</a></span><span class="op">(</span><span class="va">channel</span><span class="op">)</span></span></code></pre></div>
-<p>The function get_survdat_data() has parameters to include conversion
-factors (conversion.factor), species biological data (getBio), and
-length data (getLengths) which can be set = TRUE or FALSE.</p>
-</div>
-<div class="section level2">
-<h2 id="poc-for-troubleshooting">POC for Troubleshooting<a class="anchor" aria-label="anchor" href="#poc-for-troubleshooting"></a>
-</h2>
-<p>Contact Andy Beet (<a href="mailto:andrew.beet@noaa.gov" class="email">andrew.beet@noaa.gov</a>) for issues with {dbutils} and
-{survdat} package help and data pulls.</p>
-<p>If you do not have access to all the required tables in SVDBS to run
-{survdat} functions, the function ‘get_survdat_data’ will result in the
-following error:</p>
-<p>“Error in .oci.GetQuery(conn, statment, data = data, prefetch =
-prefetch,…) ORA-00942: table or view does not exist”</p>
-<p>If this occurs, contact Jakub Kircun with PEMAD (<a href="mailto:jakub.cirkun@noaa.gov" class="email">jakub.cirkun@noaa.gov</a>) for SVDBS table access.</p>
+<code class="sourceCode R"><span><span class="fu">get_commercial_data</span><span class="op">(</span></span>
+<span>  ora_id <span class="op">=</span> <span class="st">"user"</span>,</span>
+<span>  oraprod_pw <span class="op">=</span> <span class="st">"password"</span>,</span>
+<span>  spp_name <span class="op">=</span> <span class="st">"LONGFINSQUID"</span>,</span>
+<span>  nespp3_codes <span class="op">=</span> <span class="st">"('801')"</span>,</span>
+<span>  START.YEAR <span class="op">=</span> <span class="fl">1996</span>,</span>
+<span>  END.YEAR <span class="op">=</span> <span class="fl">2025</span>,</span>
+<span>  deflate_yr <span class="op">=</span> <span class="fl">2025</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The data will save in a folder named ‘intermediate’ inside the ‘data’
+folder. You may need to create this folder before running the
+script.</p>
+<p>The output of ‘get_commercial_data’ is a data frame with the
+following columns, formatted to fit naming conventions of other ESP
+indicators:</p>
+<ul>
+<li>YEAR</li>
+<li>DATA_VALUE</li>
+<li>CATEGORY ( = Commercial)</li>
+<li>INDICATOR_NAME</li>
+<li>INDICATOR_TYPE (= Socioeconomic)</li>
+</ul>
+<p><img src="../images/avg_price.png" alt="" width="415"></p>
+<p><img src="../images/diesel_price.png" alt="" width="414"></p>
+<p><img src="../images/landings.png" alt="" width="413"></p>
+<p><img src="../images/n_vessels.png" alt="" width="416"></p>
+<p><img src="../images/total_rev.png" alt="" width="414"></p>
+<p><img src="../images/vessel_rev.png" alt="" width="418"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
