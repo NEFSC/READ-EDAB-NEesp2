@@ -16,6 +16,8 @@
 #'
 #' This uses CFDERS data but may need to be updated to CAMs 
 #' 
+#' Table with species names and nespp3 codes here: https://nefsc.github.io/NEFSC-dataserve/table-of-commercial-species.html
+#' 
 #' before running!!! 
 #' make sure you are connected to VPN
 #' ensure all packages are installed 
@@ -33,12 +35,6 @@
 #' @param deflate_yr the year you want to deflate to (e.g, 2025)
 #' @export
 #' 
-
-# library(ROracle)
-# library(DBI)
-# library(fredr)
-# library(tidyverse)
-# library(DescTools) # For Winsorize
 
 get_commercial_data <- function(
     ora_id,
@@ -184,7 +180,7 @@ get_commercial_data <- function(
   # --- 3. Adjust for Inflation (Deflate) ---
   # (Keep this the same as before)
   
-  base_index_val <- DBI::gdp_deflator$GDPDEF[gdp_deflator$YEAR == deflate_yr]
+  base_index_val <- gdp_deflator$GDPDEF[gdp_deflator$YEAR == deflate_yr]
   
   price_final <- price_annual |>
     dplyr::left_join(gdp_deflator, by = "YEAR") |>
