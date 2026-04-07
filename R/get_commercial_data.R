@@ -67,6 +67,7 @@ get_commercial_data <- function(
   )
   
   # 3. Connect ONCE outside the loop
+  loadNamespace("ROracle")
   drv <- DBI::dbDriver("Oracle")
   conn <- DBI::dbConnect(drv, ora_id, password = oraprod_pw, dbname = nefscusers.connect.string)
   

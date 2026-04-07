@@ -62,3 +62,13 @@ NEesp2::get_commercial_data(
   nespp3_codes = "('122')"
 )
 
+NEesp2::get_commercial_data(
+  ora_id = "user",
+  oraprod_pw = "password",
+  START.YEAR = 1996,
+  END.YEAR = 2025,
+  deflate_yr = 2025,
+  spp_name = "ATLANTICMACKEREL",
+  nespp3_codes = "('212')"
+)
+
