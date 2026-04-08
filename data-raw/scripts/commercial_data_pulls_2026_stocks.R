@@ -72,3 +72,12 @@ NEesp2::get_commercial_data(
   nespp3_codes = "('212')"
 )
 
+NEesp2::get_commercial_data(
+  ora_id = "user",
+  oraprod_pw = "password",
+  START.YEAR = 1996,
+  END.YEAR = 2025,
+  deflate_yr = 2025,
+  spp_name = "SEASCALLOP",
+  nespp3_codes = "('800')"
+)
