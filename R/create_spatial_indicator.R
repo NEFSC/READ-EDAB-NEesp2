@@ -36,12 +36,12 @@ create_spatial_indicator <- function(indicator_name,
                   DAY = lubridate::day(.data$time), 
                   MONTH = lubridate::month(.data$time), 
                   YEAR = lubridate::year(.data$time)) %>%
-    subset(select = -c(.data$agg.time, .data$time, .data$ls.id, .data$var.name) ) |>
+    subset(select = -c(agg.time, time, ls.id, var.name) ) |>
     dplyr::mutate(INDICATOR_NAME = indicator_name,
                   INDICATOR_UNITS = units)  %>%
-    dplyr::rename(DATA_VALUE = .data$value,
-                  AREA = .data$area,
-                  STATISTIC = .data$statistic) %>%
+    dplyr::rename(DATA_VALUE = value,
+                  AREA = area,
+                  STATISTIC = statistic) %>%
     purrr::discard(~all(is.na(.)))
   
   return(output)
