@@ -9,6 +9,7 @@ save_catch(
   this_region,
   out_folder,
   catch_type = "all",
+  this_data_type = "numbers of fish",
   wait = TRUE,
   return_fname = TRUE
 )
@@ -21,6 +22,8 @@ save_catch(
 \item{out_folder}{where to save the data}
 
 \item{catch_type}{the type of catch to query. Can be "all" for all catch types (A, B1, B2), or "landings" for just the landings (A and B1). Default is "all".}
+
+\item{this_data_type}{the type of data to query. Can be any or all of c("numbers of fish", "weight of fish (pounds)", "weight of fish (kilograms)", "mean length", "mean weight"). Default is "numbers of fish".}
 
 \item{wait}{whether to pause after saving the data. Default is TRUE.}
 

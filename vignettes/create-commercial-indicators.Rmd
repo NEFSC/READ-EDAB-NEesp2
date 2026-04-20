@@ -1,0 +1,101 @@
+---
+title: "Pulling Commercial Fishing Data and Creating Commercial Indicators"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Pull Data and Create Commercial Fishing Indicators}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+```
+
+## Commercial Fishing Data in CFDERS
+
+The NEesp2 function 'get_commercial_data' pulls CFDERS data from the NEFSC_GARFO Oracle database. To run the function you will need the following:
+
+- Installation of Oracle Instant Client. 
+- Oracle username and password.  
+- Installation of {ROracle} package.
+- Access to the NEFSC_GARFO schema in SQL Developer. This can be granted with an ITD ticket.
+
+You must also be behind the NEFSC firewall (remote using VPN) for R to connect to Oracle databases. 
+
+## NEesp2::get_commercial_data
+
+The function 'get_commercial_data' returns six commercial indicators that are used in ESPs:
+
+  - Commercial landings (in lbs)
+  - Number of commercial vessels
+  - Average price per pound (2025 USD$/lb)
+  - Total annual revenue (average revenue per vessel) (2025 USD$)
+  - Average annual diesel price (2025 USD$/gallon adjusted for inflation - from Federal Reserve Economic Data)
+
+As of 03/2026, prices and revenue can be deflated up to 2025 USD$.
+
+'get_commercial_data' contains the following parameters as inputs:
+
+  - ora_id: Your Oracle username, must be in "".
+  - oraprod_pw: Your Oracle password, must be in "".
+  - spp_name: The name of the species you want to pull, must be in "". 
+  - nespp3_codes: The NESPP3 codes for the species you want to pull. Must be in the following format: "('#')".
+  - START.YEAR : The first year of data you want to pull.
+  - END.YEAR: The last year you want to pull.
+  - deflate_yr: The year you want to deflate to. 
+
+NESPP3 codes and species names can be found in 'data/species.codes.csv' or by running 'NEesp2::species.codes'.
+
+The function sources a file in the network drive ("\\nefscdata\SOE_ESP_Data\READ-EDAB-NEesp2\data-raw\scripts\connect_socioeco_oracle.R") that contains the connection string for the Oracle database. For confidential reasons, this script is not hosted on Github.
+
+An example data pull for longfin squid, from years 1996-2025 and deflating to 2025 will look like the following:
+
+```{r, eval = FALSE}
+get_commercial_data(
+  ora_id = "user",
+  oraprod_pw = "password",
+  spp_name = "LONGFINSQUID",
+  nespp3_codes = "('801')",
+  START.YEAR = 1996,
+  END.YEAR = 2025,
+  deflate_yr = 2025
+)
+```
+
+The data will save in a folder named 'intermediate' inside the 'data' folder. You may need to create this folder before running the script.
+
+The output of 'get_commercial_data' is a data frame with the following columns, formatted to fit naming conventions of other ESP indicators:
+
+  - YEAR
+  - DATA_VALUE 
+  - CATEGORY ( = Commercial)
+  - INDICATOR_NAME
+  - INDICATOR_TYPE (= Socioeconomic)
+
+```{r, echo=FALSE}
+knitr::include_graphics(here::here("images/avg_price.png"))
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics(here::here("images/diesel_price.png"))
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics(here::here("images/landings.png"))
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics(here::here("images/n_vessels.png"))
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics(here::here("images/total_rev.png"))
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics(here::here("images/vessel_rev.png"))
+```

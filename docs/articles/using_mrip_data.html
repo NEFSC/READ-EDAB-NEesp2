@@ -48,6 +48,7 @@
     <li><a class="dropdown-item" href="../articles/accessing-survdat-data.html">Accessing Bottom Trawl Survey Data</a></li>
     <li><a class="dropdown-item" href="../articles/using_mrip_data.html">Using MRIP Data for Recreational Indicators</a></li>
     <li><a class="dropdown-item" href="../articles/using_survdat_data.html">Using {survdat} for Bottom Trawl Indicators</a></li>
+    <li><a class="dropdown-item" href="../articles/create-commercial-indicators.html">Pull Commercial Fisheries Data from Oracle</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Functions</a></li>
@@ -110,94 +111,800 @@ the landings (A and B1).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_catch.html">get_mrip_catch</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, </span>
 <span>                            type <span class="op">=</span> <span class="st">"all"</span>, </span>
-<span>                            region <span class="op">=</span> <span class="st">"north and mid-atlantic"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_catch</span><span class="op">)</span></span></code></pre></div>
+<span>                            region <span class="op">=</span> <span class="st">"north and mid-atlantic"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_catch</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $data</span></span>
-<span><span class="co">## <span style="color: #949494;"># A tibble: 44 × 14</span></span></span>
-<span><span class="co">##    `Estimate Status`  Year `Fishing Year`     `Common Name` `Cumulative Through`</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> FINAL              <span style="text-decoration: underline;">1</span>981 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> FINAL              <span style="text-decoration: underline;">1</span>982 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> FINAL              <span style="text-decoration: underline;">1</span>983 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> FINAL              <span style="text-decoration: underline;">1</span>984 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> FINAL              <span style="text-decoration: underline;">1</span>985 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> FINAL              <span style="text-decoration: underline;">1</span>986 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> FINAL              <span style="text-decoration: underline;">1</span>987 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> FINAL              <span style="text-decoration: underline;">1</span>988 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> FINAL              <span style="text-decoration: underline;">1</span>989 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> FINAL              <span style="text-decoration: underline;">1</span>990 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 34 more rows</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 9 more variables: `PSE Total Catch (A+B1+B2)` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Does Total Catch (A+B1+B2) Meet MRIP Standard` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Is Total Catch (A+B1+B2) Significantly Different From 0` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Total Catch (A+B1+B2)` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Total Catch (A+B1+B2) Lower 95% Confidence Limit` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Total Catch (A+B1+B2) Upper 95% Confidence Limit` &lt;chr&gt;, …</span></span></span>
+<span><span class="co">##    Estimate Status Year                   Fishing Year    Common Name</span></span>
+<span><span class="co">## 1            FINAL 1981 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 2            FINAL 1982 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 3            FINAL 1983 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 4            FINAL 1984 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 5            FINAL 1985 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 6            FINAL 1986 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 7            FINAL 1987 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 8            FINAL 1988 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 9            FINAL 1989 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 10           FINAL 1990 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 11           FINAL 1991 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 12           FINAL 1992 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 13           FINAL 1993 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 14           FINAL 1994 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 15           FINAL 1995 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 16           FINAL 1996 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 17           FINAL 1997 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 18           FINAL 1998 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 19           FINAL 1999 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 20           FINAL 2000 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 21           FINAL 2001 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 22           FINAL 2002 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 23           FINAL 2003 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 24           FINAL 2004 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 25           FINAL 2005 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 26           FINAL 2006 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 27           FINAL 2007 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 28           FINAL 2008 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 29           FINAL 2009 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 30           FINAL 2010 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 31           FINAL 2011 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 32           FINAL 2012 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 33           FINAL 2013 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 34           FINAL 2014 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 35           FINAL 2015 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 36           FINAL 2016 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 37           FINAL 2017 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 38           FINAL 2018 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 39           FINAL 2019 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 40           FINAL 2020 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 41           FINAL 2021 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 42           FINAL 2022 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 43           FINAL 2023 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 44           FINAL 2024 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">##    Cumulative Through PSE Total Catch (A+B1+B2)</span></span>
+<span><span class="co">## 1              ANNUAL                      49.3</span></span>
+<span><span class="co">## 2              ANNUAL                      14.7</span></span>
+<span><span class="co">## 3              ANNUAL                      13.3</span></span>
+<span><span class="co">## 4              ANNUAL                      21.8</span></span>
+<span><span class="co">## 5              ANNUAL                      10.8</span></span>
+<span><span class="co">## 6              ANNUAL                      16.4</span></span>
+<span><span class="co">## 7              ANNUAL                      14.5</span></span>
+<span><span class="co">## 8              ANNUAL                      12.1</span></span>
+<span><span class="co">## 9              ANNUAL                      10.1</span></span>
+<span><span class="co">## 10             ANNUAL                      11.9</span></span>
+<span><span class="co">## 11             ANNUAL                       9.1</span></span>
+<span><span class="co">## 12             ANNUAL                       8.9</span></span>
+<span><span class="co">## 13             ANNUAL                      19.6</span></span>
+<span><span class="co">## 14             ANNUAL                      15.0</span></span>
+<span><span class="co">## 15             ANNUAL                       9.5</span></span>
+<span><span class="co">## 16             ANNUAL                      13.6</span></span>
+<span><span class="co">## 17             ANNUAL                      11.8</span></span>
+<span><span class="co">## 18             ANNUAL                       9.3</span></span>
+<span><span class="co">## 19             ANNUAL                      10.1</span></span>
+<span><span class="co">## 20             ANNUAL                       8.0</span></span>
+<span><span class="co">## 21             ANNUAL                       7.9</span></span>
+<span><span class="co">## 22             ANNUAL                       8.4</span></span>
+<span><span class="co">## 23             ANNUAL                       7.9</span></span>
+<span><span class="co">## 24             ANNUAL                      14.2</span></span>
+<span><span class="co">## 25             ANNUAL                      11.0</span></span>
+<span><span class="co">## 26             ANNUAL                       9.8</span></span>
+<span><span class="co">## 27             ANNUAL                       9.2</span></span>
+<span><span class="co">## 28             ANNUAL                      14.4</span></span>
+<span><span class="co">## 29             ANNUAL                       9.3</span></span>
+<span><span class="co">## 30             ANNUAL                      21.8</span></span>
+<span><span class="co">## 31             ANNUAL                       9.7</span></span>
+<span><span class="co">## 32             ANNUAL                       9.1</span></span>
+<span><span class="co">## 33             ANNUAL                       8.5</span></span>
+<span><span class="co">## 34             ANNUAL                       7.6</span></span>
+<span><span class="co">## 35             ANNUAL                       9.1</span></span>
+<span><span class="co">## 36             ANNUAL                       7.9</span></span>
+<span><span class="co">## 37             ANNUAL                      11.1</span></span>
+<span><span class="co">## 38             ANNUAL                       5.7</span></span>
+<span><span class="co">## 39             ANNUAL                       5.9</span></span>
+<span><span class="co">## 40             ANNUAL                       6.9</span></span>
+<span><span class="co">## 41             ANNUAL                       6.5</span></span>
+<span><span class="co">## 42             ANNUAL                       5.8</span></span>
+<span><span class="co">## 43             ANNUAL                       6.8</span></span>
+<span><span class="co">## 44             ANNUAL                       6.0</span></span>
+<span><span class="co">##    Does Total Catch (A+B1+B2) Meet MRIP Standard</span></span>
+<span><span class="co">## 1                                        CAUTION</span></span>
+<span><span class="co">## 2                                            YES</span></span>
+<span><span class="co">## 3                                            YES</span></span>
+<span><span class="co">## 4                                            YES</span></span>
+<span><span class="co">## 5                                            YES</span></span>
+<span><span class="co">## 6                                            YES</span></span>
+<span><span class="co">## 7                                            YES</span></span>
+<span><span class="co">## 8                                            YES</span></span>
+<span><span class="co">## 9                                            YES</span></span>
+<span><span class="co">## 10                                           YES</span></span>
+<span><span class="co">## 11                                           YES</span></span>
+<span><span class="co">## 12                                           YES</span></span>
+<span><span class="co">## 13                                           YES</span></span>
+<span><span class="co">## 14                                           YES</span></span>
+<span><span class="co">## 15                                           YES</span></span>
+<span><span class="co">## 16                                           YES</span></span>
+<span><span class="co">## 17                                           YES</span></span>
+<span><span class="co">## 18                                           YES</span></span>
+<span><span class="co">## 19                                           YES</span></span>
+<span><span class="co">## 20                                           YES</span></span>
+<span><span class="co">## 21                                           YES</span></span>
+<span><span class="co">## 22                                           YES</span></span>
+<span><span class="co">## 23                                           YES</span></span>
+<span><span class="co">## 24                                           YES</span></span>
+<span><span class="co">## 25                                           YES</span></span>
+<span><span class="co">## 26                                           YES</span></span>
+<span><span class="co">## 27                                           YES</span></span>
+<span><span class="co">## 28                                           YES</span></span>
+<span><span class="co">## 29                                           YES</span></span>
+<span><span class="co">## 30                                           YES</span></span>
+<span><span class="co">## 31                                           YES</span></span>
+<span><span class="co">## 32                                           YES</span></span>
+<span><span class="co">## 33                                           YES</span></span>
+<span><span class="co">## 34                                           YES</span></span>
+<span><span class="co">## 35                                           YES</span></span>
+<span><span class="co">## 36                                           YES</span></span>
+<span><span class="co">## 37                                           YES</span></span>
+<span><span class="co">## 38                                           YES</span></span>
+<span><span class="co">## 39                                           YES</span></span>
+<span><span class="co">## 40                                           YES</span></span>
+<span><span class="co">## 41                                           YES</span></span>
+<span><span class="co">## 42                                           YES</span></span>
+<span><span class="co">## 43                                           YES</span></span>
+<span><span class="co">## 44                                           YES</span></span>
+<span><span class="co">##    Is Total Catch (A+B1+B2) Significantly Different From 0</span></span>
+<span><span class="co">## 1                                                      YES</span></span>
+<span><span class="co">## 2                                                      YES</span></span>
+<span><span class="co">## 3                                                      YES</span></span>
+<span><span class="co">## 4                                                      YES</span></span>
+<span><span class="co">## 5                                                      YES</span></span>
+<span><span class="co">## 6                                                      YES</span></span>
+<span><span class="co">## 7                                                      YES</span></span>
+<span><span class="co">## 8                                                      YES</span></span>
+<span><span class="co">## 9                                                      YES</span></span>
+<span><span class="co">## 10                                                     YES</span></span>
+<span><span class="co">## 11                                                     YES</span></span>
+<span><span class="co">## 12                                                     YES</span></span>
+<span><span class="co">## 13                                                     YES</span></span>
+<span><span class="co">## 14                                                     YES</span></span>
+<span><span class="co">## 15                                                     YES</span></span>
+<span><span class="co">## 16                                                     YES</span></span>
+<span><span class="co">## 17                                                     YES</span></span>
+<span><span class="co">## 18                                                     YES</span></span>
+<span><span class="co">## 19                                                     YES</span></span>
+<span><span class="co">## 20                                                     YES</span></span>
+<span><span class="co">## 21                                                     YES</span></span>
+<span><span class="co">## 22                                                     YES</span></span>
+<span><span class="co">## 23                                                     YES</span></span>
+<span><span class="co">## 24                                                     YES</span></span>
+<span><span class="co">## 25                                                     YES</span></span>
+<span><span class="co">## 26                                                     YES</span></span>
+<span><span class="co">## 27                                                     YES</span></span>
+<span><span class="co">## 28                                                     YES</span></span>
+<span><span class="co">## 29                                                     YES</span></span>
+<span><span class="co">## 30                                                     YES</span></span>
+<span><span class="co">## 31                                                     YES</span></span>
+<span><span class="co">## 32                                                     YES</span></span>
+<span><span class="co">## 33                                                     YES</span></span>
+<span><span class="co">## 34                                                     YES</span></span>
+<span><span class="co">## 35                                                     YES</span></span>
+<span><span class="co">## 36                                                     YES</span></span>
+<span><span class="co">## 37                                                     YES</span></span>
+<span><span class="co">## 38                                                     YES</span></span>
+<span><span class="co">## 39                                                     YES</span></span>
+<span><span class="co">## 40                                                     YES</span></span>
+<span><span class="co">## 41                                                     YES</span></span>
+<span><span class="co">## 42                                                     YES</span></span>
+<span><span class="co">## 43                                                     YES</span></span>
+<span><span class="co">## 44                                                     YES</span></span>
+<span><span class="co">##    Total Catch (A+B1+B2) Total Catch (A+B1+B2) Lower 95% Confidence Limit</span></span>
+<span><span class="co">## 1              7,680,855                                          258,998</span></span>
+<span><span class="co">## 2             12,824,985                                        9,129,850</span></span>
+<span><span class="co">## 3              8,172,372                                        6,041,998</span></span>
+<span><span class="co">## 4              4,566,246                                        2,615,181</span></span>
+<span><span class="co">## 5              8,973,265                                        7,073,804</span></span>
+<span><span class="co">## 6             29,444,111                                       19,979,596</span></span>
+<span><span class="co">## 7              5,437,007                                        3,891,810</span></span>
+<span><span class="co">## 8              9,823,266                                        7,493,581</span></span>
+<span><span class="co">## 9             11,220,984                                        8,999,678</span></span>
+<span><span class="co">## 10            14,299,771                                       10,964,493</span></span>
+<span><span class="co">## 11            14,650,865                                       12,037,737</span></span>
+<span><span class="co">## 12            11,529,198                                        9,518,045</span></span>
+<span><span class="co">## 13            12,148,525                                        7,481,548</span></span>
+<span><span class="co">## 14            10,601,576                                        7,484,713</span></span>
+<span><span class="co">## 15            18,936,151                                       15,410,240</span></span>
+<span><span class="co">## 16            13,978,797                                       10,252,609</span></span>
+<span><span class="co">## 17            15,530,507                                       11,938,611</span></span>
+<span><span class="co">## 18             8,088,316                                        6,613,978</span></span>
+<span><span class="co">## 19            14,062,049                                       11,278,326</span></span>
+<span><span class="co">## 20            25,458,839                                       21,466,893</span></span>
+<span><span class="co">## 21            20,652,610                                       17,454,760</span></span>
+<span><span class="co">## 22            24,699,570                                       20,633,033</span></span>
+<span><span class="co">## 23            18,204,338                                       15,385,578</span></span>
+<span><span class="co">## 24            12,774,217                                        9,218,897</span></span>
+<span><span class="co">## 25            12,281,428                                        9,633,553</span></span>
+<span><span class="co">## 26            12,678,946                                       10,243,574</span></span>
+<span><span class="co">## 27            14,233,595                                       11,666,993</span></span>
+<span><span class="co">## 28            23,765,583                                       17,057,985</span></span>
+<span><span class="co">## 29            22,575,126                                       18,460,132</span></span>
+<span><span class="co">## 30            26,195,386                                       15,002,621</span></span>
+<span><span class="co">## 31            12,133,735                                        9,826,869</span></span>
+<span><span class="co">## 32            34,534,029                                       28,374,539</span></span>
+<span><span class="co">## 33            25,614,135                                       21,346,820</span></span>
+<span><span class="co">## 34            23,793,895                                       20,249,556</span></span>
+<span><span class="co">## 35            23,958,028                                       19,684,874</span></span>
+<span><span class="co">## 36            35,686,925                                       30,161,162</span></span>
+<span><span class="co">## 37            41,018,183                                       32,094,267</span></span>
+<span><span class="co">## 38            24,887,613                                       22,107,169</span></span>
+<span><span class="co">## 39            32,158,337                                       28,439,547</span></span>
+<span><span class="co">## 40            33,965,530                                       29,372,032</span></span>
+<span><span class="co">## 41            42,417,488                                       37,013,500</span></span>
+<span><span class="co">## 42            39,936,904                                       35,396,876</span></span>
+<span><span class="co">## 43            39,708,143                                       34,415,841</span></span>
+<span><span class="co">## 44            35,377,908                                       31,217,466</span></span>
+<span><span class="co">##    Total Catch (A+B1+B2) Upper 95% Confidence Limit</span></span>
+<span><span class="co">## 1                                        15,102,712</span></span>
+<span><span class="co">## 2                                        16,520,119</span></span>
+<span><span class="co">## 3                                        10,302,746</span></span>
+<span><span class="co">## 4                                         6,517,312</span></span>
+<span><span class="co">## 5                                        10,872,726</span></span>
+<span><span class="co">## 6                                        38,908,626</span></span>
+<span><span class="co">## 7                                         6,982,204</span></span>
+<span><span class="co">## 8                                        12,152,952</span></span>
+<span><span class="co">## 9                                        13,442,290</span></span>
+<span><span class="co">## 10                                       17,635,050</span></span>
+<span><span class="co">## 11                                       17,263,993</span></span>
+<span><span class="co">## 12                                       13,540,351</span></span>
+<span><span class="co">## 13                                       16,815,503</span></span>
+<span><span class="co">## 14                                       13,718,439</span></span>
+<span><span class="co">## 15                                       22,462,062</span></span>
+<span><span class="co">## 16                                       17,704,985</span></span>
+<span><span class="co">## 17                                       19,122,402</span></span>
+<span><span class="co">## 18                                        9,562,654</span></span>
+<span><span class="co">## 19                                       16,845,773</span></span>
+<span><span class="co">## 20                                       29,450,785</span></span>
+<span><span class="co">## 21                                       23,850,460</span></span>
+<span><span class="co">## 22                                       28,766,107</span></span>
+<span><span class="co">## 23                                       21,023,098</span></span>
+<span><span class="co">## 24                                       16,329,538</span></span>
+<span><span class="co">## 25                                       14,929,305</span></span>
+<span><span class="co">## 26                                       15,114,318</span></span>
+<span><span class="co">## 27                                       16,800,196</span></span>
+<span><span class="co">## 28                                       30,473,182</span></span>
+<span><span class="co">## 29                                       26,690,119</span></span>
+<span><span class="co">## 30                                       37,388,150</span></span>
+<span><span class="co">## 31                                       14,440,601</span></span>
+<span><span class="co">## 32                                       40,693,518</span></span>
+<span><span class="co">## 33                                       29,881,450</span></span>
+<span><span class="co">## 34                                       27,338,234</span></span>
+<span><span class="co">## 35                                       28,231,182</span></span>
+<span><span class="co">## 36                                       41,212,688</span></span>
+<span><span class="co">## 37                                       49,942,099</span></span>
+<span><span class="co">## 38                                       27,668,057</span></span>
+<span><span class="co">## 39                                       35,877,128</span></span>
+<span><span class="co">## 40                                       38,559,028</span></span>
+<span><span class="co">## 41                                       47,821,476</span></span>
+<span><span class="co">## 42                                       44,476,931</span></span>
+<span><span class="co">## 43                                       45,000,444</span></span>
+<span><span class="co">## 44                                       39,538,350</span></span>
+<span><span class="co">##    ** Contribution of Imputed Data to Total Catch Rate        SPECIES</span></span>
+<span><span class="co">## 1                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 2                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 3                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 4                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 5                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 6                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 7                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 8                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 9                                                   0% BLACK SEA BASS</span></span>
+<span><span class="co">## 10                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 11                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 12                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 13                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 14                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 15                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 16                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 17                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 18                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 19                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 20                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 21                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 22                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 23                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 24                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 25                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 26                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 27                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 28                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 29                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 30                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 31                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 32                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 33                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 34                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 35                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 36                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 37                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 38                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 39                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 40                                                 14% BLACK SEA BASS</span></span>
+<span><span class="co">## 41                                                  1% BLACK SEA BASS</span></span>
+<span><span class="co">## 42                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 43                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">## 44                                                  0% BLACK SEA BASS</span></span>
+<span><span class="co">##                    REGION</span></span>
+<span><span class="co">## 1  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 2  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 3  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 4  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 5  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 6  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 7  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 8  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 9  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 10 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 11 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 12 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 13 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 14 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 15 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 16 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 17 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 18 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 19 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 20 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 21 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 22 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 23 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 24 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 25 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 26 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 27 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 28 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 29 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 30 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 31 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 32 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 33 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 34 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 35 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 36 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 37 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 38 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 39 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 40 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 41 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 42 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 43 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 44 NORTH AND MID-ATLANTIC</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $metadata</span></span>
-<span><span class="co">## <span style="color: #949494;"># A tibble: 13 × 2</span></span></span>
-<span><span class="co">##    X2                                                                      X3   </span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="color: #949494;">""</span>                                                                      <span style="color: #949494;">""</span>   </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="color: #949494;">"</span>Your Query Parameters:<span style="color: #949494;">"</span>                                                <span style="color: #949494;">"</span>You…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="color: #949494;">"</span>Query:<span style="color: #949494;">"</span>                                                                <span style="color: #949494;">"</span>MRI…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="color: #949494;">"</span>Year:<span style="color: #949494;">"</span>                                                                 <span style="color: #949494;">"</span>198…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="color: #949494;">"</span>Summarize By:<span style="color: #949494;">"</span>                                                         <span style="color: #949494;">"</span>ANN…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="color: #949494;">"</span>Fishing Year:<span style="color: #949494;">"</span>                                                         <span style="color: #949494;">"</span>CAL…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="color: #949494;">"</span>Species:<span style="color: #949494;">"</span>                                                              <span style="color: #949494;">"</span>BLA…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="color: #949494;">"</span>Geographic Area:<span style="color: #949494;">"</span>                                                      <span style="color: #949494;">"</span>NOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="color: #949494;">"</span>Fishing Mode:<span style="color: #949494;">"</span>                                                         <span style="color: #949494;">"</span>ALL…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="color: #949494;">"</span>Fishing Area:<span style="color: #949494;">"</span>                                                         <span style="color: #949494;">"</span>ALL…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">11</span> <span style="color: #949494;">"</span>Type of Catch:<span style="color: #949494;">"</span>                                                        <span style="color: #949494;">"</span>TOT…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">12</span> <span style="color: #949494;">"</span>Information:<span style="color: #949494;">"</span>                                                          <span style="color: #949494;">"</span>NUM…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">13</span> <span style="color: #949494;">"</span>Notes on Query Results:        MRIP does not support the use of estim… <span style="color: #949494;">"</span>Not…</span></span>
+<span><span class="co">##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   X2</span></span>
+<span><span class="co">## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </span></span>
+<span><span class="co">## 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Your Query Parameters:</span></span>
+<span><span class="co">## 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Query:</span></span>
+<span><span class="co">## 4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Year:</span></span>
+<span><span class="co">## 5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Summarize By:</span></span>
+<span><span class="co">## 6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Fishing Year:</span></span>
+<span><span class="co">## 7                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Species:</span></span>
+<span><span class="co">## 8                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Geographic Area:</span></span>
+<span><span class="co">## 9                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Fishing Mode:</span></span>
+<span><span class="co">## 10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     Fishing Area:</span></span>
+<span><span class="co">## 11                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Type of Catch:</span></span>
+<span><span class="co">## 12                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Information:</span></span>
+<span><span class="co">## 13 Notes on Query Results:        MRIP does not support the use of estimates with a percent standard error above 50 and in those instances, recommends considering higher levels of aggregation (e.g., across states, geographic regions, or fishing modes).Due to COVID-related disruptions to the Access Point Angler Intercept Survey and subsequent gaps in catch records, some catch estimates are based in part on imputed data.  Columns labeled 'Contribution of Imputed Data to {ESTIMATE} rate' represent the weighted percentage of catch rate information that can be attributed to imputed catch data. Note: This does *not* represent the percent difference between the estimate with and without imputed data incorporated. If no such column appears in your query results, no imputed data were used.Estimates for Hawaii (prior to 2023) and Puerto Rico (prior to 2014) are based on Marine Recreational Fisheries Statistics Survey methodology and have not been calibrated.         Beginning in 2023, estimates for Hawaii are produced using certified MRIP survey designs and weighted estimation methods.</span></span>
+<span><span class="co">##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   X3</span></span>
+<span><span class="co">## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </span></span>
+<span><span class="co">## 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Your Query Parameters:</span></span>
+<span><span class="co">## 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             MRIP CATCH TIME SERIES</span></span>
+<span><span class="co">## 4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1981 - 2024</span></span>
+<span><span class="co">## 5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ANNUAL</span></span>
+<span><span class="co">## 6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            CALENDAR YEAR (JANUARY 1 - DECEMBER 31)</span></span>
+<span><span class="co">## 7                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     BLACK SEA BASS</span></span>
+<span><span class="co">## 8                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 9                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ALL MODES COMBINED</span></span>
+<span><span class="co">## 10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ALL AREAS COMBINED</span></span>
+<span><span class="co">## 11                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    TOTAL CATCH (TYPE A + B1 + B2)</span></span>
+<span><span class="co">## 12                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   NUMBERS OF FISH</span></span>
+<span><span class="co">## 13 Notes on Query Results:        MRIP does not support the use of estimates with a percent standard error above 50 and in those instances, recommends considering higher levels of aggregation (e.g., across states, geographic regions, or fishing modes).Due to COVID-related disruptions to the Access Point Angler Intercept Survey and subsequent gaps in catch records, some catch estimates are based in part on imputed data.  Columns labeled 'Contribution of Imputed Data to {ESTIMATE} rate' represent the weighted percentage of catch rate information that can be attributed to imputed catch data. Note: This does *not* represent the percent difference between the estimate with and without imputed data incorporated. If no such column appears in your query results, no imputed data were used.Estimates for Hawaii (prior to 2023) and Puerto Rico (prior to 2014) are based on Marine Recreational Fisheries Statistics Survey methodology and have not been calibrated.         Beginning in 2023, estimates for Hawaii are produced using certified MRIP survey designs and weighted estimation methods.</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $url</span></span>
 <span><span class="co">## [1] "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&amp;qyearfrom=1981&amp;qyearto=2024&amp;qsummary=cumulative_pya&amp;qwave=1&amp;fshyr=annual&amp;qstate=NORTH+AND+MID-ATLANTIC&amp;qspecies=BLACK%20SEA%20BASS&amp;qmode_fx=ALL+MODES+COMBINED&amp;qarea_x=ALL+AREAS+COMBINED&amp;qcatch_type=TOTAL+CATCH+%28TYPE+A+%2B+B1+%2B+B2%29&amp;qdata_type=NUMBERS+OF+FISH&amp;qoutput_type=TABLE&amp;qsource=PRODUCTION"</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_landings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_catch.html">get_mrip_catch</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>,</span>
 <span>                               type <span class="op">=</span> <span class="st">"landings"</span>, </span>
-<span>                               region <span class="op">=</span> <span class="st">"north and mid-atlantic"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_landings</span><span class="op">)</span></span></code></pre></div>
+<span>                               region <span class="op">=</span> <span class="st">"north and mid-atlantic"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_landings</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $data</span></span>
-<span><span class="co">## <span style="color: #949494;"># A tibble: 44 × 14</span></span></span>
-<span><span class="co">##    `Estimate Status`  Year `Fishing Year`     `Common Name` `Cumulative Through`</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> FINAL              <span style="text-decoration: underline;">1</span>981 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> FINAL              <span style="text-decoration: underline;">1</span>982 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> FINAL              <span style="text-decoration: underline;">1</span>983 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> FINAL              <span style="text-decoration: underline;">1</span>984 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> FINAL              <span style="text-decoration: underline;">1</span>985 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> FINAL              <span style="text-decoration: underline;">1</span>986 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> FINAL              <span style="text-decoration: underline;">1</span>987 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> FINAL              <span style="text-decoration: underline;">1</span>988 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> FINAL              <span style="text-decoration: underline;">1</span>989 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> FINAL              <span style="text-decoration: underline;">1</span>990 CALENDAR YEAR (JA… BLACK SEA BA… ANNUAL              </span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 34 more rows</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 9 more variables: `PSE Total Harvest (A+B1)` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Does Total Harvest (A+B1) Meet MRIP Standard` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Is Total Harvest (A+B1) Significantly Different From 0` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Total Harvest (A+B1)` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Total Harvest (A+B1) Lower 95% Confidence Limit` &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   `Total Harvest (A+B1) Upper 95% Confidence Limit` &lt;chr&gt;, …</span></span></span>
+<span><span class="co">##    Estimate Status Year                   Fishing Year    Common Name</span></span>
+<span><span class="co">## 1            FINAL 1981 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 2            FINAL 1982 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 3            FINAL 1983 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 4            FINAL 1984 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 5            FINAL 1985 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 6            FINAL 1986 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 7            FINAL 1987 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 8            FINAL 1988 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 9            FINAL 1989 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 10           FINAL 1990 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 11           FINAL 1991 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 12           FINAL 1992 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 13           FINAL 1993 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 14           FINAL 1994 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 15           FINAL 1995 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 16           FINAL 1996 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 17           FINAL 1997 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 18           FINAL 1998 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 19           FINAL 1999 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 20           FINAL 2000 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 21           FINAL 2001 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 22           FINAL 2002 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 23           FINAL 2003 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 24           FINAL 2004 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 25           FINAL 2005 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 26           FINAL 2006 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 27           FINAL 2007 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 28           FINAL 2008 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 29           FINAL 2009 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 30           FINAL 2010 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 31           FINAL 2011 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 32           FINAL 2012 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 33           FINAL 2013 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 34           FINAL 2014 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 35           FINAL 2015 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 36           FINAL 2016 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 37           FINAL 2017 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 38           FINAL 2018 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 39           FINAL 2019 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 40           FINAL 2020 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 41           FINAL 2021 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 42           FINAL 2022 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 43           FINAL 2023 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">## 44           FINAL 2024 CALENDAR YEAR (JAN 1 - DEC 31) BLACK SEA BASS</span></span>
+<span><span class="co">##    Cumulative Through PSE Total Harvest (A+B1)</span></span>
+<span><span class="co">## 1              ANNUAL                     24.3</span></span>
+<span><span class="co">## 2              ANNUAL                     16.2</span></span>
+<span><span class="co">## 3              ANNUAL                     16.5</span></span>
+<span><span class="co">## 4              ANNUAL                     23.3</span></span>
+<span><span class="co">## 5              ANNUAL                     13.9</span></span>
+<span><span class="co">## 6              ANNUAL                     22.5</span></span>
+<span><span class="co">## 7              ANNUAL                     23.6</span></span>
+<span><span class="co">## 8              ANNUAL                     15.4</span></span>
+<span><span class="co">## 9              ANNUAL                     14.4</span></span>
+<span><span class="co">## 10             ANNUAL                     16.7</span></span>
+<span><span class="co">## 11             ANNUAL                     11.7</span></span>
+<span><span class="co">## 12             ANNUAL                     11.9</span></span>
+<span><span class="co">## 13             ANNUAL                     27.2</span></span>
+<span><span class="co">## 14             ANNUAL                     24.9</span></span>
+<span><span class="co">## 15             ANNUAL                     13.8</span></span>
+<span><span class="co">## 16             ANNUAL                     19.2</span></span>
+<span><span class="co">## 17             ANNUAL                     16.4</span></span>
+<span><span class="co">## 18             ANNUAL                     16.6</span></span>
+<span><span class="co">## 19             ANNUAL                     23.8</span></span>
+<span><span class="co">## 20             ANNUAL                     11.7</span></span>
+<span><span class="co">## 21             ANNUAL                     18.0</span></span>
+<span><span class="co">## 22             ANNUAL                     11.8</span></span>
+<span><span class="co">## 23             ANNUAL                     11.1</span></span>
+<span><span class="co">## 24             ANNUAL                     18.2</span></span>
+<span><span class="co">## 25             ANNUAL                     16.7</span></span>
+<span><span class="co">## 26             ANNUAL                     14.1</span></span>
+<span><span class="co">## 27             ANNUAL                     12.0</span></span>
+<span><span class="co">## 28             ANNUAL                     24.4</span></span>
+<span><span class="co">## 29             ANNUAL                     12.5</span></span>
+<span><span class="co">## 30             ANNUAL                     21.2</span></span>
+<span><span class="co">## 31             ANNUAL                     14.1</span></span>
+<span><span class="co">## 32             ANNUAL                     12.6</span></span>
+<span><span class="co">## 33             ANNUAL                     13.4</span></span>
+<span><span class="co">## 34             ANNUAL                     11.3</span></span>
+<span><span class="co">## 35             ANNUAL                     10.5</span></span>
+<span><span class="co">## 36             ANNUAL                     11.1</span></span>
+<span><span class="co">## 37             ANNUAL                     17.0</span></span>
+<span><span class="co">## 38             ANNUAL                      7.7</span></span>
+<span><span class="co">## 39             ANNUAL                      7.5</span></span>
+<span><span class="co">## 40             ANNUAL                      7.0</span></span>
+<span><span class="co">## 41             ANNUAL                      8.6</span></span>
+<span><span class="co">## 42             ANNUAL                      9.9</span></span>
+<span><span class="co">## 43             ANNUAL                      9.5</span></span>
+<span><span class="co">## 44             ANNUAL                      8.7</span></span>
+<span><span class="co">##    Does Total Harvest (A+B1) Meet MRIP Standard</span></span>
+<span><span class="co">## 1                                           YES</span></span>
+<span><span class="co">## 2                                           YES</span></span>
+<span><span class="co">## 3                                           YES</span></span>
+<span><span class="co">## 4                                           YES</span></span>
+<span><span class="co">## 5                                           YES</span></span>
+<span><span class="co">## 6                                           YES</span></span>
+<span><span class="co">## 7                                           YES</span></span>
+<span><span class="co">## 8                                           YES</span></span>
+<span><span class="co">## 9                                           YES</span></span>
+<span><span class="co">## 10                                          YES</span></span>
+<span><span class="co">## 11                                          YES</span></span>
+<span><span class="co">## 12                                          YES</span></span>
+<span><span class="co">## 13                                          YES</span></span>
+<span><span class="co">## 14                                          YES</span></span>
+<span><span class="co">## 15                                          YES</span></span>
+<span><span class="co">## 16                                          YES</span></span>
+<span><span class="co">## 17                                          YES</span></span>
+<span><span class="co">## 18                                          YES</span></span>
+<span><span class="co">## 19                                          YES</span></span>
+<span><span class="co">## 20                                          YES</span></span>
+<span><span class="co">## 21                                          YES</span></span>
+<span><span class="co">## 22                                          YES</span></span>
+<span><span class="co">## 23                                          YES</span></span>
+<span><span class="co">## 24                                          YES</span></span>
+<span><span class="co">## 25                                          YES</span></span>
+<span><span class="co">## 26                                          YES</span></span>
+<span><span class="co">## 27                                          YES</span></span>
+<span><span class="co">## 28                                          YES</span></span>
+<span><span class="co">## 29                                          YES</span></span>
+<span><span class="co">## 30                                          YES</span></span>
+<span><span class="co">## 31                                          YES</span></span>
+<span><span class="co">## 32                                          YES</span></span>
+<span><span class="co">## 33                                          YES</span></span>
+<span><span class="co">## 34                                          YES</span></span>
+<span><span class="co">## 35                                          YES</span></span>
+<span><span class="co">## 36                                          YES</span></span>
+<span><span class="co">## 37                                          YES</span></span>
+<span><span class="co">## 38                                          YES</span></span>
+<span><span class="co">## 39                                          YES</span></span>
+<span><span class="co">## 40                                          YES</span></span>
+<span><span class="co">## 41                                          YES</span></span>
+<span><span class="co">## 42                                          YES</span></span>
+<span><span class="co">## 43                                          YES</span></span>
+<span><span class="co">## 44                                          YES</span></span>
+<span><span class="co">##    Is Total Harvest (A+B1) Significantly Different From 0 Total Harvest (A+B1)</span></span>
+<span><span class="co">## 1                                                     YES            2,387,527</span></span>
+<span><span class="co">## 2                                                     YES           10,696,079</span></span>
+<span><span class="co">## 3                                                     YES            5,075,429</span></span>
+<span><span class="co">## 4                                                     YES            2,447,169</span></span>
+<span><span class="co">## 5                                                     YES            4,491,941</span></span>
+<span><span class="co">## 6                                                     YES           19,254,567</span></span>
+<span><span class="co">## 7                                                     YES            2,542,841</span></span>
+<span><span class="co">## 8                                                     YES            3,442,937</span></span>
+<span><span class="co">## 9                                                     YES            6,566,698</span></span>
+<span><span class="co">## 10                                                    YES            5,082,539</span></span>
+<span><span class="co">## 11                                                    YES            6,037,483</span></span>
+<span><span class="co">## 12                                                    YES            4,503,133</span></span>
+<span><span class="co">## 13                                                    YES            7,080,512</span></span>
+<span><span class="co">## 14                                                    YES            4,169,397</span></span>
+<span><span class="co">## 15                                                    YES            6,824,826</span></span>
+<span><span class="co">## 16                                                    YES            7,178,616</span></span>
+<span><span class="co">## 17                                                    YES            6,542,329</span></span>
+<span><span class="co">## 18                                                    YES            1,539,044</span></span>
+<span><span class="co">## 19                                                    YES            1,599,732</span></span>
+<span><span class="co">## 20                                                    YES            4,252,068</span></span>
+<span><span class="co">## 21                                                    YES            4,269,251</span></span>
+<span><span class="co">## 22                                                    YES            4,565,377</span></span>
+<span><span class="co">## 23                                                    YES            4,056,050</span></span>
+<span><span class="co">## 24                                                    YES            2,345,446</span></span>
+<span><span class="co">## 25                                                    YES            2,000,584</span></span>
+<span><span class="co">## 26                                                    YES            1,777,425</span></span>
+<span><span class="co">## 27                                                    YES            2,118,952</span></span>
+<span><span class="co">## 28                                                    YES            2,444,136</span></span>
+<span><span class="co">## 29                                                    YES            3,913,348</span></span>
+<span><span class="co">## 30                                                    YES            5,084,577</span></span>
+<span><span class="co">## 31                                                    YES            1,709,310</span></span>
+<span><span class="co">## 32                                                    YES            3,686,565</span></span>
+<span><span class="co">## 33                                                    YES            3,005,414</span></span>
+<span><span class="co">## 34                                                    YES            3,974,106</span></span>
+<span><span class="co">## 35                                                    YES            4,938,583</span></span>
+<span><span class="co">## 36                                                    YES            5,840,274</span></span>
+<span><span class="co">## 37                                                    YES            5,680,470</span></span>
+<span><span class="co">## 38                                                    YES            3,985,866</span></span>
+<span><span class="co">## 39                                                    YES            4,371,221</span></span>
+<span><span class="co">## 40                                                    YES            4,183,382</span></span>
+<span><span class="co">## 41                                                    YES            6,431,419</span></span>
+<span><span class="co">## 42                                                    YES            4,533,070</span></span>
+<span><span class="co">## 43                                                    YES            4,470,960</span></span>
+<span><span class="co">## 44                                                    YES            3,101,277</span></span>
+<span><span class="co">##    Total Harvest (A+B1) Lower 95% Confidence Limit</span></span>
+<span><span class="co">## 1                                        1,250,396</span></span>
+<span><span class="co">## 2                                        7,299,860</span></span>
+<span><span class="co">## 3                                        3,434,035</span></span>
+<span><span class="co">## 4                                        1,329,596</span></span>
+<span><span class="co">## 5                                        3,268,157</span></span>
+<span><span class="co">## 6                                       10,763,303</span></span>
+<span><span class="co">## 7                                        1,366,624</span></span>
+<span><span class="co">## 8                                        2,403,721</span></span>
+<span><span class="co">## 9                                        4,713,313</span></span>
+<span><span class="co">## 10                                       3,418,922</span></span>
+<span><span class="co">## 11                                       4,652,967</span></span>
+<span><span class="co">## 12                                       3,452,822</span></span>
+<span><span class="co">## 13                                       3,305,749</span></span>
+<span><span class="co">## 14                                       2,134,564</span></span>
+<span><span class="co">## 15                                       4,978,847</span></span>
+<span><span class="co">## 16                                       4,477,159</span></span>
+<span><span class="co">## 17                                       4,439,363</span></span>
+<span><span class="co">## 18                                       1,038,301</span></span>
+<span><span class="co">## 19                                         853,489</span></span>
+<span><span class="co">## 20                                       3,276,984</span></span>
+<span><span class="co">## 21                                       2,763,059</span></span>
+<span><span class="co">## 22                                       3,509,497</span></span>
+<span><span class="co">## 23                                       3,173,616</span></span>
+<span><span class="co">## 24                                       1,508,778</span></span>
+<span><span class="co">## 25                                       1,345,753</span></span>
+<span><span class="co">## 26                                       1,286,216</span></span>
+<span><span class="co">## 27                                       1,620,575</span></span>
+<span><span class="co">## 28                                       1,275,253</span></span>
+<span><span class="co">## 29                                       2,954,578</span></span>
+<span><span class="co">## 30                                       2,971,834</span></span>
+<span><span class="co">## 31                                       1,236,925</span></span>
+<span><span class="co">## 32                                       2,776,131</span></span>
+<span><span class="co">## 33                                       2,216,072</span></span>
+<span><span class="co">## 34                                       3,093,921</span></span>
+<span><span class="co">## 35                                       3,922,223</span></span>
+<span><span class="co">## 36                                       4,569,664</span></span>
+<span><span class="co">## 37                                       3,787,737</span></span>
+<span><span class="co">## 38                                       3,384,319</span></span>
+<span><span class="co">## 39                                       3,728,652</span></span>
+<span><span class="co">## 40                                       3,609,422</span></span>
+<span><span class="co">## 41                                       5,347,339</span></span>
+<span><span class="co">## 42                                       3,653,473</span></span>
+<span><span class="co">## 43                                       3,638,467</span></span>
+<span><span class="co">## 44                                       2,572,447</span></span>
+<span><span class="co">##    Total Harvest (A+B1) Upper 95% Confidence Limit</span></span>
+<span><span class="co">## 1                                        3,524,658</span></span>
+<span><span class="co">## 2                                       14,092,297</span></span>
+<span><span class="co">## 3                                        6,716,823</span></span>
+<span><span class="co">## 4                                        3,564,742</span></span>
+<span><span class="co">## 5                                        5,715,726</span></span>
+<span><span class="co">## 6                                       27,745,831</span></span>
+<span><span class="co">## 7                                        3,719,057</span></span>
+<span><span class="co">## 8                                        4,482,153</span></span>
+<span><span class="co">## 9                                        8,420,083</span></span>
+<span><span class="co">## 10                                       6,746,155</span></span>
+<span><span class="co">## 11                                       7,421,999</span></span>
+<span><span class="co">## 12                                       5,553,444</span></span>
+<span><span class="co">## 13                                      10,855,275</span></span>
+<span><span class="co">## 14                                       6,204,229</span></span>
+<span><span class="co">## 15                                       8,670,806</span></span>
+<span><span class="co">## 16                                       9,880,073</span></span>
+<span><span class="co">## 17                                       8,645,296</span></span>
+<span><span class="co">## 18                                       2,039,788</span></span>
+<span><span class="co">## 19                                       2,345,975</span></span>
+<span><span class="co">## 20                                       5,227,152</span></span>
+<span><span class="co">## 21                                       5,775,443</span></span>
+<span><span class="co">## 22                                       5,621,258</span></span>
+<span><span class="co">## 23                                       4,938,484</span></span>
+<span><span class="co">## 24                                       3,182,113</span></span>
+<span><span class="co">## 25                                       2,655,415</span></span>
+<span><span class="co">## 26                                       2,268,634</span></span>
+<span><span class="co">## 27                                       2,617,330</span></span>
+<span><span class="co">## 28                                       3,613,020</span></span>
+<span><span class="co">## 29                                       4,872,119</span></span>
+<span><span class="co">## 30                                       7,197,321</span></span>
+<span><span class="co">## 31                                       2,181,694</span></span>
+<span><span class="co">## 32                                       4,596,999</span></span>
+<span><span class="co">## 33                                       3,794,756</span></span>
+<span><span class="co">## 34                                       4,854,291</span></span>
+<span><span class="co">## 35                                       5,954,943</span></span>
+<span><span class="co">## 36                                       7,110,884</span></span>
+<span><span class="co">## 37                                       7,573,202</span></span>
+<span><span class="co">## 38                                       4,587,413</span></span>
+<span><span class="co">## 39                                       5,013,791</span></span>
+<span><span class="co">## 40                                       4,757,342</span></span>
+<span><span class="co">## 41                                       7,515,499</span></span>
+<span><span class="co">## 42                                       5,412,666</span></span>
+<span><span class="co">## 43                                       5,303,453</span></span>
+<span><span class="co">## 44                                       3,630,107</span></span>
+<span><span class="co">##    ** Contribution of Imputed Data to Total Harvest Rate        SPECIES</span></span>
+<span><span class="co">## 1                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 2                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 3                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 4                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 5                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 6                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 7                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 8                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 9                                                     0% BLACK SEA BASS</span></span>
+<span><span class="co">## 10                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 11                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 12                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 13                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 14                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 15                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 16                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 17                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 18                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 19                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 20                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 21                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 22                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 23                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 24                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 25                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 26                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 27                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 28                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 29                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 30                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 31                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 32                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 33                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 34                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 35                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 36                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 37                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 38                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 39                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 40                                                   22% BLACK SEA BASS</span></span>
+<span><span class="co">## 41                                                    1% BLACK SEA BASS</span></span>
+<span><span class="co">## 42                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 43                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">## 44                                                    0% BLACK SEA BASS</span></span>
+<span><span class="co">##                    REGION</span></span>
+<span><span class="co">## 1  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 2  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 3  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 4  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 5  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 6  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 7  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 8  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 9  NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 10 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 11 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 12 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 13 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 14 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 15 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 16 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 17 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 18 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 19 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 20 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 21 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 22 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 23 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 24 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 25 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 26 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 27 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 28 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 29 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 30 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 31 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 32 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 33 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 34 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 35 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 36 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 37 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 38 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 39 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 40 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 41 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 42 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 43 NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 44 NORTH AND MID-ATLANTIC</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $metadata</span></span>
-<span><span class="co">## <span style="color: #949494;"># A tibble: 13 × 2</span></span></span>
-<span><span class="co">##    X2                                                                      X3   </span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="color: #949494;">""</span>                                                                      <span style="color: #949494;">""</span>   </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="color: #949494;">"</span>Your Query Parameters:<span style="color: #949494;">"</span>                                                <span style="color: #949494;">"</span>You…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="color: #949494;">"</span>Query:<span style="color: #949494;">"</span>                                                                <span style="color: #949494;">"</span>MRI…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="color: #949494;">"</span>Year:<span style="color: #949494;">"</span>                                                                 <span style="color: #949494;">"</span>198…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="color: #949494;">"</span>Summarize By:<span style="color: #949494;">"</span>                                                         <span style="color: #949494;">"</span>ANN…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="color: #949494;">"</span>Fishing Year:<span style="color: #949494;">"</span>                                                         <span style="color: #949494;">"</span>CAL…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="color: #949494;">"</span>Species:<span style="color: #949494;">"</span>                                                              <span style="color: #949494;">"</span>BLA…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="color: #949494;">"</span>Geographic Area:<span style="color: #949494;">"</span>                                                      <span style="color: #949494;">"</span>NOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="color: #949494;">"</span>Fishing Mode:<span style="color: #949494;">"</span>                                                         <span style="color: #949494;">"</span>ALL…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="color: #949494;">"</span>Fishing Area:<span style="color: #949494;">"</span>                                                         <span style="color: #949494;">"</span>ALL…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">11</span> <span style="color: #949494;">"</span>Type of Catch:<span style="color: #949494;">"</span>                                                        <span style="color: #949494;">"</span>HAR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">12</span> <span style="color: #949494;">"</span>Information:<span style="color: #949494;">"</span>                                                          <span style="color: #949494;">"</span>NUM…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">13</span> <span style="color: #949494;">"</span>Notes on Query Results:        MRIP does not support the use of estim… <span style="color: #949494;">"</span>Not…</span></span>
+<span><span class="co">##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   X2</span></span>
+<span><span class="co">## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </span></span>
+<span><span class="co">## 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Your Query Parameters:</span></span>
+<span><span class="co">## 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Query:</span></span>
+<span><span class="co">## 4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Year:</span></span>
+<span><span class="co">## 5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Summarize By:</span></span>
+<span><span class="co">## 6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Fishing Year:</span></span>
+<span><span class="co">## 7                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Species:</span></span>
+<span><span class="co">## 8                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Geographic Area:</span></span>
+<span><span class="co">## 9                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Fishing Mode:</span></span>
+<span><span class="co">## 10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     Fishing Area:</span></span>
+<span><span class="co">## 11                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Type of Catch:</span></span>
+<span><span class="co">## 12                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Information:</span></span>
+<span><span class="co">## 13 Notes on Query Results:        MRIP does not support the use of estimates with a percent standard error above 50 and in those instances, recommends considering higher levels of aggregation (e.g., across states, geographic regions, or fishing modes).Due to COVID-related disruptions to the Access Point Angler Intercept Survey and subsequent gaps in catch records, some catch estimates are based in part on imputed data.  Columns labeled 'Contribution of Imputed Data to {ESTIMATE} rate' represent the weighted percentage of catch rate information that can be attributed to imputed catch data. Note: This does *not* represent the percent difference between the estimate with and without imputed data incorporated. If no such column appears in your query results, no imputed data were used.Estimates for Hawaii (prior to 2023) and Puerto Rico (prior to 2014) are based on Marine Recreational Fisheries Statistics Survey methodology and have not been calibrated.         Beginning in 2023, estimates for Hawaii are produced using certified MRIP survey designs and weighted estimation methods.</span></span>
+<span><span class="co">##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   X3</span></span>
+<span><span class="co">## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </span></span>
+<span><span class="co">## 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Your Query Parameters:</span></span>
+<span><span class="co">## 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             MRIP CATCH TIME SERIES</span></span>
+<span><span class="co">## 4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        1981 - 2024</span></span>
+<span><span class="co">## 5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ANNUAL</span></span>
+<span><span class="co">## 6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            CALENDAR YEAR (JANUARY 1 - DECEMBER 31)</span></span>
+<span><span class="co">## 7                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     BLACK SEA BASS</span></span>
+<span><span class="co">## 8                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             NORTH AND MID-ATLANTIC</span></span>
+<span><span class="co">## 9                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ALL MODES COMBINED</span></span>
+<span><span class="co">## 10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ALL AREAS COMBINED</span></span>
+<span><span class="co">## 11                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             HARVEST (TYPE A + B1)</span></span>
+<span><span class="co">## 12                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   NUMBERS OF FISH</span></span>
+<span><span class="co">## 13 Notes on Query Results:        MRIP does not support the use of estimates with a percent standard error above 50 and in those instances, recommends considering higher levels of aggregation (e.g., across states, geographic regions, or fishing modes).Due to COVID-related disruptions to the Access Point Angler Intercept Survey and subsequent gaps in catch records, some catch estimates are based in part on imputed data.  Columns labeled 'Contribution of Imputed Data to {ESTIMATE} rate' represent the weighted percentage of catch rate information that can be attributed to imputed catch data. Note: This does *not* represent the percent difference between the estimate with and without imputed data incorporated. If no such column appears in your query results, no imputed data were used.Estimates for Hawaii (prior to 2023) and Puerto Rico (prior to 2014) are based on Marine Recreational Fisheries Statistics Survey methodology and have not been calibrated.         Beginning in 2023, estimates for Hawaii are produced using certified MRIP survey designs and weighted estimation methods.</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $url</span></span>
 <span><span class="co">## [1] "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&amp;qyearfrom=1981&amp;qyearto=2024&amp;qsummary=cumulative_pya&amp;qwave=1&amp;fshyr=annual&amp;qstate=NORTH+AND+MID-ATLANTIC&amp;qspecies=BLACK%20SEA%20BASS&amp;qmode_fx=ALL+MODES+COMBINED&amp;qarea_x=ALL+AREAS+COMBINED&amp;qcatch_type=HARVEST+%28TYPE+A+%2B+B1%29&amp;qdata_type=NUMBERS+OF+FISH&amp;qoutput_type=TABLE&amp;qsource=PRODUCTION"</span></span></code></pre>
@@ -209,12 +916,12 @@ the landings (A and B1).</p>
 data can be used directly for analyses, with minimal data wrangling. The
 data can be formatted for use in ESPs with the function
 <code><a href="../reference/create_total_mrip.html">create_total_mrip()</a></code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">esp_catch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_mrip.html">create_total_mrip</a></span><span class="op">(</span><span class="va">bsb_catch</span><span class="op">$</span><span class="va">data</span>,</span>
 <span>  var_name <span class="op">=</span> <span class="st">"catch"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Removing data that does not meet MRIP standards. If you want to keep this data, set `remove_non_standard = FALSE`.</span></span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">esp_catch</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%;" class="table">
@@ -317,12 +1024,12 @@ data can be formatted for use in ESPs with the function
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">esp_landings</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_total_mrip.html">create_total_mrip</a></span><span class="op">(</span><span class="va">bsb_landings</span><span class="op">$</span><span class="va">data</span>,</span>
 <span>  var_name <span class="op">=</span> <span class="st">"landings"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Removing data that does not meet MRIP standards. If you want to keep this data, set `remove_non_standard = FALSE`.</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">esp_landings</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%;" class="table">
@@ -435,36 +1142,32 @@ This function is useful for automating data pulls and saving them in a
 specified folder. The file names are automatically generated, and are
 printed when the function runs. The function returns the file name as a
 value, which can be used to read the data back in later.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/save_catch.html">save_catch</a></span><span class="op">(</span></span>
 <span>  this_species <span class="op">=</span> <span class="st">"black sea bass"</span>,</span>
 <span>  this_region <span class="op">=</span> <span class="st">"north and mid-atlantic"</span>,</span>
 <span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"inst/mrip_data"</span><span class="op">)</span>,</span>
 <span>  catch_type <span class="op">=</span> <span class="st">"all"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Data saved at: C:/Users/stephanie.owen/Documents/READ-EDAB-NEesp2/inst/mrip_data/catch_all_black_sea_bass_north_and_mid-atlantic.Rds</span></span></code></pre>
-<pre><code><span><span class="co">## [1] "C:/Users/stephanie.owen/Documents/READ-EDAB-NEesp2/inst/mrip_data/catch_all_black_sea_bass_north_and_mid-atlantic.Rds"</span></span></code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/save_catch.html">save_catch</a></span><span class="op">(</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/save_catch.html">save_catch</a></span><span class="op">(</span></span>
 <span>  this_species <span class="op">=</span> <span class="st">"black sea bass"</span>,</span>
 <span>  this_region <span class="op">=</span> <span class="st">"north and mid-atlantic"</span>,</span>
 <span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"inst/mrip_data"</span><span class="op">)</span>,</span>
 <span>  catch_type <span class="op">=</span> <span class="st">"landings"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Data saved at: C:/Users/stephanie.owen/Documents/READ-EDAB-NEesp2/inst/mrip_data/catch_landings_black_sea_bass_north_and_mid-atlantic.Rds</span></span></code></pre>
-<pre><code><span><span class="co">## [1] "C:/Users/stephanie.owen/Documents/READ-EDAB-NEesp2/inst/mrip_data/catch_landings_black_sea_bass_north_and_mid-atlantic.Rds"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="plot-data">Plot data<a class="anchor" aria-label="anchor" href="#plot-data"></a>
 </h3>
 <p>The data can be plotted with <code><a href="../reference/plt_indicator.html">plt_indicator()</a></code> as long as
 it has columns named INDICATOR_NAME, DATA_VALUE, and YEAR.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">esp_catch</span><span class="op">)</span></span></code></pre></div>
-<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-9-1.png" alt="" width="700"></p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">esp_landings</span><span class="op">)</span></span></code></pre></div>
-<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
+<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-9-2.png" alt="" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="suggested-workflow">Suggested workflow<a class="anchor" aria-label="anchor" href="#suggested-workflow"></a>
@@ -474,7 +1177,7 @@ in the .Rds, and formatting using <code><a href="../reference/create_total_mrip.
 format the data for use in ESPs. This allows for easy access to the data
 and metadata, and ensures that the data is in a consistent format for
 analysis.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">save_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/save_catch.html">save_catch</a></span><span class="op">(</span></span>
 <span>  this_species <span class="op">=</span> <span class="st">"black sea bass"</span>,</span>
 <span>  this_region <span class="op">=</span> <span class="st">"north and mid-atlantic"</span>,</span>
@@ -488,7 +1191,7 @@ analysis.</p>
 <span>                               var_name <span class="op">=</span> <span class="st">"catch"</span><span class="op">)</span></span></code></pre></div>
 <p>This workflow can also be easily iterated over multiple species with
 <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code>.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">species_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black sea bass"</span>, <span class="st">"summer flounder"</span>, <span class="st">"scup"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
@@ -523,9 +1226,9 @@ state).</p>
 </h3>
 <p>Here is a sample query for Black Sea Bass trips in the North Atlantic
 in 2020.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips_2020</span></span></code></pre></div>
 <pre><code><span><span class="co">## $data</span></span>
 <span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 13</span></span></span>
@@ -546,7 +1249,7 @@ in 2020.</p>
 be manually downloaded and combined, as shown below. The following
 queries Black Sea Bass trips for the North Atlantic and Mid-Atlantic
 from 2020-2024.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trips_2020</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span></span>
 <span><span class="va">trips_2021</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2021"</span><span class="op">)</span></span>
 <span><span class="va">trips_2022</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"North Atlantic"</span>, year <span class="op">=</span> <span class="st">"2022"</span><span class="op">)</span></span>
@@ -558,7 +1261,7 @@ from 2020-2024.</p>
 <span><span class="va">trips2_2022</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"Mid-Atlantic"</span>, year <span class="op">=</span> <span class="st">"2022"</span><span class="op">)</span></span>
 <span><span class="va">trips2_2023</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"Mid-Atlantic"</span>, year <span class="op">=</span> <span class="st">"2023"</span><span class="op">)</span></span>
 <span><span class="va">trips2_2024</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_mrip_trips.html">get_mrip_trips</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>, region <span class="op">=</span> <span class="st">"Mid-Atlantic"</span>, year <span class="op">=</span> <span class="st">"2024"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="va">trips_2020</span><span class="op">$</span><span class="va">data</span>,</span>
 <span>  <span class="va">trips_2021</span><span class="op">$</span><span class="va">data</span>,</span>
@@ -603,22 +1306,19 @@ specified folder. Data can then be read in and used in analyses. For
 example, the following code will download and save the same data that is
 shown in the <code>trips_2020</code> object above. The file name is
 automatically created and is returned by the function.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/save_trips.html">save_trips</a></span><span class="op">(</span></span>
 <span>  this_species <span class="op">=</span> <span class="st">"BLACK SEA BASS"</span>,</span>
 <span>  this_year <span class="op">=</span> <span class="fl">2020</span>,</span>
 <span>  this_region <span class="op">=</span> <span class="st">"North Atlantic"</span>,</span>
 <span>  out_folder <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"inst/mrip_data"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## MRIP query successful: BLACK SEA BASS North Atlantic 2020</span></span></code></pre>
-<pre><code><span><span class="co">## Data saved at: C:/Users/stephanie.owen/Documents/READ-EDAB-NEesp2/inst/mrip_data/BLACK_SEA_BASS_trips/trips_BLACK_SEA_BASS_North_Atlantic_2020.Rds</span></span></code></pre>
-<pre><code><span><span class="co">## [1] "C:/Users/stephanie.owen/Documents/READ-EDAB-NEesp2/inst/mrip_data/BLACK_SEA_BASS_trips/trips_BLACK_SEA_BASS_North_Atlantic_2020.Rds"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="automate-data-pulls-with-save_trips">Automate data pulls with <code>save_trips()</code><a class="anchor" aria-label="anchor" href="#automate-data-pulls-with-save_trips"></a>
 </h3>
 <p>To iterate with <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code>:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create parameter grid</span></span>
 <span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span></span>
 <span>  region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"north atlantic"</span>, <span class="st">"mid-atlantic"</span><span class="op">)</span>,</span>
@@ -655,7 +1355,7 @@ combined. Note that this function will automatically combine the data
 from multiple regions, so if you would like to create region-specific
 indicators, you must run the function over two separate lists of
 files.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">esp_trips</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_mrip_trips.html">create_mrip_trips</a></span><span class="op">(</span></span>
 <span>  files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"mrip_data"</span>, package <span class="op">=</span> <span class="st">"NEesp2"</span><span class="op">)</span>,</span>
 <span>    pattern <span class="op">=</span> <span class="st">"trips_Black_sea_bass*"</span>,</span>
@@ -737,10 +1437,10 @@ files.</p>
 <div class="section level3">
 <h3 id="plot-data-1">Plot data<a class="anchor" aria-label="anchor" href="#plot-data-1"></a>
 </h3>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plt_indicator.html">plt_indicator</a></span><span class="op">(</span><span class="va">esp_trips</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## N &lt; 30</span></span></code></pre>
-<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="using_mrip_data_files/figure-html/unnamed-chunk-21-1.png" alt="" width="700"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
