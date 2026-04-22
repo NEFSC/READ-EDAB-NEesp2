@@ -196,7 +196,6 @@ glorys_silverhake <- create_spatial_indicator(indicator_name = "bottomT",
 write.csv(glorys_redhake, here::here('data-raw/2026','silverhake_glorys_bottomT.csv'), row.names = FALSE)
 
 ### WITCH FLOUNDER
-# USING BTS_STRATA.shp ERRORS OUT WITH A CROPPING ERROR (Error: [crop] cannot crop a SpatRaster with an empty extent, [mask] CRS do not match )
 bt_witchflounder_EPU <- create_spatial_indicator(indicator_name = "bottomT", 
                                           units = "degC",
                                           data.in = c(here::here('data-raw/2026','duPontavice_bottom_temp_1959_2021.nc')),
@@ -212,47 +211,48 @@ bt_witchflounder_EPU <- create_spatial_indicator(indicator_name = "bottomT",
                                           write.out = F)
 write.csv(bt_witchflounder_EPU, here::here('data-raw/2026','witchflounder_hubert_bottomT.csv'), row.names = FALSE)
 
-hubert_witchflounder_BTS <- create_spatial_indicator(indicator_name = "bottomT",
-                                                     units = "degC",
-                                                     data.in = c(here::here('data-raw/2026','duPontavice_bottom_temp_1959_2021.nc')),
-                                                     file.time = 'annual',
-                                                     output.files = c(here::here('data-raw','witchflounder_hubert.nc')),
-                                                     shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
-                                                     var.name = "bottomT",
-                                                     area.names = c(
-                                                       #"04010", "04030", "04060", "04080", "09250",
-                                                       #                "09260", "09270", "09280", "09290", "09300",
-                                                       #                "09310", "09320", "09330", "09340", "09350", "09360", 
-                                                       "01220", "01230", "01240", "01250",
-                                                       "01260", "01270", "01280", "01290", "01300",
-                                                       "01360", "01370", "01380", "01390", "01400"),
-                                                     statistic = 'mean',
-                                                     agg.time = 'days',
-                                                     tz = NA,
-                                                     touches = TRUE,
-                                                     write.out = F)
-write.csv(hubert_witchflounder_BTS, here::here('data-raw/2026','witchflounder_hubert_BTS_partial_bottomT.csv'), row.names = FALSE)
+# WORKS WITH ONLY OFFSHORE STRATA - INSHORE STRATA STARTING WITH 04-09 DO NOT OVERLAP WITH THE DATA
+# hubert_witchflounder_BTS <- create_spatial_indicator(indicator_name = "bottomT",
+#                                                      units = "degC",
+#                                                      data.in = c(here::here('data-raw/2026','duPontavice_bottom_temp_1959_2021.nc')),
+#                                                      file.time = 'annual',
+#                                                      output.files = c(here::here('data-raw','witchflounder_hubert.nc')),
+#                                                      shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
+#                                                      var.name = "sea_water_temperature_at_sea_floor",
+#                                                      area.names = c(
+#                                                        #"04010", "04030", "04060", "04080", "09250",
+#                                                        #                "09260", "09270", "09280", "09290", "09300",
+#                                                        #                "09310", "09320", "09330", "09340", "09350", "09360", 
+#                                                        "01220", "01230", "01240", "01250",
+#                                                        "01260", "01270", "01280", "01290", "01300",
+#                                                        "01360", "01370", "01380", "01390", "01400"),
+#                                                      statistic = 'mean',
+#                                                      agg.time = 'days',
+#                                                      tz = NA,
+#                                                      touches = TRUE,
+#                                                      write.out = F)
+# write.csv(hubert_witchflounder_BTS, here::here('data-raw/2026','witchflounder_hubert_BTS_partial_bottomT.csv'), row.names = FALSE)
 
-glorys_witchflounder_BTS <- create_spatial_indicator(indicator_name = "bottomT",
-                                              units = "degC",
-                                              data.in = c(here::here('data-raw/2026','glorys_2021_2026.nc')),
-                                              file.time = 'annual',
-                                              output.files = c(here::here('data-raw','witchflounder_glorys.nc')),
-                                              shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
-                                              var.name = "bottomT",
-                                               area.names = c(
-                                              #"04010", "04030", "04060", "04080", "09250",
-                                              #                "09260", "09270", "09280", "09290", "09300",
-                                              #                "09310", "09320", "09330", "09340", "09350", "09360", 
-                                                             "01220", "01230", "01240", "01250",
-                                                             "01260", "01270", "01280", "01290", "01300",
-                                                             "01360", "01370", "01380", "01390", "01400"),
-                                              statistic = 'mean',
-                                              agg.time = 'days',
-                                              tz = NA,
-                                              touches = TRUE,
-                                              write.out = F)
-write.csv(glorys_witchflounder_BTS, here::here('data-raw/2026','witchflounder_glorys_BTS_partial_bottomT.csv'), row.names = FALSE)
+# glorys_witchflounder_BTS <- create_spatial_indicator(indicator_name = "bottomT",
+#                                               units = "degC",
+#                                               data.in = c(here::here('data-raw/2026','glorys_2021_2026.nc')),
+#                                               file.time = 'annual',
+#                                               output.files = c(here::here('data-raw','witchflounder_glorys.nc')),
+#                                               shp.file = here::here('data-raw/shapefiles','BTS_STRATA.shp'),
+#                                               var.name = "bottomT",
+#                                                area.names = c(
+#                                               #"04010", "04030", "04060", "04080", "09250",
+#                                               #                "09260", "09270", "09280", "09290", "09300",
+#                                               #                "09310", "09320", "09330", "09340", "09350", "09360", 
+#                                                              "01220", "01230", "01240", "01250",
+#                                                              "01260", "01270", "01280", "01290", "01300",
+#                                                              "01360", "01370", "01380", "01390", "01400"),
+#                                               statistic = 'mean',
+#                                               agg.time = 'days',
+#                                               tz = NA,
+#                                               touches = TRUE,
+#                                               write.out = F)
+# write.csv(glorys_witchflounder_BTS, here::here('data-raw/2026','witchflounder_glorys_BTS_partial_bottomT.csv'), row.names = FALSE)
 
 glorys_witchflounder_EPU <- create_spatial_indicator(indicator_name = "bottomT", 
                                                  units = "degC",
@@ -268,3 +268,34 @@ glorys_witchflounder_EPU <- create_spatial_indicator(indicator_name = "bottomT",
                                                  touches = TRUE,
                                                  write.out = F)
 write.csv(glorys_witchflounder_EPU, here::here('data-raw/2026','witchflounder_glorys_bottomT.csv'), row.names = FALSE)
+
+### SCALLOP
+hubert_scallop_bt <- create_spatial_indicator(indicator_name = "bottomT", 
+                                        units = "degC",
+                                        data.in = c(here::here('data-raw/2026','duPontavice_bottom_temp_1959_2021.nc')),
+                                        file.time = 'annual',
+                                        output.files = c(here::here('data-raw','scallop_hubert_bottomT.nc')),
+                                        shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                                        var.name = "sea_water_temperature_at_sea_floor",
+                                        area.names = c("MAB","GB"),
+                                        statistic = 'mean',
+                                        agg.time = 'days',
+                                        tz = NA,
+                                        touches = TRUE,
+                                        write.out = F)
+write.csv(hubert_scallop_bt, here::here('data-raw/2026','scallop_hubert_bottomT.csv'), row.names = F)
+
+glorys_scallop_bt <- create_spatial_indicator(indicator_name = "bottomT", 
+                                                     units = "degC",
+                                                     data.in = c(here::here('data-raw/2026','glorys_2021_2026.nc')),
+                                                     file.time = 'annual',
+                                                     output.files = c(here::here('data-raw','scallop_glorys.nc')),
+                                                     shp.file = here::here('data-raw/shapefiles','EPU_NOESTUARIES.shp'),
+                                                     var.name = "bottomT",
+                                                     area.names = c("MAB","GB"),
+                                                     statistic = 'mean',
+                                                     agg.time = 'days',
+                                                     tz = NA,
+                                                     touches = TRUE,
+                                                     write.out = F)
+write.csv(glorys_scallop_bt, here::here('data-raw/2026','scallop_glorys_bottomT.csv'), row.names = FALSE)
