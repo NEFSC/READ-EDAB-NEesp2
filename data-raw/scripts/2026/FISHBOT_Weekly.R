@@ -1,6 +1,6 @@
 ## Download FISHBOT data from ERDDAP
 end = Sys.Date()
-start = end - lubridate::days(7)
+start = end - lubridate::days(90)
 url = paste0(
   "https://erddap.ondeckdata.com/erddap/tabledap/fishbot_realtime.csvp?time%2Ctemperature%2Cgrid_id%2Clatitude%2Clongitude&time%3E=",
   lubridate::year(start),

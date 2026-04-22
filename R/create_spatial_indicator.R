@@ -9,7 +9,7 @@
 #' output.files = vector of full output file names corresponding to each input file
 #' shp.file = Shape file you wish to crop each input file to
 #' var.name = Variable name you wish to extract.
-#' area.names = Names of shape file areas you want to summarize. 
+#' area.names = Names of shape file areas you want to summarize.
 #' statistic = Which statistic to calculate = 'mean'
 #' agg.time = Time scale to calculate over (days, doy, months, season, or years)
 #' tz = Time zone to convert. No correction if NA
@@ -23,26 +23,42 @@
 #' @importFrom rlang .data
 #' @export
 
-create_spatial_indicator <- function(indicator_name,
-                                     units,
-                                     ...) { 
-  make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...) 
-  
+create_spatial_indicator <- function(indicator_name, units, ...) {
+  make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...)
+
   df <- make_2d_summary_output %>%
-    terra::as.data.frame(na.rm = FALSE) 
-  
-  output <- df %>%
-    dplyr::mutate(time = as.Date(.data$time),
-                  DAY = lubridate::day(.data$time), 
-                  MONTH = lubridate::month(.data$time), 
-                  YEAR = lubridate::year(.data$time)) %>%
-    subset(select = -c(agg.time, time, ls.id, var.name) ) |>
-    dplyr::mutate(INDICATOR_NAME = indicator_name,
-                  INDICATOR_UNITS = units)  %>%
-    dplyr::rename(DATA_VALUE = value,
-                  AREA = area,
-                  STATISTIC = statistic) %>%
-    purrr::discard(~all(is.na(.)))
-  
+    terra::as.data.frame(na.rm = FALSE)
+
+  if (agg.time == "months") {
+    output <- df %>%
+      dplyr::rename(
+        MONTH = time,
+        YEAR = ls.id,
+        DATA_VALUE = value,
+        AREA = area,
+        STATISTIC = statistic
+      ) |>
+      dplyr::mutate(INDICATOR_NAME = indicator_name, INDICATOR_UNITS = units)
+    output <- output %>%
+      subset(select = -c(agg.time, var.name))
+    output <- output |>
+      purrr::discard(~ all(is.na(.)))
+  } else {
+    output <- df %>%
+      dplyr::mutate(
+        time = as.Date(.data$time),
+        DAY = lubridate::day(.data$time),
+        MONTH = lubridate::month(.data$time),
+        YEAR = lubridate::year(.data$time)
+      ) %>%
+      subset(select = -c(agg.time, time, ls.id, var.name)) |>
+      dplyr::mutate(
+        INDICATOR_NAME = indicator_name,
+        INDICATOR_UNITS = units
+      ) %>%
+      dplyr::rename(DATA_VALUE = value, AREA = area, STATISTIC = statistic) %>%
+      purrr::discard(~ all(is.na(.)))
+  }
+
   return(output)
 }
