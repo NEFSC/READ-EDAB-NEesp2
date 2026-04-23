@@ -5,6 +5,8 @@
 
 devtools::load_all()
 
+### inputs ----
+
 ### FILEPATHS FOR EXTRACTING VAR.NAME
 glorys <- ncdf4::nc_open(here::here('data-raw/2026/glorys_2021_2026.nc'))
 hubert <- ncdf4::nc_open(here::here(
@@ -24,64 +26,11 @@ hubert <- here::here('data-raw/2026/duPontavice_bottom_temp_1959_2021.nc') #|>
 fishbot <- '//nefscdata/SOE_ESP_Data/READ-EDAB-NEesp2/data-raw/2026/fishbot_2000_2026.nc' #|>
   # terra::vect()
 
-
 ## create stock shapefile from strata provided
 shp <- terra::vect(here::here('data-raw/shapefiles', 'BTS_STRATA.shp'))
 
-create_shp <- function(strata, orig_shp = shp) {
-  shp_out <- orig_shp[orig_shp$STRATUMA %in% strata, ] |>
-    terra::aggregate()
-  # add dummy attribute so it works with edab_utils
-  shp_out$region <- "stock_area"
-
-  return(shp_out)
-}
-
-eval_spatial <- function(species, strata_nums) {
-  exp <- knitr::knit_expand(
-    file = here::here("data-raw/scripts/2026/spatial_code_template.R"),
-    species = species,
-    strata = strata_nums
-  )
-  
-  eval(parse(text = exp))
-}
-
-eval_spatial(species = input_data[[1]]$species,
-             strata_nums = input_data[[1]]$strat)
-
-purrr::map(input_data,
-           ~ eval_spatial(species = .x$species,
-                          strata_nums = .x$strat))
-
 input_data <- list(
-  halibut = list(species = "halibut",
-  strat = 'c(
-    "01130",
-    "01140",
-    "01150",
-    "01160",
-    "01170",
-    "01180",
-    "01190",
-    "01200",
-    "01210",
-    "01220",
-    "01230",
-    "01240",
-    "01250",
-    "01260",
-    "01270",
-    "01280",
-    "01290",
-    "01300",
-    "01360",
-    "01370",
-    "01380",
-    "01390",
-    "01400"
-  )'),
-  pollock = list(species = "pollock",
+  halibut = list(species = "ATLANTICHALIBUT",
                  strat = 'c(
     "01130",
     "01140",
@@ -107,7 +56,33 @@ input_data <- list(
     "01390",
     "01400"
   )'),
-  red_hake = list(species = "red_hake",
+  pollock = list(species = "ATLANTICPOLLOCK",
+                 strat = 'c(
+    "01130",
+    "01140",
+    "01150",
+    "01160",
+    "01170",
+    "01180",
+    "01190",
+    "01200",
+    "01210",
+    "01220",
+    "01230",
+    "01240",
+    "01250",
+    "01260",
+    "01270",
+    "01280",
+    "01290",
+    "01300",
+    "01360",
+    "01370",
+    "01380",
+    "01390",
+    "01400"
+  )'),
+  red_hake = list(species = "ATLANTICREDHAKE",
                   strat = 'c(
     "01200",
     "01210",
@@ -161,7 +136,7 @@ input_data <- list(
     "01750",
     "01760"
   )'),
-  silver_hake = list(species = "silver_hake",
+  silver_hake = list(species = "SILVERHAKE",
                      strat = 'c(
     "01200",
     "01210",
@@ -216,6 +191,31 @@ input_data <- list(
     "01760"
   )'))
 
+## functions ----
+create_shp <- function(strata, orig_shp = shp) {
+  shp_out <- orig_shp[orig_shp$STRATUMA %in% strata, ] |>
+    terra::aggregate()
+  # add dummy attribute so it works with edab_utils
+  shp_out$region <- "stock_area"
+
+  return(shp_out)
+}
+
+eval_spatial <- function(species, strata_nums) {
+  exp <- knitr::knit_expand(
+    file = here::here("data-raw/scripts/2026/spatial_code_template.R"),
+    species = species,
+    strata = strata_nums
+  )
+  
+  eval(parse(text = exp))
+}
+
+### run ----
+
+purrr::map(input_data,
+           ~ eval_spatial(species = .x$species,
+                          strata_nums = .x$strat))
 
 
 ### WITCH FLOUNDER
