@@ -23,8 +23,11 @@
 #' @importFrom rlang .data
 #' @export
 
-create_spatial_indicator <- function(indicator_name, units, ...) {
-  make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(...)
+create_spatial_indicator <- function(indicator_name, units, agg.time, ...) {
+  make_2d_summary_output <- EDABUtilities::make_2d_summary_ts(
+    agg.time = agg.time,
+    ...
+  )
 
   df <- make_2d_summary_output %>%
     terra::as.data.frame(na.rm = FALSE)

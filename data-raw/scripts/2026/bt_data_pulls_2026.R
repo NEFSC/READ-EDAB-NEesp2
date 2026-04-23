@@ -12,6 +12,17 @@ hubert <- ncdf4::nc_open(here::here(
 ))
 fishbot <- ncdf4::nc_open(here::here('data-raw/2026/fishbot_2000_2026.nc'))
 
+### filepaths from container
+glorys <- '//nefscdata/SOE_ESP_Data/READ-EDAB-NEesp2/data-raw/2026/glorys_2021_2026.nc' # |>
+# terra::vect()
+
+hubert <- "//nefscdata/SOE_ESP_Data/READ-EDAB-NEesp2/data-raw/2026/duPontavice_bottom_temp_1959_2021.nc" #|>
+# terra::vect()
+
+fishbot <- '//nefscdata/SOE_ESP_Data/READ-EDAB-NEesp2/data-raw/2026/fishbot_2000_2026.nc' |>
+  terra::vect()
+
+
 ## create stock shapefile from strata provided
 shp <- terra::vect(here::here('data-raw/shapefiles', 'BTS_STRATA.shp'))
 
@@ -25,6 +36,38 @@ create_shp <- function(strata, orig_shp = shp) {
 }
 
 ### HALIBUT
+
+exp <- knitr::knit_expand(
+  file = here::here("data-raw/scripts/2026/spatial_code_template.R"),
+  species = "halibut",
+  strata = 'c(
+    "01130",
+    "01140",
+    "01150",
+    "01160",
+    "01170",
+    "01180",
+    "01190",
+    "01200",
+    "01210",
+    "01220",
+    "01230",
+    "01240",
+    "01250",
+    "01260",
+    "01270",
+    "01280",
+    "01290",
+    "01300",
+    "01360",
+    "01370",
+    "01380",
+    "01390",
+    "01400"
+  )'
+)
+
+eval(parse(text = exp))
 
 halibut_shp <- create_shp(
   strata = c(
