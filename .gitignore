@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+*.nc
+data-raw/scripts/connect_socioeco_oracle.R
