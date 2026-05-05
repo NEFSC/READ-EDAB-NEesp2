@@ -57,15 +57,18 @@ us <- geodata::gadm(
   path = here::here("data-raw")
 )
 
-terra::plot(species_shp, col = "lightblue")
-terra::plot(us, add = TRUE)
-
-ggsave(
+png(
   here::here("data-raw/2026", "{{ species }}_map.png"),
   width = 6,
   height = 6,
-  units = "in"
+  units = "in",
+  res = 300
 )
+
+terra::plot(species_shp, col = "lightblue")
+terra::plot(us, add = TRUE)
+
+dev.off()
 
 # #not recognizing var.name as "temperature"
 # fishbot_halibut <- create_spatial_indicator(
