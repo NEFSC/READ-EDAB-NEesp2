@@ -46,3 +46,4 @@ nc_to_raster <- function(nc,
   
   return(ne_data)
 }
+
