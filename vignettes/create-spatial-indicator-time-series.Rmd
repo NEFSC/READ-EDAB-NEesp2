@@ -20,7 +20,7 @@ library(magrittr)
 
 ## Creating Spatial Indicators 
 
-The function NEesp::create_spatial_indicator generates a spatially-aggregated time series from a netCDF file. The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area and outputs as a data frame. 
+The function NEesp2::create_spatial_indicator generates a spatially-aggregated time series from a netCDF file. The function passes data through EDABUtilities::make_2d_summary_ts, which provides summary statistics of 2d gridded data as time series by area and outputs as a data frame. 
 
 This function has been tested with GLORYS bottom temperature and salinity data, OCCCI chlorophyll and mean primary production data, and OISST sea surface temperature data. All test input files can be found in 'data-raw' in this package. 
 
@@ -28,7 +28,7 @@ This function has been tested with GLORYS bottom temperature and salinity data, 
 
 Setting file.time = annual and agg.time = days returns a daily value for a netCDF on a daily time step. 
 ```{r}
-glorys_bt <- create_spatial_indicator(indicator_name = "bottomT", 
+glorys_bt <- NEesp2::create_spatial_indicator(indicator_name = "bottomT", 
                                units = "degC",
                                data.in = c(here::here('data-raw','glorys_bottomT.nc')),
                                file.time = 'annual',
@@ -49,7 +49,7 @@ head(glorys_bt)
 
 Setting file.time = annual and agg.time = days returns a daily value for a netCDF on a daily time step.
 ```{r}
-glorys_sal <- create_spatial_indicator(indicator_name = 'bottomS',
+glorys_sal <- NEesp2::create_spatial_indicator(indicator_name = 'bottomS',
                                 units = '1e-3',
                                 data.in = c(here::here('data-raw','glorys_bottomS.nc')),
                                 output.files = c(here::here('data-raw','GLORYS_daily_bottomS.nc')),
@@ -70,7 +70,7 @@ head(glorys_sal)
 
 Setting file.time = annual and agg.time = days returns a monthly value for a netCDF on a monthly time step. 
 ```{r}
-occci_chl <- create_spatial_indicator(indicator_name = 'chlor_a',
+occci_chl <- NEesp2::create_spatial_indicator(indicator_name = 'chlor_a',
                                 units = 'milligram m-3',
                                 data.in = c(here::here('data-raw','occci_test2.nc')),
                                 output.files = c(here::here('data-raw','occci_chl.nc')),
@@ -91,7 +91,7 @@ head(occci_chl)
 
 Setting file.time = annual and agg.time = days returns a monthly value for a netCDF on a monthly time step.
 ```{r}
-occci_primprod <- create_spatial_indicator(indicator_name = "primary_production_mean",
+occci_primprod <- NEesp2::create_spatial_indicator(indicator_name = "primary_production_mean",
                 units = 'gCarbon/m^2/day',
                 data.in = c(here::here('data-raw','pp_occci_199798.nc')),
                 file.time = 'annual',
@@ -112,7 +112,7 @@ head(occci_primprod)
 
 OISST data is formatting using a 0-360 longitude. It must be passed through EDABUtilities::convert_longitude to convert to -180 to +180 longitude before running 'create_spatial_indicator'
 ```{r}
-sst_monthly_converted <- EDABUtilities::convert_longitude(data = here::here('data-raw/sst_monthly.nc'))
+sst_monthly_converted <- EDABUtilities::convert_2d_longitude_gridded(data = here::here('data-raw/sst_monthly.nc'))
 
 sst_monthly <- NEesp2::create_spatial_indicator(indicator_name = 'sst',
                                 units = 'degC',
