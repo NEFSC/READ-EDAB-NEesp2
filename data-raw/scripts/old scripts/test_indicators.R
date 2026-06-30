@@ -47,15 +47,24 @@ range <- species_range(data = data, species)
 ###CONDITION
 
 ecodata_condition <- ecodata::condition
-condition <- species_condition(
-  data = data$survdat,
+condition <- NEesp2::species_condition(
+  data = survdat$survdat,
   LWparams = NEesp2::LWparams,
   species.codes = NEesp2::species.codes,
   by_EPU = TRUE,
   by_sex = FALSE,
-  length_break = NULL,
-  output = "soe"
+  length_break = c(0, 15),
+  output = "full"
 )
+
+bsb_15 <- condition |>
+  dplyr::filter(Species == "Black sea bass") |>
+  dplyr::rename(DATA_VALUE = MeanCond)
+
+NEesp2::plot_condition(data = bsb_15,
+                       var = "Black sea bass",
+                       return = TRUE)
+
 pkgdown::build_site()
 
 ###SPATIAL

@@ -120,7 +120,7 @@ dd <- EDABUtilities::make_2d_deg_day_ts(data.in = c(here::here('data-raw','glory
                                             '01750', '01760'),
                    ref.value = 14,
                    type = 'above',
-                   statistic = 'nd',
+                   metric = 'nd',
                    write.out = F)
 
 dd_df = dplyr::bind_rows(dd)
