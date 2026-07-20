@@ -32,7 +32,7 @@ https://github.com/atyrell3/RT2022/tree/main/bluefishESP
 
 ### Black Sea Bass
 
-Github repository for the 2023 Black sea bass ESP and snapshot ESP
+Github repository for the 2023 Black sea bass ESP and 2025 snapshot ESP
 
 https://github.com/ScottLarge-NOAA/bsb
 
@@ -44,12 +44,26 @@ https://github.com/SSalois1/tilefish_indicators
 
 ### Atlantic herring
 
-Github repository for the 2026 Atlantic herring snapshot ESP
+Github repositories for the 2026 ESP and snapshot ESP
 
-https://github.com/NEFSC/READ-EDAB-herring_snapshotESP
+https://github.com/adellemolina/Atlantic-Herring-Recruitment 
+
+https://github.com/NEFSC/READ-EDAB-herring_snapshotESP 
 
 ### Longfin Squid
 
 Github repository for the 2026 Longfin squid snapshot ESP
 
 https://github.com/NEFSC/READ-EDAB-longfinESP
+
+### Atlantic pollock
+
+Github repository for the 2026 Atlantic pollock snapshot ESP
+
+https://github.com/NEFSC/READ-EDAB-pollockESP
+
+### American plaice
+
+Github repository for the 2026 American plaice snapshot ESP
+
+https://github.com/NEFSC/READ-EDAB-plaiceESP2026
