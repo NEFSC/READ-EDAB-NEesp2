@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Creating Spatial Indicator Time Series with EDAB_Utilities • NEesp2</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Creating Spatial Indicator Time Series with EDAB_Utilities">
 </head>
@@ -84,7 +84,7 @@
 <div class="section level2">
 <h2 id="creating-spatial-indicators">Creating Spatial Indicators<a class="anchor" aria-label="anchor" href="#creating-spatial-indicators"></a>
 </h2>
-<p>The function NEesp::create_spatial_indicator generates a
+<p>The function NEesp2::create_spatial_indicator generates a
 spatially-aggregated time series from a netCDF file. The function passes
 data through EDABUtilities::make_2d_summary_ts, which provides summary
 statistics of 2d gridded data as time series by area and outputs as a
@@ -99,7 +99,7 @@ OISST sea surface temperature data. All test input files can be found in
 <p>Setting file.time = annual and agg.time = days returns a daily value
 for a netCDF on a daily time step.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">glorys_bt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">"bottomT"</span>, </span>
+<code class="sourceCode R"><span><span class="va">glorys_bt</span> <span class="op">&lt;-</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">"bottomT"</span>, </span>
 <span>                               units <span class="op">=</span> <span class="st">"degC"</span>,</span>
 <span>                               data.in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'glorys_bottomT.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                               file.time <span class="op">=</span> <span class="st">'annual'</span>,</span>
@@ -121,7 +121,7 @@ for a netCDF on a daily time step.</p>
 <p>Setting file.time = annual and agg.time = days returns a daily value
 for a netCDF on a daily time step.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">glorys_sal</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">'bottomS'</span>,</span>
+<code class="sourceCode R"><span><span class="va">glorys_sal</span> <span class="op">&lt;-</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">'bottomS'</span>,</span>
 <span>                                units <span class="op">=</span> <span class="st">'1e-3'</span>,</span>
 <span>                                data.in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'glorys_bottomS.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                output.files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'GLORYS_daily_bottomS.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -143,7 +143,7 @@ for a netCDF on a daily time step.</p>
 <p>Setting file.time = annual and agg.time = days returns a monthly
 value for a netCDF on a monthly time step.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">occci_chl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">'chlor_a'</span>,</span>
+<code class="sourceCode R"><span><span class="va">occci_chl</span> <span class="op">&lt;-</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">'chlor_a'</span>,</span>
 <span>                                units <span class="op">=</span> <span class="st">'milligram m-3'</span>,</span>
 <span>                                data.in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'occci_test2.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                output.files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'occci_chl.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -165,7 +165,7 @@ value for a netCDF on a monthly time step.</p>
 <p>Setting file.time = annual and agg.time = days returns a monthly
 value for a netCDF on a monthly time step.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">occci_primprod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">"primary_production_mean"</span>,</span>
+<code class="sourceCode R"><span><span class="va">occci_primprod</span> <span class="op">&lt;-</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">"primary_production_mean"</span>,</span>
 <span>                units <span class="op">=</span> <span class="st">'gCarbon/m^2/day'</span>,</span>
 <span>                data.in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw'</span>,<span class="st">'pp_occci_199798.nc'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                file.time <span class="op">=</span> <span class="st">'annual'</span>,</span>
@@ -188,7 +188,7 @@ value for a netCDF on a monthly time step.</p>
 through EDABUtilities::convert_longitude to convert to -180 to +180
 longitude before running ‘create_spatial_indicator’</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sst_monthly_converted</span> <span class="op">&lt;-</span> <span class="fu">EDABUtilities</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EDABUtilities/man/convert_longitude.html" class="external-link">convert_longitude</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw/sst_monthly.nc'</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sst_monthly_converted</span> <span class="op">&lt;-</span> <span class="fu">EDABUtilities</span><span class="fu">::</span><span class="fu"><a href="https://nefsc.github.io/READ_EDAB_Utilities/reference/convert_2d_longitude_gridded.html" class="external-link">convert_2d_longitude_gridded</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">'data-raw/sst_monthly.nc'</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sst_monthly</span> <span class="op">&lt;-</span> <span class="fu">NEesp2</span><span class="fu">::</span><span class="fu"><a href="../reference/create_spatial_indicator.html">create_spatial_indicator</a></span><span class="op">(</span>indicator_name <span class="op">=</span> <span class="st">'sst'</span>,</span>
 <span>                                units <span class="op">=</span> <span class="st">'degC'</span>,</span>
