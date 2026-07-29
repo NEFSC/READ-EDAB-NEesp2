@@ -10,7 +10,7 @@
 #' shp.file = Shape file you wish to crop each input file to
 #' var.name = Variable name you wish to extract.
 #' area.names = Names of shape file areas you want to summarize.
-#' statistic = Which statistic to calculate = 'mean'
+#' statistics = Which statistic(s) to calculate = 'mean'
 #' agg.time = Time scale to calculate over (days, doy, months, season, or years)
 #' tz = Time zone to convert. No correction if NA
 #' touches = If TRUE, all cells touched by lines or polygons will be masked, not just those on the line render path, or whose center point is within the polygon
@@ -39,7 +39,7 @@ create_spatial_indicator <- function(indicator_name, units, agg.time, ...) {
         YEAR = ls.id,
         DATA_VALUE = value,
         AREA = area,
-        STATISTIC = statistic
+        STATISTIC = statistics
       ) |>
       dplyr::mutate(INDICATOR_NAME = indicator_name, INDICATOR_UNITS = units)
     output <- output %>%
@@ -59,7 +59,7 @@ create_spatial_indicator <- function(indicator_name, units, agg.time, ...) {
         INDICATOR_NAME = indicator_name,
         INDICATOR_UNITS = units
       ) %>%
-      dplyr::rename(DATA_VALUE = value, AREA = area, STATISTIC = statistic) %>%
+      dplyr::rename(DATA_VALUE = value, AREA = area, STATISTIC = statistics) %>%
       purrr::discard(~ all(is.na(.)))
   }
 
