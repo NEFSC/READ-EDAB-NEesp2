@@ -22,7 +22,7 @@ get_mrip_catch <- function(
   ## URL query parameters
   new_species <- species |>
     stringr::str_to_upper() |>
-    stringr::str_replace_all(" ", "%20")
+    stringr::str_replace_all(" ", "+")
 
   catch_query <- dplyr::case_when(
     type == "all" ~ "TOTAL+CATCH+%28TYPE+A+%2B+B1+%2B+B2",
@@ -49,7 +49,7 @@ get_mrip_catch <- function(
 
   ## compile URL
   url <- paste0(
-    "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=",
+    "https://apps-st.fisheries.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_series_catch&qyearfrom=",
     years[1],
     "&qyearto=",
     years[2],
@@ -108,7 +108,8 @@ get_mrip_catch <- function(
   return(output)
 }
 
-# get_mrip_catch("Atlantic cod", type = "landings")
+
+#cod <- get_mrip_catch("Atlantic cod", type = "landings")
 # bsb_test <- get_mrip_catch("BLACK SEA BASS")
 
 #' Scrape MRIP trip data from MRIP Query tool
