@@ -109,9 +109,6 @@ get_mrip_catch <- function(
 }
 
 
-#cod <- get_mrip_catch("Atlantic cod", type = "landings")
-# bsb_test <- get_mrip_catch("BLACK SEA BASS")
-
 #' Scrape MRIP trip data from MRIP Query tool
 #'
 #' This function scrapes MRIP trip data from the MRIP Query tool
@@ -122,23 +119,17 @@ get_mrip_catch <- function(
 #' @return Returns a list of the scraped data and metadata.
 #' @export
 
-# species <- "Chub mackerel"
-# region <- "north atlantic"
-# year <- 1995
-
-## TODO: add option to get trips by for-hire only
-
 get_mrip_trips <- function(species, region, year) {
   new_species <- species |>
     stringr::str_to_upper() |>
-    stringr::str_replace_all(" ", "%20")
+    stringr::str_replace_all(" ", "+")
 
   new_region <- region |>
     stringr::str_to_upper() |>
     stringr::str_replace_all(" ", "+")
 
   url <- paste0(
-    "https://www.st.nmfs.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_directed_trip&qyearfrom=",
+    "https://apps-st.fisheries.noaa.gov/SASStoredProcess/guest?_program=%2F%2FFoundation%2FSTP%2Fmrip_directed_trip&qyearfrom=",
     year,
     "&qsummary=cumulative_pya&qwave=1&fshyr=annual&qstate=",
     new_region,
@@ -334,8 +325,3 @@ save_catch <- function(
     return(fname)
   }
 }
-
-# save_catch(this_species = "black sea bass",
-#            out_folder = here::here("data-raw"),
-#            catch_type = "landings")
-# get_mrip_catch("black sea bass")
