@@ -13,8 +13,9 @@
 #' Total Annual Revenue: The total value of all landings for that species, adjusted for inflation (e.g., TOTALANNUALREV_LONGFINSQUID_2025Dols).
 #' Average Revenue per Vessel: The average revenue earned per permit per year, adjusted for inflation (e.g., AVGVESREVperYr_LONGFINSQUID_2025_DOLlb).
 #' Average Annual Diesel Price: The price of Ultra-Low-Sulfur No. 2 Diesel (from FRED), adjusted for inflation (e.g., AVGANNUAL_DIESEL_PRICE2025dols).
-#'
-#' This uses CFDERS data but may need to be updated to CAMs 
+#' Gini Coefficient: The annual measure of revenue concentration among permits, ranging from 0 (perfect equality across all vessels) to 1 (complete inequality, where a single vessel earns all revenue) (e.g., GINI_COEFF_SPPNAME).
+#' Permits Earning Majority Revenue: The total number of top-earning permits earning the majority of revenues (>=50% of total annual commercial revenue) for that species; lower numbers indicate higher revenue concentration among fewer key players (e.g., N_PERMITS_50PCT_REV_SPPNAME).
+#' 
 #' 
 #' Table with species names and nespp3 codes here: https://nefsc.github.io/NEFSC-dataserve/table-of-commercial-species.html
 #' 
@@ -29,18 +30,34 @@
 #' @param ora_id username for Oracle connection (in quotation marks)
 #' @param oraprod_pw password for Oracle connection (in quotation marks)
 #' @param spp_name the name of the species you want to pull (e.g., "LONGFINSQUID")
-#' @param nespp3_codes the NESPP3 codes for the species you want to pull (e.g., "('801')") - note the single quotes inside the string for SQL
+#' @param ITIS_TSN_codes the ITIS_TSN for the species you want to pull 
 #' @param START.YEAR the first year you want to pull (e.g., 1996)
 #' @param END.YEAR the last year you want to pull (e.g., 2025)
 #' @param deflate_yr the year you want to deflate to (e.g, 2025)
 #' @export
 #' 
 
+
+#RUN the following example call (ONLY IN THE CONSOLE to protect PII) AFTER running the function below: 
+#my_data <- get_commercial_data(
+#'  ora_id       = "username",   # Your Oracle username
+#'   oraprod_pw   = "YOUR_ORACLE_PASSWORD",# Your Oracle password
+#'   spp_name     = "AMERICANPLAICE",
+#'   nespp3_codes = "('123')",             # Single quotes inside string for SQL
+#'   ITIS_TSN_codes     = 172877 ,                # Longfin Squid ITIS TSN
+#'   START.YEAR   = 1996,
+#'   END.YEAR     = 2025,
+#'   deflate_yr   = 2025
+#')
+
+###########################################################
+
 get_commercial_data <- function(
     ora_id,
     oraprod_pw,
     spp_name,
     nespp3_codes,
+    ITIS_TSN_codes,       
     START.YEAR,
     END.YEAR,
     deflate_yr
@@ -51,12 +68,32 @@ get_commercial_data <- function(
   data_intermediate <- file.path("data/intermediate")
   
   
+  '# use the following sources to identify the connection string information 
+'#includes the following: ## Connection to Oracle for Socioeconomic Commercial Data
+  ## For use with NEesp2/get_commercial_data.R
+  ## Note: Run this before running the 'get_commercial_data' function
+  
+  # Set your API key for FRED data (deflation) you may need to log into FRED API Keys and request a new one. https://fred.stlouisfed.org/docs/api/api_key.html
+  # fredr::fredr_set_key("a09e5d083681605146191f4996992c6e")
+  
+  # 2. Build the connection string
+  # shost <- "nefsc-prod-01-db.nmfs.noaa.gov"
+  #  port  <- 1521
+  #ssid  <- "NEFSC_DB_PROD.nefscproddbsn.nefscprodvcn.oraclevcn.com"
+  
+  
+  source("//nefscdata/SOE_ESP_Data/ESPs/connect_socioeco_oracle.R")
+  #source(here::here('data-raw/scripts/connect_socioeco_oracle.R'))
+  
+  
   #################################################################
   ##no editiing should be needed past this point
   #####################################################
-  
-  #source("//nefscdata/SOE_ESP_Data/ESPs/connect_socioeco_oracle.R")
-  source(here::here('data-raw/scripts/connect_socioeco_oracle.R'))
+  # Ensure the directory exists automatically before running queries
+  data_intermediate <- file.path("data", "intermediate")
+  if (!dir.exists(data_intermediate)) {
+    dir.create(data_intermediate, recursive = TRUE)
+  }
   
   
   # Using the name consistent with your loop
@@ -87,9 +124,9 @@ get_commercial_data <- function(
   # We use paste0 to insert the species name into the column alias 
   # and the codes into the WHERE clause.
   query_landings <- paste0(
-    "SELECT YEAR, SUM(SPPLNDLB) AS total_", spp_name, 
-    " FROM NEFSC_GARFO.CFDERS_ALL_YEARS ",
-    " WHERE NESPP3 IN ", nespp3_codes, 
+    "SELECT YEAR, SUM(LNDLB) AS total_", spp_name, 
+    " FROM CAMS_GARFO.CAMS_LAND ",
+    " WHERE ITIS_TSN IN ", ITIS_TSN_codes, 
     "AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR,
     " GROUP BY YEAR ORDER BY YEAR"
   )
@@ -121,9 +158,10 @@ get_commercial_data <- function(
   # I also added a space before 'FROM' to prevent syntax errors.
   query_Nvessels <- paste0(
     "SELECT YEAR, count(distinct PERMIT) AS N_VESSELS ", 
-    "FROM NEFSC_GARFO.CFDERS_ALL_YEARS ",
-    "WHERE NESPP3 IN ", nespp3_codes, 
+    "FROM CAMS_GARFO.CAMS_LAND ",
+    "WHERE ITIS_TSN IN ", ITIS_TSN_codes, 
     " AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR,
+    "AND PERMIT != '000000'",
     " GROUP BY YEAR ORDER BY YEAR"
   )
   
@@ -151,8 +189,8 @@ get_commercial_data <- function(
   #1. Pull Price Data from Oracle ---
   # Uses the 'conn' object you already established
   query_price <- paste0(
-    "SELECT SPPVALUE, SPPLNDLB, YEAR FROM NEFSC_GARFO.CFDERS_ALL_YEARS ",
-    "WHERE NESPP3 IN ", nespp3_codes, 
+    "SELECT VALUE, LNDLB, YEAR FROM CAMS_GARFO.CAMS_LAND ",
+    "WHERE ITIS_TSN IN ", ITIS_TSN_codes, 
     " AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR
   )
   
@@ -160,7 +198,7 @@ get_commercial_data <- function(
   
   #--- 2. Calculate Average Annual Prices (Manual Winsorize) ---
   price_annual <- price_raw |>
-    dplyr::mutate(price_lb = SPPVALUE / SPPLNDLB) |>
+    dplyr::mutate(price_lb = VALUE / LNDLB) |>
     # Remove Infinity or NA if pounds were 0
     dplyr::filter(is.finite(price_lb)) |> 
     dplyr::group_by(YEAR) |>
@@ -208,9 +246,9 @@ get_commercial_data <- function(
   
   # 1. Pull Revenue Data
   query_revs <- paste0(
-    "SELECT YEAR, SUM(SPPVALUE) AS TOTAL_REV ",
-    "FROM NEFSC_GARFO.CFDERS_ALL_YEARS ",
-    "WHERE NESPP3 IN ", nespp3_codes, 
+    "SELECT YEAR, SUM(VALUE) AS TOTAL_REV ",
+    "FROM CAMS_GARFO.CAMS_LAND ",
+    "WHERE ITIS_TSN IN ", ITIS_TSN_codes, 
     " AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR,
     " GROUP BY YEAR ORDER BY YEAR"
   )
@@ -256,10 +294,11 @@ get_commercial_data <- function(
   
   # 1. Pull Revenue per Permit/Year with Year Range
   query_ves_rev <- paste0(
-    "SELECT YEAR, PERMIT, SUM(SPPVALUE) AS VESSEL_TOTAL_REV ",
-    "FROM NEFSC_GARFO.CFDERS_ALL_YEARS ",
-    "WHERE NESPP3 IN ", nespp3_codes, 
+    "SELECT YEAR, PERMIT, SUM(VALUE) AS VESSEL_TOTAL_REV ",
+    "FROM CAMS_GARFO.CAMS_LAND ",
+    "WHERE ITIS_TSN IN ", ITIS_TSN_codes, 
     " AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR,
+    "AND PERMIT != '000000'",
     " GROUP BY YEAR, PERMIT"
   )
   ves_rev_raw <- DBI::dbGetQuery(conn, query_ves_rev)
@@ -277,8 +316,92 @@ get_commercial_data <- function(
     ) |>
     dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
   
-  ##disconnect from oracle 
+  
+  nefscusers.connect.string <- paste0(
+    "(DESCRIPTION=",
+    "(ADDRESS=(PROTOCOL=tcp)(HOST=", shost, ")(PORT=", port, "))",
+    "(CONNECT_DATA=(SERVICE_NAME=", ssid, ")))"
+  )
+  
+  # 2. Establish Database Connection
+  drv  <- DBI::dbDriver("Oracle")
+  conn <- DBI::dbConnect(drv, ora_id, password = oraprod_pw, dbname = nefscusers.connect.string)
+  
+  
+  ####################GINI CALCULATION############################
+  
+  # 8. GINI Calculation (CAMS Data Pull)
+  query_gini_revs <- paste0(
+    "SELECT YEAR, PERMIT, SUM(VALUE) AS VALUE_BY_PERMIT_YEAR ",
+    "FROM CAMS_GARFO.CAMS_LAND ",
+    "WHERE ITIS_TSN = ", ITIS_TSN_codes, " ",
+    "AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR, " ",
+    "GROUP BY YEAR, PERMIT"
+  )
+  
+  gini_revs_raw <- DBI::dbGetQuery(conn, query_gini_revs)
+  
+  gini_final <- gini_revs_raw |>
+    dplyr::filter(!is.na(VALUE_BY_PERMIT_YEAR), VALUE_BY_PERMIT_YEAR > 0) |>
+    dplyr::group_by(YEAR) |>
+    dplyr::summarise(
+      GINI_VAL = ineq::ineq(VALUE_BY_PERMIT_YEAR, type = "Gini")
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      DATA_VALUE     = GINI_VAL,
+      CATEGORY       = "Commercial",
+      INDICATOR_NAME = paste0("GINI_COEFF_", spp_name),
+      INDICATOR_TYPE = "Socioeconomic"
+    ) |>
+    dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
+  
+  
+  ####################N vessels earning majority of revenue (>=50% of revenue)#####
+  
+  
+  # 1. Query Data
+  query_maj_revs <- paste0(
+    "SELECT YEAR, PERMIT, SUM(VALUE) AS PERMIT_REV ",
+    "FROM CAMS_GARFO.CAMS_LAND ",
+    "WHERE ITIS_TSN = ", ITIS_TSN_codes, " ",
+    "AND YEAR BETWEEN ", START.YEAR, " AND ", END.YEAR, " ",
+    "GROUP BY YEAR, PERMIT"
+  )
+  
+  maj_revs_raw <- DBI::dbGetQuery(conn, query_maj_revs)
+  
+  # 2. Process data to find number of permits accounting for >= 50% of revenue
+  majority_permits_final <- maj_revs_raw |>
+    dplyr::filter(!is.na(PERMIT_REV), PERMIT_REV > 0) |>
+    # Sort permits from highest to lowest earner within each year
+    dplyr::group_by(YEAR) |>
+    dplyr::arrange(desc(PERMIT_REV), .by_group = TRUE) |>
+    # Compute total, running sum, and cumulative percentage
+    dplyr::mutate(
+      YEAR_TOTAL = sum(PERMIT_REV),
+      CUM_REV    = cumsum(PERMIT_REV),
+      CUM_PCT    = (CUM_REV / YEAR_TOTAL) * 100,
+      PERMIT_RANK = dplyr::row_number()
+    ) |>
+    # Filter for the smallest group of top permits that reach/exceed 50% threshold
+    dplyr::filter(CUM_PCT >= 50) |>
+    # Take the first rank that crosses 50% for each year
+    dplyr::slice_min(PERMIT_RANK, n = 1) |>
+    dplyr::ungroup() |>
+    # Format to match your standardized master file structure
+    dplyr::mutate(
+      DATA_VALUE     = PERMIT_RANK,
+      CATEGORY       = "Commercial",
+      INDICATOR_NAME = paste0("N_PERMITS_50PCT_REV_", spp_name),
+      INDICATOR_TYPE = "Socioeconomic"
+    ) |>
+    dplyr::select(YEAR, DATA_VALUE, CATEGORY, INDICATOR_NAME, INDICATOR_TYPE)
+  
+  
+  # Disconnect database
   DBI::dbDisconnect(conn)
+  
   ################## MASTER APPEND ##################
   
   # 1. Create a list of all your final data frames
@@ -289,7 +412,9 @@ get_commercial_data <- function(
     price_final, 
     revs_final, 
     fuel_final, 
-    av_ves_rev_final
+    av_ves_rev_final,
+    gini_final,
+    majority_permits_final
   )
   
   # 2. Use bind_rows to stack them into one long file
@@ -312,5 +437,7 @@ get_commercial_data <- function(
   # 5. View a summary of what you appended
   print(table(final_master_file$INDICATOR_NAME))
   
+  
+  return(final_master_file)
+  
 }
-
