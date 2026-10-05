@@ -281,43 +281,26 @@ R/create_bottomtrawl_indicators.R</p>
 <span>  a <span class="op">=</span> <span class="fl">0.0384</span></span>
 <span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">SVSPP</span> <span class="op">==</span> <span class="st">"141"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: The `tidy` argument is deprecated and will be removed in the next</span></span>
+<span><span class="co">## version. `calc_swept_area()` will soon strictly return tidy output.</span></span></code></pre>
 <pre><code><span><span class="co">## Prepping data ...</span></span></code></pre>
 <pre><code><span><span class="co">## Spherical geometry (s2) switched off</span></span></code></pre>
-<pre><code><span><span class="co">## Linking to GEOS 3.13.0, GDAL 3.10.1, PROJ 9.5.1; sf_use_s2() is FALSE</span></span></code></pre>
 <pre><code><span><span class="co">## Filtering data ...</span></span></code></pre>
-<pre><code><span><span class="co">##   [1]  3820  3880  3890  3900  3920  1352     0  3860  3840  3870  1390  1351</span></span>
-<span><span class="co">##  [13]  1380  3850  1360  1330  1340  3760  3790  3830  3800  3730  3810  1400</span></span>
-<span><span class="co">##  [25]  3770  3780  3740  3750  3908  3720  3710  1270  1370  1260  3700  1310</span></span>
-<span><span class="co">##  [37]  1280  3690  3680  3670  3660  3650  3630  3640  3620  1320  1290  1300</span></span>
-<span><span class="co">##  [49]  1240  1220  1210  3580  3610  3590  3600  1200  3560  1180  1170  1160</span></span>
-<span><span class="co">##  [61]  3570  1190  1230  1250  3470  3500  3510  3530  3550  3520  3540  3480</span></span>
-<span><span class="co">##  [73]  3450  3460  1050  1090  1130  3010  3020  3030  1100  3040  3050  1060</span></span>
-<span><span class="co">##  [85]  3060  3070  3080  1140  1150  1010  3090  3100  3110  3120  3130  3140</span></span>
-<span><span class="co">##  [97]  1020  1070  1110  1120  3150  3160  3170  1080  1730  1030  1040  3180</span></span>
-<span><span class="co">## [109]  3190  3200  1740  1750  3220  3230  1760  1690  3240  3250  3260  1700</span></span>
-<span><span class="co">## [121]  1710  3270  3280  3290  1720  3300  3310  3320  1650  1660  1670  3330</span></span>
-<span><span class="co">## [133]  1680  3340  3350  3360  3370  3380  3390  3400  3410  1610  1620  1630</span></span>
-<span><span class="co">## [145]  1640  3420  3430  3440  8510  8520  8530  8500  7500  7510  7520  7540</span></span>
-<span><span class="co">## [157]  7550 99999  7590  8540  7530  7570  7600  7580  8550  7610  8560  8570</span></span>
-<span><span class="co">## [169]  7620  7630  7640  8580  7650  7660  7670  8590  8600  8770</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating Stratified Mean  ...</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating Swept Area Estimate  ...</span></span></code></pre>
-<pre><code><span><span class="co">## Assuming a value of q = c(74, 105, 73, 75, 77, 143, 33, 72, 155, 103, 106, 121, 102, 76, 107, 131, 34, 141, 135, 32, 15, 23, 24, 26, 28, 78, 84, 101, 104, 108, 123, 136, 145, 146, 149, 163, 164, 192, 193, 197, 435, 437, 652, 745, 139, 203, 360, 563, 744, 938, 27, 112, 14, 22, 25, 35, 87, 4, 9, 18, 19, 21, 69, 270, 375, 376, 793, 3, 12, 16, 29, 31, 208, 428, 429, 600, 795, 934, 950, 156, 380, 176, 177, 194, 80, 654, 13, 79, 158, 166, 191, 205, 240, 263, 301, 318, 324, 388, 390, 451, 461, 530, 627, 867, 897, 978, 1, 36, 37, </span></span>
-<span><span class="co">## 46, 67, 88, 90, 91, 109, 110, 111, 120, 124, 129, 134, 137, 171, 172, 173, 175, 179, 180, 187, 190, 199, 202, 204, 211, 212, 213, 221, 232, 239, 252, 267, 310, 312, 313, 317, 321, 401, 425, 436, 444, 500, 529, 539, 546, 552, 557, 596, 631, 646, 650, 759, 856, 896, 925, 979, 56, 147, 168, 196, 198, 314, 439, 489, 621, 640, 773, 5, 99, 188, 378, 63, 126, 159, 322, 502, 617, 764, 83, 512, 554, 151, 154, 201, 320, 354, 357, 396, 503, 527, 604, 651, 866, 265, 355, 399, 952, 161, 382, 394, 578, 874, 898, </span></span>
-<span><span class="co">## 899, 931, 358, 363, 353, 573, 362)c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, </span></span>
-<span><span class="co">## 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) for all groups</span></span></code></pre>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## Assuming a value of q = 1 for all groups</span></span></code></pre>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_swept_area</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 8</span></span></span>
 <span><span class="co">##    YEAR SVSPP   variance     se     sd INDICATOR_UNITS INDICATOR_NAME DATA_VALUE</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983   141    1.82<span style="color: #949494;">e</span> 9 4.27<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">173</span>135.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>984   141    2.12<span style="color: #949494;">e</span>11 4.60<span style="color: #949494;">e</span>5 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">520</span>266.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>985   141    7.09<span style="color: #949494;">e</span> 9 8.42<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">291</span>241.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986   141    6.36<span style="color: #949494;">e</span> 9 7.97<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">255</span>190.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987   141    3.45<span style="color: #949494;">e</span>10 1.86<span style="color: #949494;">e</span>5 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">428</span>212.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988   141    2.73<span style="color: #949494;">e</span> 9 5.22<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">159</span>031.</span></span></code></pre>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">1</span>983   141    1.82<span style="color: #949494;">e</span> 9 4.27<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">173</span>138.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">1</span>984   141    2.12<span style="color: #949494;">e</span>11 4.60<span style="color: #949494;">e</span>5 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">520</span>280.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">1</span>985   141    7.09<span style="color: #949494;">e</span> 9 8.42<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">291</span>244.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">1</span>986   141    6.36<span style="color: #949494;">e</span> 9 7.98<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">255</span>195.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987   141    3.45<span style="color: #949494;">e</span>10 1.86<span style="color: #949494;">e</span>5 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">428</span>221.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988   141    2.73<span style="color: #949494;">e</span> 9 5.22<span style="color: #949494;">e</span>4 3.43<span style="color: #949494;">e</span>7 numberstow-1    swept_area_bi…    <span style="text-decoration: underline;">159</span>033.</span></span></code></pre>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_swept_area</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="va">YEAR</span>,</span>
@@ -339,7 +322,7 @@ R/create_bottomtrawl_indicators.R</p>
 <p>Uses ‘create_stratified_mean’ indicator in
 R/create_bottomtrawl_indicators.R</p>
 <p>Modified from ‘calc_stratified_mean’ in {survdat} package.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_strat_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_stratified_mean.html">create_stratified_mean</a></span><span class="op">(</span></span>
 <span>  surveyData <span class="op">=</span> <span class="va">survdat_subset</span>,</span>
 <span>  areaPolygon <span class="op">=</span> <span class="st">"NEFSC strata"</span>,</span>
@@ -355,23 +338,8 @@ R/create_bottomtrawl_indicators.R</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">SVSPP</span> <span class="op">==</span> <span class="st">"141"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Prepping data ...</span></span></code></pre>
 <pre><code><span><span class="co">## Filtering data ...</span></span></code></pre>
-<pre><code><span><span class="co">##   [1]  3820  3880  3890  3900  3920  1352     0  3860  3840  3870  1390  1351</span></span>
-<span><span class="co">##  [13]  1380  3850  1360  1330  1340  3760  3790  3830  3800  3730  3810  1400</span></span>
-<span><span class="co">##  [25]  3770  3780  3740  3750  3908  3720  3710  1270  1370  1260  3700  1310</span></span>
-<span><span class="co">##  [37]  1280  3690  3680  3670  3660  3650  3630  3640  3620  1320  1290  1300</span></span>
-<span><span class="co">##  [49]  1240  1220  1210  3580  3610  3590  3600  1200  3560  1180  1170  1160</span></span>
-<span><span class="co">##  [61]  3570  1190  1230  1250  3470  3500  3510  3530  3550  3520  3540  3480</span></span>
-<span><span class="co">##  [73]  3450  3460  1050  1090  1130  3010  3020  3030  1100  3040  3050  1060</span></span>
-<span><span class="co">##  [85]  3060  3070  3080  1140  1150  1010  3090  3100  3110  3120  3130  3140</span></span>
-<span><span class="co">##  [97]  1020  1070  1110  1120  3150  3160  3170  1080  1730  1030  1040  3180</span></span>
-<span><span class="co">## [109]  3190  3200  1740  1750  3220  3230  1760  1690  3240  3250  3260  1700</span></span>
-<span><span class="co">## [121]  1710  3270  3280  3290  1720  3300  3310  3320  1650  1660  1670  3330</span></span>
-<span><span class="co">## [133]  1680  3340  3350  3360  3370  3380  3390  3400  3410  1610  1620  1630</span></span>
-<span><span class="co">## [145]  1640  3420  3430  3440  8510  8520  8530  8500  7500  7510  7520  7540</span></span>
-<span><span class="co">## [157]  7550 99999  7590  8540  7530  7570  7600  7580  8550  7610  8560  8570</span></span>
-<span><span class="co">## [169]  7620  7630  7640  8580  7650  7660  7670  8590  8600  8770</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating Stratified Mean  ...</span></span></code></pre>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bsb_strat_mean</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
 <span><span class="co">##    YEAR SEASON SVSPP  variance      se    sd INDICATOR_UNITS INDICATOR_NAME    </span></span>
@@ -383,7 +351,7 @@ R/create_bottomtrawl_indicators.R</p>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">1</span>987 FALL     141 0.000<span style="text-decoration: underline;">861</span>  0.029<span style="text-decoration: underline;">3</span>   5.87 kgtow-1         strat_mean_biomass</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">1</span>988 FALL     141 0.000<span style="text-decoration: underline;">070</span>2 0.008<span style="text-decoration: underline;">38</span>  5.87 kgtow-1         strat_mean_biomass</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: DATA_VALUE &lt;dbl&gt;</span></span></span></code></pre>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsb_strat_mean</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="va">YEAR</span>,</span>
