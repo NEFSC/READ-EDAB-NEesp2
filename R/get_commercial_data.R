@@ -39,7 +39,7 @@
 #'
 
 #RUN the following example call (ONLY IN THE CONSOLE to protect PII) AFTER running the function below:
-#my_data <- get_commercial_data(
+#'my_data <- get_commercial_data(
 #'  ora_id       = "username",   # Your Oracle username
 #'   oraprod_pw   = "YOUR_ORACLE_PASSWORD",# Your Oracle password
 #'   spp_name     = "AMERICANPLAICE",
@@ -165,7 +165,8 @@ get_commercial_data <- function(
   # I simplified the alias to N_VESSELS so the rename() below actually works.
   # I also added a space before 'FROM' to prevent syntax errors.
   query_Nvessels <- paste0(
-    "SELECT YEAR, count(distinct PERMIT) AS N_VESSELS ",
+    "SELECT YEAR, ",
+    "COUNT(DISTINCT CASE WHEN PERMIT = '000000' THEN HULLID ELSE PERMIT END) AS N_VESSELS ",
     "FROM CAMS_GARFO.CAMS_LAND ",
     "WHERE ITIS_TSN IN ",
     ITIS_TSN_codes,
@@ -173,7 +174,6 @@ get_commercial_data <- function(
     START.YEAR,
     " AND ",
     END.YEAR,
-    "AND PERMIT != '000000'",
     " GROUP BY YEAR ORDER BY YEAR"
   )
 
